@@ -10,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 import org.codehaus.plexus.util.IOUtil;
@@ -25,8 +23,6 @@ import org.codehaus.plexus.util.StringUtils;
 public class FileDBUpgradeLifecycle
     implements DBUpgradeLifecycle
 {
-
-    private final Log log = LogFactory.getLog( FileDBUpgradeLifecycle.class );
 
     private DefaultSQLExec sqlexec;
 
@@ -50,9 +46,11 @@ public class FileDBUpgradeLifecycle
     /**
      * Execute DB Upgrade lifecycle phases
      */
-    public void upgrade()
+    public int upgrade()
         throws DBUpgradeException
     {
+        int upgraderCount = 0;
+        
         FileReader fileReader = null;
 
         try
@@ -85,6 +83,7 @@ public class FileDBUpgradeLifecycle
                 }
             }
 
+            
             //continue on with last upgrade
             line = reader.readLine();
             while ( line != null )
@@ -96,6 +95,7 @@ public class FileDBUpgradeLifecycle
                 }
 
                 upgrade( config.getWorkingDirectory(), line.trim() );
+                upgraderCount++;
 
                 line = reader.readLine();
             }
@@ -109,6 +109,8 @@ public class FileDBUpgradeLifecycle
         {
             IOUtil.close( fileReader );
         }
+        
+        return upgraderCount;
     }
 
     ////////////////////////////////////////////////////////////////////////////

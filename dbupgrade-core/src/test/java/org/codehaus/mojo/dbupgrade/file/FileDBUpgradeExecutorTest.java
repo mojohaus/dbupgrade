@@ -4,8 +4,6 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeException;
-
 
 /**
  * @author dan.tran
@@ -43,46 +41,25 @@ public class FileDBUpgradeExecutorTest
         throws Exception
     {
         config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
-        upgrader.upgrade();
+        assertEquals( 2, upgrader.upgrade() );
 
         //do it one more time
-        //upgrader.upgrade();
+        upgrader = new FileDBUpgradeLifecycle( config );
+        assertEquals( 0, upgrader.upgrade() );
     }
 
     public void testMissingDBUpgraderTest()
         throws Exception
     {
-        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
-        upgrader.upgrade();
-        /*
         try
         {
+            config.setUpgradeFile( new File( dataDirectory, "version-bogus.lst"  ) );
             upgrader.upgrade();
+            fail( "Exception expected." );
         }
-        catch ( RuntimeException e )
+        catch ( Exception e )
         {
-            assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" )  );
         }
-        */
     }
-
-    public void testDowngradeDBUpgraderTest()
-        throws Exception
-    {
-        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
-        upgrader.upgrade();
-        /*
-        try
-        {
-            upgrader.upgrade();
-        }
-        catch ( DBUpgradeException e )
-        {
-            System.out.println( "Expected exception: " + e.getMessage() );
-        }
-        */
-    }
-
-
 
 }

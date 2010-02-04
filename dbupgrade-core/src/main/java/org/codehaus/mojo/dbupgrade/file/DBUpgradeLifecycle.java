@@ -7,6 +7,11 @@ public interface DBUpgradeLifecycle
 {
 	String ROLE = DBUpgradeLifecycle.class.getName();
 	
-	void upgrade() throws DBUpgradeException;
+	/**
+	 * Upgrade database
+	 * @return number of upgrader it executes
+	 * @throws DBUpgradeException
+	 */
+	int upgrade() throws DBUpgradeException;
 	  
 }
