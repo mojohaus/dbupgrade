@@ -13,6 +13,14 @@
   
   <name>DBUpgrade Parent</name>
   
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
   <scm>
     <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</connection>
     <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</developerConnection>
@@ -26,11 +34,10 @@
       <email>dantran@gmail.com</email>
       <organization />
       <roles>
-        <role>Lead Developer</role>
+        <role>Developer</role>
       </roles>
     </developer>
   </developers>
-  
   
   
   <dependencyManagement>
