@@ -2,6 +2,7 @@ package org.codehaus.mojo.dbupgrade;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeLifecycle;
 
 /**
  * Upgrade incrementally Using Generic Method
@@ -19,17 +20,15 @@ public class GenericDBUpgradeMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
-        /*
         try
         {
-            //DefaultDBUpgradeLifecyle dbupgrade = new DefaultDBUpgradeLifecyle( config );
-            //dbupgrade.upgrade();
+            GenericDBUpgradeLifecycle dbupgrade = new GenericDBUpgradeLifecycle( config );
+            dbupgrade.upgrade();
         }
-        //catch ( DBUpgradeException e )
+        catch ( DBUpgradeException e )
         {
             throw new MojoExecutionException( "Unable to run upgrade", e );
         }
-        */
         
     }
 }
