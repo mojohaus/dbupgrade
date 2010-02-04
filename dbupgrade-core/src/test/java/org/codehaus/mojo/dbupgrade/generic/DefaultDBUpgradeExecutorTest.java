@@ -1,9 +1,9 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeConfiguration;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
-import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
-import org.codehaus.mojo.dbupgrade.DefaultDBUpgradeLifecyle;
+import org.codehaus.mojo.dbupgrade.generic.DBUpgradeConfiguration;
+import org.codehaus.mojo.dbupgrade.generic.DBUpgradeLifecycle;
+import org.codehaus.mojo.dbupgrade.generic.DefaultDBUpgradeLifecyle;
 
 import junit.framework.TestCase;
 
@@ -24,7 +24,7 @@ public class DefaultDBUpgradeExecutorTest
         config.setDriver( "org.hsqldb.jdbcDriver" );
         config.setDialect( "hsqldb" );
         config.setUrl( "jdbc:hsqldb:mem:target/testdb" );
-        config.setPackageName( "org.codehaus.mojo.dbupgrade.test1" );
+        config.setPackageName( "org.codehaus.mojo.dbupgrade.generic.test1" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
     }

@@ -1,4 +1,4 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +11,8 @@ import java.util.Properties;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.Util;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 
 

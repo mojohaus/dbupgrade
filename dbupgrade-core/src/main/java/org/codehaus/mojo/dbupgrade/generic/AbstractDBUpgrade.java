@@ -1,9 +1,10 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
 

@@ -1,4 +1,4 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 
 /**
  * Submit the resource to jdbc in one shot

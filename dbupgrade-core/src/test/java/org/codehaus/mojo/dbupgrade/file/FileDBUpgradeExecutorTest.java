@@ -1,9 +1,9 @@
-package org.codehaus.mojo.dbupdate2;
+package org.codehaus.mojo.dbupgrade.file;
 
-import org.codehaus.mojo.dbupdate2.DBUpgradeConfiguration;
-import org.codehaus.mojo.dbupdate2.DBUpgradeLifecycle;
-import org.codehaus.mojo.dbupdate2.FileDBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.file.DBUpgradeConfiguration;
+import org.codehaus.mojo.dbupgrade.file.DBUpgradeLifecycle;
+import org.codehaus.mojo.dbupgrade.file.FileDBUpgradeLifecycle;
 
 import junit.framework.TestCase;
 

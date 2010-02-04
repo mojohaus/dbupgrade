@@ -1,4 +1,4 @@
-package org.codehaus.mojo.dbupdate2;
+package org.codehaus.mojo.dbupgrade.file;
 
 import java.io.File;
 

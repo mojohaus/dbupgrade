@@ -1,7 +1,7 @@
-package org.codehaus.mojo.dbupgrade.test1.hsqldb;
+package org.codehaus.mojo.dbupgrade.generic.test1.hsqldb;
 
-import org.codehaus.mojo.dbupgrade.AbstractDBUpgrade;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
 
 public class PreDBUpgrade
     extends AbstractDBUpgrade

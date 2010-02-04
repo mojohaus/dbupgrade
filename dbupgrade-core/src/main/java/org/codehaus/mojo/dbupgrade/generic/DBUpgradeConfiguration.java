@@ -1,4 +1,4 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
 

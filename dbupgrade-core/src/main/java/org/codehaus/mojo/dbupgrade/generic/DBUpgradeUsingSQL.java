@@ -1,6 +1,8 @@
-package org.codehaus.mojo.dbupgrade;
+package org.codehaus.mojo.dbupgrade.generic;
 
 import java.sql.SQLException;
+
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 
 public class DBUpgradeUsingSQL
     extends AbstractDBUpgrade
