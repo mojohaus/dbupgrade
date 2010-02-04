@@ -615,14 +615,7 @@ public class DefaultSQLExec
         {
             if ( !config.isAutocommit() && conn != null && SQLExecConfig.ON_ERROR_ABORT.equalsIgnoreCase( config.getOnError() ) )
             {
-                try
-                {
-                    conn.rollback();
-                }
-                catch ( SQLException ex )
-                {
-                    // ignore
-                }
+                this.roolbackQuietly();
             }
             throw new SQLException( e.getMessage(), e );
         }

@@ -8,7 +8,7 @@
     <version>1.0-beta-1-SNAPSHOT</version>
   </parent>
 
-  <packaging>jar</packaging>
+  <packaging>maven-plugin</packaging>
 
   <name>Maven Database Upgrade Plugin</name>
   

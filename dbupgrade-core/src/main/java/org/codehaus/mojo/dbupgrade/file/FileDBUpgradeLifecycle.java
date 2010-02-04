@@ -182,7 +182,7 @@ public class FileDBUpgradeLifecycle
         throws SQLException
     {
         sqlexec.execute( "insert into " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
-            + " ) values ( \"\"" );
+            + " ) values ( '' )" );
     }
 
 

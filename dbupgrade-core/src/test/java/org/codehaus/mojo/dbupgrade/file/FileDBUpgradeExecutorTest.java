@@ -1,11 +1,10 @@
 package org.codehaus.mojo.dbupgrade.file;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeException;
-import org.codehaus.mojo.dbupgrade.file.DBUpgradeConfiguration;
-import org.codehaus.mojo.dbupgrade.file.DBUpgradeLifecycle;
-import org.codehaus.mojo.dbupgrade.file.FileDBUpgradeLifecycle;
+import java.io.File;
 
 import junit.framework.TestCase;
+
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 
 
 /**
@@ -17,7 +16,9 @@ public class FileDBUpgradeExecutorTest
 {
     private DBUpgradeConfiguration config;
     
-    DBUpgradeLifecycle upgrader;
+    private DBUpgradeLifecycle upgrader;
+    
+    private File dataDirectory = new File( "src/test/resources/org/codehaus/mojo/dbupgrade/file" );
 
     protected void setUp()
         throws Exception
@@ -29,7 +30,7 @@ public class FileDBUpgradeExecutorTest
         config.setUrl( "jdbc:hsqldb:mem:target/testdb2s" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
-        
+        config.setWorkingDirectory( dataDirectory );
         upgrader = new FileDBUpgradeLifecycle( config );
         
     }
@@ -41,15 +42,19 @@ public class FileDBUpgradeExecutorTest
     public void testGoodDBUpgradeExecutorTest()
         throws Exception
     {
+        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
         upgrader.upgrade();
 
         //do it one more time
-        upgrader.upgrade();
+        //upgrader.upgrade();
     }
 
     public void testMissingDBUpgraderTest()
         throws Exception
     {
+        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
+        upgrader.upgrade();
+        /*
         try
         {
             upgrader.upgrade();
@@ -58,11 +63,15 @@ public class FileDBUpgradeExecutorTest
         {
             assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" )  );
         }
+        */
     }
 
     public void testDowngradeDBUpgraderTest()
         throws Exception
     {
+        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
+        upgrader.upgrade();
+        /*
         try
         {
             upgrader.upgrade();
@@ -71,6 +80,7 @@ public class FileDBUpgradeExecutorTest
         {
             System.out.println( "Expected exception: " + e.getMessage() );
         }
+        */
     }
 
 
