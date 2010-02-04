@@ -2,6 +2,8 @@ package org.codehaus.mojo.dbupgrade.file;
 
 import java.io.File;
 
+import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
+
 import junit.framework.TestCase;
 
 

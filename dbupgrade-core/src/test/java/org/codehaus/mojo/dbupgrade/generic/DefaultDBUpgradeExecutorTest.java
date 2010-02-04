@@ -1,11 +1,9 @@
 package org.codehaus.mojo.dbupgrade.generic;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeException;
-import org.codehaus.mojo.dbupgrade.generic.DBUpgradeConfiguration;
-import org.codehaus.mojo.dbupgrade.generic.DBUpgradeLifecycle;
-import org.codehaus.mojo.dbupgrade.generic.DefaultDBUpgradeLifecyle;
-
 import junit.framework.TestCase;
+
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 
 /**
  * @author dan.tran
@@ -36,21 +34,21 @@ public class DefaultDBUpgradeExecutorTest
     public void testGoodDBUpgradeExecutorTest()
         throws Exception
     {
-        DBUpgradeLifecycle upgrader = new DefaultDBUpgradeLifecyle();
-        upgrader.upgrade( this.config );
+        DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
+        upgrader.upgrade();
 
         //do it one more time
-        upgrader.upgrade( this.config );
+        upgrader.upgrade();
     }
 
     public void testMissingDBUpgraderTest()
         throws Exception
     {
         config.setVersionResourceName( "missing-version.properties" );
-        DBUpgradeLifecycle upgrader = new DefaultDBUpgradeLifecyle();
+        DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
         try
         {
-            upgrader.upgrade( this.config );
+            upgrader.upgrade( );
         }
         catch ( RuntimeException e )
         {
@@ -62,10 +60,10 @@ public class DefaultDBUpgradeExecutorTest
         throws Exception
     {
         config.setVersionResourceName( "downgrade-version.properties" );
-        DBUpgradeLifecycle upgrader = new DefaultDBUpgradeLifecyle();
+        DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
         try
         {
-            upgrader.upgrade( this.config );
+            upgrader.upgrade();
         }
         catch ( DBUpgradeException e )
         {

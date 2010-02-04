@@ -12,38 +12,46 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.Util;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
-
 
 /**
  * Incremental Database upgrade implementation, capable of understanding both java and sql format
  * Original source is from http://code.google.com/p/dbmigrate
  * @author dan.tran
  */
-public class DefaultDBUpgradeLifecyle
+public class GenericDBUpgradeLifecycle
     implements DBUpgradeLifecycle
 {
 
-    private final Log log = LogFactory.getLog( DefaultDBUpgradeLifecyle.class );
+    private final Log log = LogFactory.getLog( GenericDBUpgradeLifecycle.class );
 
-    protected DefaultSQLExec sqlexec;
+    private DefaultSQLExec sqlexec;
+
+    private DBUpgradeConfiguration config;
 
     public void setSqlexec( DefaultSQLExec sqlexec )
     {
         this.sqlexec = sqlexec;
     }
 
+    public GenericDBUpgradeLifecycle( DBUpgradeConfiguration config )
+        throws DBUpgradeException
+    {
+        this.config = config;
+        this.sqlexec = new DefaultSQLExec( config );
+        this.initDBUpgrade();
+    }
+
     /**
      * Execute DB Upgrade lifecycle phases
      */
-    public void upgrade( DBUpgradeConfiguration config )
+    public int upgrade()
         throws DBUpgradeException
     {
         try
         {
-            this.initDBUpgrade( config );
-
             runJavaUpgrader( config, "PreDBUpgrade" );
 
             this.incrementalUpgrade( config );
@@ -55,6 +63,7 @@ public class DefaultDBUpgradeLifecyle
             throw new DBUpgradeException( "Unable to upgrade", e );
         }
 
+        return 0; //until we figure out how to do this
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -73,27 +82,32 @@ public class DefaultDBUpgradeLifecyle
         }
     }
 
-    private void initDBUpgrade( DBUpgradeConfiguration conf )
-        throws DBUpgradeException, SQLException
+    private void initDBUpgrade()
+        throws DBUpgradeException
     {
         Statement stm = null;
         ResultSet rs = null;
 
         try
         {
-            initSQLExec( conf );
-
             stm = sqlexec.getConnection().createStatement();
-            rs = stm.executeQuery( "SELECT " + conf.getVersionColumnName() + " FROM " + conf.getVersionTableName() );
+            rs = stm.executeQuery( "SELECT " + config.getVersionColumnName() + " FROM " + config.getVersionTableName() );
             if ( !rs.next() )
             {
-                this.createInitialVersion( conf );
+                this.createInitialVersion( config );
             }
         }
         catch ( SQLException e )
         {
-            this.createVersionTable( conf );
-            this.createInitialVersion( conf );
+            try
+            {
+                this.createVersionTable( config );
+                this.createInitialVersion( config );
+            }
+            catch ( SQLException ex )
+            {
+                throw new DBUpgradeException( "Unable to intialize version table.", ex );
+            }
         }
         finally
         {
@@ -101,11 +115,6 @@ public class DefaultDBUpgradeLifecyle
             DbUtils.closeQuietly( stm );
         }
 
-    }
-
-    private void initSQLExec( DBUpgradeConfiguration config )
-    {
-        this.sqlexec = new DefaultSQLExec( config );
     }
 
     private void createVersionTable( DBUpgradeConfiguration conf )
@@ -119,7 +128,7 @@ public class DefaultDBUpgradeLifecyle
         throws SQLException
     {
         sqlexec.execute( "insert into " + conf.getVersionTableName() + " ( " + conf.getVersionColumnName()
-            + " ) values ( " + conf.getInitialVersion() + " )" );
+            + " ) values ( " + config.getInitialVersion() + " )" );
     }
 
     private void incrementalUpgrade( DBUpgradeConfiguration config )

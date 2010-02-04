@@ -1,6 +1,5 @@
-package org.codehaus.mojo.dbupgrade.file;
+package org.codehaus.mojo.dbupgrade;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 
 
 public interface DBUpgradeLifecycle 

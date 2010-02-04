@@ -11,6 +11,7 @@ import java.sql.Statement;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
