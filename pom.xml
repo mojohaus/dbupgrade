@@ -112,13 +112,9 @@
     </dependency>    
   </dependencies>
        
-  
-  
-  <modules>
-    <module>dbupgrade-core</module>
-    <module>dbupgrade-maven-plugin</module>
-  </modules>
-  
+  <properties>
+    <project.build.java.target>1.5</project.build.java.target>
+  </properties>
   
   <build>
   
@@ -136,9 +132,42 @@
             </workspaceCodeStylesURL>
           </configuration>
         </plugin>
+        
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[1.5,)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[2.0.4,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+        
       </plugins>
     </pluginManagement>
+
     
   </build>
+  
+  
+  
+  <modules>
+    <module>dbupgrade-core</module>
+    <module>dbupgrade-maven-plugin</module>
+  </modules>
+  
   
 </project>

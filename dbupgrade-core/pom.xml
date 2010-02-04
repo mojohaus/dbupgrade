@@ -1,20 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <parent>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>mojo-parent</artifactId>
-    <version>23</version>
+    <groupId>org.codehaus.mojo.dbupgrade</groupId>
+    <artifactId>dbupgrade</artifactId>
+    <version>1.0-beta-1-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.codehaus.mojo.dbupgrade</groupId>
   <artifactId>dbupgrade-core</artifactId>
   <version>1.0-beta-1-SNAPSHOT</version>
 
-  <name>SQL Executor</name>
+  <name>Database Upgrade Engines</name>
 
-  <description>Shared component to execute a set of SQL files</description>
+  <description>Database Upgrade Engines</description>
 
   <inceptionYear>2010</inceptionYear>
   
@@ -65,22 +64,6 @@
     </dependency>
           
   </dependencies>
-  
-  <properties>
-    <project.build.java.target>1.5</project.build.java.target>
-  </properties>
-  
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
   
     
 </project>
