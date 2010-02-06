@@ -37,6 +37,8 @@ public interface SQLExec
      */
     void rollback();
 
+    void commit() throws SQLException;
+    
     void rollbackQuietly();
 
     void close();

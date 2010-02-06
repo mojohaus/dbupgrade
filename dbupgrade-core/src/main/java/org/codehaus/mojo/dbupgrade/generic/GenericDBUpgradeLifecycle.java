@@ -29,7 +29,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  * the License.
  */
 
-
 /**
  * Incremental Database upgrade implementation, capable of understanding both java and sql format
  * Original source is from http://code.google.com/p/dbmigrate
@@ -66,11 +65,11 @@ public class GenericDBUpgradeLifecycle
     {
         try
         {
-            runJavaUpgrader( config, "PreDBUpgrade" );
+            runJavaUpgrader( "PreDBUpgrade" );
 
-            this.incrementalUpgrade( config );
+            this.incrementalUpgrade();
 
-            runJavaUpgrader( config, "PostDBUpgrade" );
+            runJavaUpgrader( "PostDBUpgrade" );
         }
         catch ( SQLException e )
         {
@@ -108,15 +107,15 @@ public class GenericDBUpgradeLifecycle
             rs = stm.executeQuery( "SELECT " + config.getVersionColumnName() + " FROM " + config.getVersionTableName() );
             if ( !rs.next() )
             {
-                this.createInitialVersion( config );
+                this.createInitialVersion();
             }
         }
         catch ( SQLException e )
         {
             try
             {
-                this.createVersionTable( config );
-                this.createInitialVersion( config );
+                this.createVersionTable();
+                this.createInitialVersion();
             }
             catch ( SQLException ex )
             {
@@ -131,21 +130,21 @@ public class GenericDBUpgradeLifecycle
 
     }
 
-    private void createVersionTable( DBUpgradeConfiguration conf )
+    private void createVersionTable()
         throws SQLException
     {
-        sqlexec.execute( "create table " + conf.getVersionTableName() + " ( " + conf.getVersionColumnName()
+        sqlexec.execute( "create table " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
             + " integer )" );
     }
 
-    private void createInitialVersion( DBUpgradeConfiguration conf )
+    private void createInitialVersion()
         throws SQLException
     {
-        sqlexec.execute( "insert into " + conf.getVersionTableName() + " ( " + conf.getVersionColumnName()
+        sqlexec.execute( "insert into " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
             + " ) values ( " + config.getInitialVersion() + " )" );
     }
 
-    private void incrementalUpgrade( DBUpgradeConfiguration config )
+    private void incrementalUpgrade()
         throws DBUpgradeException
     {
         int latestVersion = 0;
@@ -170,7 +169,7 @@ public class GenericDBUpgradeLifecycle
             throw new DBUpgradeException( "Could not read " + versionResourcePath + " resource in classpath", e );
         }
 
-        while ( !internalUpgrade( latestVersion, config, getConnection() ) );
+        while ( !internalUpgrade( latestVersion ) );
 
     }
 
@@ -182,7 +181,7 @@ public class GenericDBUpgradeLifecycle
      * @return
      * @throws DBUpgradeException
      */
-    private int getVersion( int latestVersion, DBUpgradeConfiguration config, Connection connection )
+    private int getVersion( int latestVersion )
         throws DBUpgradeException
     {
         Statement statement = null;
@@ -190,7 +189,7 @@ public class GenericDBUpgradeLifecycle
         ResultSet rs = null;
         try
         {
-            statement = connection.createStatement();
+            statement = sqlexec.getConnection().createStatement();
 
             // lock the table?
 
@@ -252,7 +251,7 @@ public class GenericDBUpgradeLifecycle
      * @return false when there are more upgrade to do
      * @throws DBUpgradeException
      */
-    private boolean internalUpgrade( int latestVersion, DBUpgradeConfiguration config, Connection connection )
+    private boolean internalUpgrade( int latestVersion )
         throws DBUpgradeException
     {
 
@@ -261,9 +260,9 @@ public class GenericDBUpgradeLifecycle
 
         try
         {
-            connection.setAutoCommit( false );
+            sqlexec.getConnection().setAutoCommit( false );
 
-            int version = getVersion( latestVersion, config, connection );
+            int version = getVersion( latestVersion );
             int toVersion = version + 1;
 
             if ( version == latestVersion )
@@ -272,7 +271,7 @@ public class GenericDBUpgradeLifecycle
                 return true;
             }
 
-            DBUpgrade upgrade = this.getUpgrader( version, toVersion, config, connection );
+            DBUpgrade upgrade = this.getUpgrader( version, toVersion );
             upgrade.setSqlexec( sqlexec );
 
             try
@@ -287,7 +286,7 @@ public class GenericDBUpgradeLifecycle
                 throw new DBUpgradeException( "Failed to upgrade from version: " + version + " to " + toVersion, e );
             }
 
-            statement = connection.createStatement();
+            statement = this.getConnection().createStatement();
 
             rs = statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
                 + config.getVersionTableName() );
@@ -310,7 +309,7 @@ public class GenericDBUpgradeLifecycle
             }
 
             //all good
-            connection.commit();
+            sqlexec.commit();
         }
         catch ( SQLException e )
         {
@@ -339,7 +338,7 @@ public class GenericDBUpgradeLifecycle
         return ret + version;
     }
 
-    private DBUpgrade getJavaUpgrader( int fromVer, int toVer, DBUpgradeConfiguration config )
+    private DBUpgrade getJavaUpgrader( int fromVer, int toVer )
     {
         String fromVersion = versionToString( fromVer );
         String toVersion = versionToString( toVer );
@@ -362,7 +361,7 @@ public class GenericDBUpgradeLifecycle
         return upgrader;
     }
 
-    private DBUpgradeUsingSQL getSqlUpgrader( int fromVer, int toVer, DBUpgradeConfiguration config )
+    private DBUpgradeUsingSQL getSqlUpgrader( int fromVer, int toVer )
     {
         DBUpgradeUsingSQL upgrader = null;
 
@@ -415,16 +414,16 @@ public class GenericDBUpgradeLifecycle
      * @return
      * @throws DBUpgradeException
      */
-    private DBUpgrade getUpgrader( int version, int toVersion, DBUpgradeConfiguration config, Connection connection )
+    private DBUpgrade getUpgrader( int version, int toVersion )
     {
 
         DBUpgrade upgrader = null;
 
-        upgrader = this.getJavaUpgrader( version, toVersion, config );
+        upgrader = this.getJavaUpgrader( version, toVersion );
 
         if ( upgrader == null )
         {
-            upgrader = this.getSqlUpgrader( version, toVersion, config );
+            upgrader = this.getSqlUpgrader( version, toVersion );
         }
 
         if ( upgrader == null )
@@ -437,7 +436,7 @@ public class GenericDBUpgradeLifecycle
         return upgrader;
     }
 
-    private void runJavaUpgrader( DBUpgradeConfiguration config, String upgraderName )
+    private void runJavaUpgrader( String upgraderName )
         throws DBUpgradeException, SQLException
     {
         String className = null;
@@ -445,13 +444,13 @@ public class GenericDBUpgradeLifecycle
         Connection connection = getConnection();
 
         className = config.getPackageName() + "." + upgraderName;
-        runUpgrade( config, this.getJavaUpgrader( className ), connection );
+        runUpgrade( this.getJavaUpgrader( className ), connection );
 
         className = config.getPackageName() + "." + config.getDialect() + "." + upgraderName;
-        runUpgrade( config, this.getJavaUpgrader( className ), connection );
+        runUpgrade( this.getJavaUpgrader( className ), connection );
     }
 
-    private void runUpgrade( DBUpgradeConfiguration config, DBUpgrade upgrader, Connection connection )
+    private void runUpgrade( DBUpgrade upgrader, Connection connection )
         throws DBUpgradeException
     {
         if ( upgrader != null )

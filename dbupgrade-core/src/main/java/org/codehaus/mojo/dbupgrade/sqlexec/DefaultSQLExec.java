@@ -769,6 +769,12 @@ public class DefaultSQLExec
 
     }
 
+    public void commit()
+        throws SQLException
+    {
+        this.getConnection().commit();
+    }
+
     public void rollback()
     {
         try
