@@ -190,6 +190,7 @@ public class FileDBUpgradeLifecycle
     {
         sqlexec.execute( "create table " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
             + " varchar )" );
+        sqlexec.commit();
     }
 
     private void createInitialVersion()
@@ -197,6 +198,7 @@ public class FileDBUpgradeLifecycle
     {
         sqlexec.execute( "insert into " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
             + " ) values ( '' )" );
+        sqlexec.commit();
     }
 
 
@@ -254,7 +256,7 @@ public class FileDBUpgradeLifecycle
         {
             sqlexec.execute( upgradeFile );
             sqlexec.execute( "update version set version = '" + upgradeFileName + "'" );
-            sqlexec.getConnection().commit();
+            sqlexec.commit();
         }
         catch ( SQLException e )
         {
