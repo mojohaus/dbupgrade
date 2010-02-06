@@ -232,7 +232,7 @@ public class FileDBUpgradeLifecycle
         }
         catch ( SQLException e )
         {
-            sqlexec.roolbackQuietly();
+            sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Version row not found" );
         }
 
@@ -258,7 +258,7 @@ public class FileDBUpgradeLifecycle
         }
         catch ( SQLException e )
         {
-            sqlexec.roolbackQuietly();
+            sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Unable to run upgrade on: " + upgradeFile, e );
         }
     }

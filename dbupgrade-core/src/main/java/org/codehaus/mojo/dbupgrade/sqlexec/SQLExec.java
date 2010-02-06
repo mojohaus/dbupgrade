@@ -32,10 +32,12 @@ public interface SQLExec
     Connection getConnection()
         throws SQLException;
 
-    void rollback()
-        throws SQLException;
+    /**
+     * throws RuntimeException
+     */
+    void rollback();
 
-    void roolbackQuietly();
+    void rollbackQuietly();
 
     void close();
 

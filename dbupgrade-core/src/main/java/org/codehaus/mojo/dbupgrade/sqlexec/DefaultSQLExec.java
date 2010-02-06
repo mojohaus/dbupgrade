@@ -43,7 +43,6 @@ import org.codehaus.plexus.util.StringUtils;
  * the License.
  */
 
-
 /**
  * Executes SQL against a database. Extracted from sql-maven-plugin 1.3
  */
@@ -51,12 +50,11 @@ public class DefaultSQLExec
     implements SQLExec
 {
     private SQLExecConfig config;
-    
-    public DefaultSQLExec ( SQLExecConfig config )
+
+    public DefaultSQLExec( SQLExecConfig config )
     {
         this.config = config;
     }
-    
 
     // //////////////////////////////// Internal properties//////////////////////
 
@@ -83,7 +81,7 @@ public class DefaultSQLExec
     {
         return totalStatements;
     }
-    
+
     /**
      * Database connection
      */
@@ -103,7 +101,6 @@ public class DefaultSQLExec
         // transactions.add( t );
         return t;
     }
-
 
     /**
      * Add sql command to transactions list.
@@ -333,8 +330,10 @@ public class DefaultSQLExec
                 }
             }
 
-            if ( ( config.getDelimiterType().equals( DelimiterType.NORMAL ) && sql.toString().endsWith( config.getDelimiter() ) )
-                || ( config.getDelimiterType().equals( DelimiterType.ROW ) && line.trim().equals( config.getDelimiter() ) ) )
+            if ( ( config.getDelimiterType().equals( DelimiterType.NORMAL ) && sql.toString()
+                .endsWith( config.getDelimiter() ) )
+                || ( config.getDelimiterType().equals( DelimiterType.ROW ) && line.trim()
+                    .equals( config.getDelimiter() ) ) )
             {
                 execSQL( sql.substring( 0, sql.length() - config.getDelimiter().length() ), out );
                 sql.replace( 0, sql.length(), "" );
@@ -595,11 +594,8 @@ public class DefaultSQLExec
             {
                 if ( config.getOutputFile() != null )
                 {
-                    out = new PrintStream(
-                                           new BufferedOutputStream(
-                                                                     new FileOutputStream(
-                                                                                           config.getOutputFile().getAbsolutePath(),
-                                                                                           config.isAppend() ) ) );
+                    out = new PrintStream( new BufferedOutputStream( new FileOutputStream( config.getOutputFile()
+                        .getAbsolutePath(), config.isAppend() ) ) );
                 }
 
                 // Process all transactions
@@ -628,9 +624,10 @@ public class DefaultSQLExec
         }
         catch ( SQLException e )
         {
-            if ( !config.isAutocommit() && conn != null && SQLExecConfig.ON_ERROR_ABORT.equalsIgnoreCase( config.getOnError() ) )
+            if ( !config.isAutocommit() && conn != null
+                && SQLExecConfig.ON_ERROR_ABORT.equalsIgnoreCase( config.getOnError() ) )
             {
-                this.roolbackQuietly();
+                this.rollbackQuietly();
             }
             throw new SQLException( e.getMessage(), e );
         }
@@ -639,7 +636,8 @@ public class DefaultSQLExec
             DbUtils.closeQuietly( statement );
         }
 
-        if ( SQLExecConfig.ON_ERROR_ABORT_AFTER.equalsIgnoreCase( config.getOnError() ) && totalStatements != successfulStatements )
+        if ( SQLExecConfig.ON_ERROR_ABORT_AFTER.equalsIgnoreCase( config.getOnError() )
+            && totalStatements != successfulStatements )
         {
             throw new SQLException( "Some SQL statements failed to execute" );
         }
@@ -772,12 +770,6 @@ public class DefaultSQLExec
     }
 
     public void rollback()
-        throws SQLException
-    {
-        this.getConnection().rollback();
-    }
-
-    public void roolbackQuietly()
     {
         try
         {
@@ -785,7 +777,20 @@ public class DefaultSQLExec
         }
         catch ( SQLException e )
         {
-            
+            //unexpected exception, throw runtime to get more attention
+            throw new RuntimeException( "Unable to rollback upgrade." );
+        }
+    }
+
+    public void rollbackQuietly()
+    {
+        try
+        {
+            this.getConnection().rollback();
+        }
+        catch ( SQLException e )
+        {
+
         }
     }
 

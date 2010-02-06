@@ -13,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
-import org.codehaus.mojo.dbupgrade.Util;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 
 /*
@@ -203,7 +202,7 @@ public class GenericDBUpgradeLifecycle
             catch ( SQLException e )
             {
                 //postgres requires this rollback
-                Util.rollback( connection );
+                sqlexec.rollback();
 
                 //version table is not available ,assume version 0
                 version = 0;
@@ -234,7 +233,7 @@ public class GenericDBUpgradeLifecycle
         }
         catch ( SQLException e )
         {
-            Util.rollback( connection );
+            sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Could not execute version query", e );
         }
         finally
@@ -284,7 +283,7 @@ public class GenericDBUpgradeLifecycle
             catch ( Exception e )
             {
                 log.error( e );
-                Util.rollback( connection );
+                sqlexec.rollbackQuietly();
                 throw new DBUpgradeException( "Failed to upgrade from version: " + version + " to " + toVersion, e );
             }
 
@@ -295,7 +294,7 @@ public class GenericDBUpgradeLifecycle
 
             if ( !rs.next() )
             {
-                Util.rollback( connection );
+                sqlexec.rollbackQuietly();
                 throw new DBUpgradeException( "Unable to look up version info in database after upgrade" );
             }
             else
@@ -304,7 +303,7 @@ public class GenericDBUpgradeLifecycle
 
                 if ( currentDBVersion != toVersion )
                 {
-                    Util.rollback( connection );
+                    sqlexec.rollbackQuietly();
                     throw new DBUpgradeException( "Version in database is: " + currentDBVersion
                         + " which is not corrected incremented after upgrading from: " + currentDBVersion );
                 }
@@ -316,7 +315,7 @@ public class GenericDBUpgradeLifecycle
         catch ( SQLException e )
         {
             //more likely version table was not created during the first upgrade at version 0
-            Util.rollback( connection );
+            sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Failed to upgrade due to database exception", e );
         }
         finally
@@ -464,7 +463,7 @@ public class GenericDBUpgradeLifecycle
             }
             catch ( Exception e )
             {
-                Util.rollback( connection );
+                sqlexec.rollbackQuietly();
                 throw new DBUpgradeException( "Unable to perform update: ", e );
             }
         }
