@@ -55,12 +55,30 @@ public class FileDBUpgradeExecutorTest
     public void testGoodDBUpgradeExecutorTest()
         throws Exception
     {
+        //version 1
         config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
         assertEquals( 2, upgrader.upgrade() );
 
-        //do it one more time
+        //version 1.1
         upgrader = new FileDBUpgradeLifecycle( config );
+        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst"  ) );
+        assertEquals( 1, upgrader.upgrade() );
+        
+        //version 1.1 again
+        upgrader = new FileDBUpgradeLifecycle( config );
+        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst"  ) );
         assertEquals( 0, upgrader.upgrade() );
+
+        //version 2
+        upgrader = new FileDBUpgradeLifecycle( config );
+        config.setUpgradeFile( new File( dataDirectory, "version-2.lst"  ) );
+        assertEquals( 2, upgrader.upgrade() );
+
+        //version 2
+        upgrader = new FileDBUpgradeLifecycle( config );
+        config.setUpgradeFile( new File( dataDirectory, "version-2.lst"  ) );
+        assertEquals( 0, upgrader.upgrade() );
+        
     }
 
     public void testMissingDBUpgraderTest()

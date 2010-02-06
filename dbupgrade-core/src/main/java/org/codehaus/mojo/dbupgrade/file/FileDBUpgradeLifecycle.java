@@ -81,7 +81,7 @@ public class FileDBUpgradeLifecycle
                 while ( line != null )
                 {
                     line = line.trim();
-                    if ( StringUtils.isBlank( line ) )
+                    if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
                     {
                         continue;
                     }
@@ -90,8 +90,6 @@ public class FileDBUpgradeLifecycle
                     {
                         break; //so that we can continue with upgrade
                     }
-
-                    upgrade( config.getWorkingDirectory(), line.trim() );
 
                     line = reader.readLine();
                 }
