@@ -3,220 +3,201 @@
  ------
  Dan T. Tran
  ------
- 2008-09-15
+ 2010-03-15
  ------
 
 
-TrueZIP Maven Plugin
+Database Upgrade Maven Plugin
 
-  This plugin uses {{{https://truezip.dev.java.net/}TrueZIP}} which treats archives as a virtual file systems.  
-  Each archive file is considered as a directory of a file system. 
+  The database upgrade consists of an internal upgrade lifecycle and a set of incremental upgrades provided by the user.
+
+Generic Upgrade
+
+  This upgrade lets you hook up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL 
+  files through java resources to upgrade multiple database types of your choice. After each executed incremental upgrade, its 
+  associated version is stored in your configurable database version table. DBUpgrade uses database version's value to pickup the next 
+  upgrade in your java resource.
+
+* Generic Upgrade Lifecycle
+
+	Here are a sequence of actions taken during this upgrade lifcycle:
+	
+	* Validates JDBC connection.
+	
+	* Creates version table and its data row with version column set to 0 if not available.
+	
+	* Lookups global java pre-upgrader and executes it if available. The java pre-upgrader must implement DBUpgrade interface.
+
+	* Retrieves resource version under your package/version.properties resource.
+	
+	* Retrieves database version and uses it to lookup next available incremental upgrade (see next).
+	
+	* Incrementally looks up the upgrade starting with the database version + 1 and execute them one by one until
+	  the upgrade version reaches the resource version . The upgrade must locate either at
+	  root of your database upgrade java package or under your package/dialect resource.  The upgrade can be either 
+	  a Java implementation of DBUpgrader interface or a SQL script. 
+	
+	* Lookup global java post-upgrader and executed if available. The java post-upgrader must implement DBUpgrade interface.
+	
+
+** Generic Upgrade Setup
+   
+   * Setting up your maven project
+   
+------------------------------------
+   src/main/java/your/upgrade/package/YourPreUpgrade.java                         optional
+   src/main/java/your/upgrade/package/YourPostUpgrade.java                        optional
+   src/main/java/your/upgrade/package/YourUpgrade3_4.java                         global to all database types
+   src/main/java/your/upgrade/package/yourdbtype1/YourUpgrade2_3.java 
+   src/main/java/your/upgrade/package/yourdbtype2/YourUpgrade2_3.java 
+
+   src/main/resources/your/upgrade/package/version.properties                     set version=5
+   src/main/resources/your/upgrade/package/YourUpgade4_5.sql                      global to all database types
+   
+   src/main/resources/your/upgrade/package/yourdbtype1/YourUpgade0_1.sql
+   src/main/resources/your/upgrade/package/yourdbtype1/YourUpgade1_2.sql
+   src/main/resources/your/upgrade/package/yourdbtype1/YourUpgade3_4.sql          ignore
+
+   src/main/resources/your/upgrade/package/yourdbtype2/YourUpgade0_1.sql
+   src/main/resources/your/upgrade/package/yourdbtype2/YourUpgade1_2.sql
+-------------------------------------
+
+   The above directory setup will cause the upgrade to execute the following sequence for yourdbtype1
+   
+------------------------------------
+   your.upgrade.package.YourPreUpgrade.class
+   your.upgrade.package.yourdbtype1.YourUpgrade0_1.sql
+   your.upgrade.package.yourdbtype1.YourUpgrade1_2.sql
+   your.upgrade.package.YourUpgrade2_3.class
+   your.upgrade.package.yourdbtype1.YourUpgrade3_4.sql
+   your.upgrade.package.YourUpgrade4_5.sql
+------------------------------------
+
+  * Setting up your plugin configuration
   
-  Similar to {{{http://maven.apache.org/plugins/maven-assembly-plugin} assembly}} and  
-  {{{http://maven.apache.org/plugins/maven-clean-plugin}clean}} plugins, 
-  {{{http://maven.apache.org/shared/file-management/apidocs/index.html} FileSet}} is used extensively
-  to manipulate file system type actions.
-
-  The following contains brief examples on how to use the truezip goals.   
-  
-* Remove
-
-  The <<remove>> goal can remove files from an existing archive. The below example show
-  how to remove any file with pom.properies under <<maven>> directory of the ${archive}
-
---------------------------
-  <build>
+------------------------------------
+  <plugin>
     [...]
-    <plugins>
-      [...]
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>truezip-maven-plugin</artifactId>
-        <version>1.0-beta-4</version>
-        <executions>
-          <execution>
-            <id>remove-a-file</id>
-            <goals>
-              <goal>remove</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <fileset>
-                <!-- note how the archive is treated a normal file directory -->
-                <directory>${archive}/META-INF/maven</directory>
-                <includes>
-                  <include>**/pom.properties</include>
-                </includes>
-              </fileset>
-            </configuration>
-          </execution>
-          [...]
-        </executions>
-      </plugin>
-      [...]
-    </plugins>
-  </build>
-  
-  <properties>
-    <archive>path.to.a.archive</archive>
-  </properties>
---------------------------
-
-* Copy
-
-  The <<copy>> goal can copy files in and out of the archive. The bellow example shows multiple executions:
-  
-  * Copy files from the archive to a real file system with option to rename the file on the fly.
-    This is similar maven-assembly-plugin's <files> configuration. 
-  
-  * Copy files from the archive to a real file system using FileSet interface.
-  
-  * Copy files from the real file system to the archive.
-
-  []  
-
---------------------------
-  <build>
-    [...]
-    <plugins>
-      [...]
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>truezip-maven-plugin</artifactId>
-        <version>1.0-beta-4</version>
-        <executions>
-          <execution>
-            <id>copy-out-files</id>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <files>
-                <file>
-                  <source>${archive}/META-INF/maven/${project.groupId}/${project.artifactId}/pom.properties</source>
-                  <outputDirectory>${project.build.directory}/copy-file</outputDirectory>
-                </file>
-                <file>
-                  <source>${archive}/META-INF/maven/${project.groupId}/${project.artifactId}/pom.xml</source>
-                  <outputDirectory>${project.build.directory}/copy-file</outputDirectory>
-                  <destName>pom.with.xml.extension</destName>
-                </file>
-              </files>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>copy-out-fileset</id>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <fileset>
-                <directory>${archive}</directory>
-                <excludes>
-                  <exclude>**/pom.properties</exclude>
-                </excludes>
-                <outputDirectory>${project.build.directory}/copy-fileset</outputDirectory>
-              </fileset>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>copy-into</id>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <fileset>
-                <directory>${basedir}</directory>
-                <includes>
-                  <include>*</include>
-                </includes>
-                <outputDirectory>${archive}/copy-into</outputDirectory>
-              </fileset>
-            </configuration>
-          </execution>
+    <executions>
+      <execution>
+        [...]
+        <goals>
+          <goal>generic-upgrade</goal>
+        </goals>
+        <configuration>
+          <dialect>${dialect}</dialect>
+          [Your SQL configuration, see SQLExec maven plugin for details]
+          <packageName>com.your.comp.app.upgrade.package</package>
           
-      </plugin>
-      [...]
-    </plugins>
-  </build>
+          <!-- the following are optional since they have default value -->
+          <versionResourceName>version.properties</versionResourceName>
+          <upgraderPrefix>DBUpgrader</upgraderPrefix>
+          <versionTableName>version</versionTableName>
+          <versionColumnName>version</versionColumnName>
+        </configuration>
+      <execution>
+    </executions>
+  </plugin>
+  [...]
   
-  <properties>
-    <archive>path.to.a.archive</archive>
-  </properties>
---------------------------
+  <profiles>
+    <profile>
+      <id>yourdbtype1</id>
+      <properties>
+        <dialect>yourdbtyp1</dialect>
+      </properties>
+    </profile>
+    <profile>
+      <id>yourdbtype2</id>
+      <properties>
+        <dialect>yourdbtyp2</dialect>
+      </properties>
+    </profile>
+  </profiles>
+-------------------------------------
+  
+* File List Upgrade
 
+    File upgrade lets you hook up your SQL upgrade scripts in increamentally upgrade your application database schema and data. 
+    After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
+    your database version's value ( a SQL script name ) to pickup the next upgrade script.
 
-* Pack/unpack from command line
+* File List Upgrade Lifecycle
 
-  Use <<cp>> goal to copy an archive/directory to another archive/directory.
-  
-  * The following example shows how to unpack an archive to a directory
-  
--------------------------------
-mvn truezip:cp -Dfrom=apache-maven-2.2.1-bin.tar.gz -Dto=.
--------------------------------
+	Here are a sequence of action taken during this upgrade lifcycle:
+	
+	* Validates JDBC connection.
+	
+	* Creates version table and its data row with varchar type version column set to empty if not available.
+	
+	* Loads up the file list via a user provided file which contains an order of sql files to be executed.
+	
+	* Retrieves database version and uses it to lookup next available incremental upgrade in the file list. (See next)
+	
+	* Walks down the file list until reaches the script name which matches with the database version. Use the next script name 
+	  in the list to start the incremental upgrade until end of list.  After each upgrade, update the database version to the 
+	  script name.
 
-  * The following example shows how to pack a directory to an archive
-  
--------------------------------
-mvn truezip:cp -Dfrom=apache-maven-2.2.1 -Dto=apache-maven-2.2.1.zip
--------------------------------
+    []
+    
+    
+   * Setting up your script directory
+   
+------------------------------------
+   src/upgrade/filelist.txt
+   src/upgrade/major-version-1/file1.sql
+   src/upgrade/major-version-1/file1.sql
+   [...]
+   src/upgrade/major-version-n/file1.sql
+   src/upgrade/major-version-n/file1.sql
+-------------------------------------
 
-  * The following example shows how to transfer an archive to another archive
+   * Setting up your file list
+   
+   Base on the above directory structure, your file list contents are:
+   
+-------------------------------------
+   major-version-1/file1.sql
+   major-version-1/file2.sql
+   [...]
+   major-version-2/file1.sql
+   major-version-2/file2.sql
+------------------------------------
+
+  * Setting up your plugin configuration
   
--------------------------------
-mvn truezip:cp -Dfrom=apache-maven-2.2.1-bin.tar.gz -Dto=apache-maven-2.2.1-bin.zip
--------------------------------
+------------------------------------
+  <plugin>
+    [...]
+    <executions>
+      <execution>
+        [...]
+        <goals>
+          <goal>filelist-upgrade</goal>
+        </goals>
+        <configuration>
+          [Your SQL configuration, see SQLExec maven plugin for details]
+          <scriptDirectory>${basedir}/src/upgrade</scriptDirectory>          
+          <upgradeFile>${basedir}/src/upgrade/filelist.txt</upgradeFile>          
+          <!-- the following are optional since they have default value -->
+          <versionTableName>version</versionTableName>
+          <versionColumnName>version</versionColumnName>
+        </configuration>
+      <execution>
+    </executions>
+  </plugin>
+  [...]
+    
+* Integration with Java Application
+
+  To integrate with your java application
   
+  1. Construct the DBUpgradeConfigution of our choice ( generic or file ).
+  
+  2. Construct FileDBUpgradeLifeCycle or GenericDBUpgradeLifeCycle
+  
+  3. Invoke the upgrade interface.
   
   []
   
-  
-* Move
-
-  The <<move>> goal can move a file in, out, or with in the archive. The below examples 
-  who to move an archive's file to another location in the archive. Note that the locacation
-  can be outside for archive as well.
-  
--------------------------------
-  <build>
-    [...]
-    <plugins>
-      [...]
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>truezip-maven-plugin</artifactId>
-        <version>1.0-beta-4</version>
-        <executions>
-          <execution>
-            <id>move-a-file</id>
-            <goals>
-              <goal>move</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <!-- move a archive file to another directory in the same archive -->
-              <from>${archive}/META-INF/MANIFEST.MF</from>
-              <to>${archive}/META-INF2/MANIFEST.MF</to>
-              
-              <!-- use this if you want to move it out of the archive -->
-              <!--to>${project.build.directory}/MANIFEST.MF</to-->
-            </configuration>
-          </execution>
-          [...]
-        </executions>
-      </plugin>
-      [...]
-    </plugins>
-  </build>
-  
-  <properties>
-    <archive>path.to.a.archive</archive>
-  </properties>
---------------------------
-  
+  * See JUnit test for samples  
