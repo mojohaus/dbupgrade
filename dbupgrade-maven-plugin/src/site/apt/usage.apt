@@ -147,10 +147,11 @@ Generic Upgrade
 ------------------------------------
    src/upgrade/filelist.txt
    src/upgrade/major-version-1/file1.sql
-   src/upgrade/major-version-1/file1.sql
+   src/upgrade/major-version-1/file2.sql
    [...]
    src/upgrade/major-version-n/file1.sql
-   src/upgrade/major-version-n/file1.sql
+   src/upgrade/major-version-n/file2.sql
+   src/upgrade/major-version-n/file3.sql
 -------------------------------------
 
    * Setting up your file list
@@ -163,6 +164,7 @@ Generic Upgrade
    [...]
    major-version-2/file1.sql
    major-version-2/file2.sql
+   major-version-2/file3.sql
 ------------------------------------
 
   * Setting up your plugin configuration
