@@ -24,7 +24,7 @@ public class DBUpgradeConfiguration
  
     private File upgradeFile;
     
-    private File workingDirectory;
+    private File scriptDirectory;
 
     /**
      * Table name to be used to look for version for
@@ -79,14 +79,14 @@ public class DBUpgradeConfiguration
         this.upgradeFile = upgradeFile;
     }
 
-    public File getWorkingDirectory()
+    public File getScriptDirectory()
     {
-        return workingDirectory;
+        return scriptDirectory;
     }
 
-    public void setWorkingDirectory( File workingDirectory )
+    public void setScriptDirectory( File dir )
     {
-        this.workingDirectory = workingDirectory;
+        this.scriptDirectory = dir;
     }
     
 }

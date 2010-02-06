@@ -21,6 +21,7 @@ import junit.framework.TestCase;
  */
 
 /**
+ * 
  * @author dan.tran
  *
  */
@@ -43,7 +44,7 @@ public class FileDBUpgradeExecutorTest
         config.setUrl( "jdbc:hsqldb:mem:target/testdb2s" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
-        config.setWorkingDirectory( dataDirectory );
+        config.setScriptDirectory( dataDirectory );
         upgrader = new FileDBUpgradeLifecycle( config );
         
     }

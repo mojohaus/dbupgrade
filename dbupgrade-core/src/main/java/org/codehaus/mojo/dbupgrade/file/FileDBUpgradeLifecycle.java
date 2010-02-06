@@ -31,8 +31,9 @@ import org.codehaus.plexus.util.StringUtils;
  */
 
 /**
- * Incremental Database upgrade implementation,
- * @author dan.tran
+ * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list of SQL script paths ). 
+ * After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
+ * database version's value ( a SQL script name ) to pickup the next upgrade script, if any.
  */
 public class FileDBUpgradeLifecycle
     implements DBUpgradeLifecycle
@@ -106,7 +107,7 @@ public class FileDBUpgradeLifecycle
                     continue;
                 }
 
-                upgrade( config.getWorkingDirectory(), line.trim() );
+                upgrade( config.getScriptDirectory(), line.trim() );
                 upgraderCount++;
 
                 line = reader.readLine();

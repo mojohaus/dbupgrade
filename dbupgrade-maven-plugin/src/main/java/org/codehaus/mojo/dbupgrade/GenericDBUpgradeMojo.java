@@ -19,7 +19,9 @@ import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeLifecycle;
  */
 
 /**
- * Upgrade incrementally Using Generic Method
+ * This class hooks up user's global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL 
+    files through java resources. Each incremental upgrade has an associate version number to be stored in a configurable
+    database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java resource, if any.
  * @goal generic-upgrade
  * @requiresProject false
  */

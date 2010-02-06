@@ -30,7 +30,10 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  */
 
 /**
- * Incremental Database upgrade implementation, capable of understanding both java and sql format
+ * This class hooks up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL 
+ * files through java resources. Each incremental upgrade has an associate version number to be stored in a configurable
+ * database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java resource, if any.
+ *   
  * Original source is from http://code.google.com/p/dbmigrate
  * @author dan.tran
  */
