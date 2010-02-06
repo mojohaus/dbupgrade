@@ -16,7 +16,7 @@
   <artifactId>dbupgrade-maven-plugin</artifactId>
   
   <inceptionYear>2010</inceptionYear>
-  
+
   <dependencies>
 
     <dependency>
@@ -49,9 +49,6 @@
       <artifactId>dbupgrade-core</artifactId>
     </dependency>    
 
-
   </dependencies>
-  
-  
   
 </project>

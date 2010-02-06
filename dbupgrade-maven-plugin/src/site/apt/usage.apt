@@ -71,6 +71,7 @@ Generic Upgrade
    your.upgrade.package.YourUpgrade2_3.class
    your.upgrade.package.yourdbtype1.YourUpgrade3_4.sql
    your.upgrade.package.YourUpgrade4_5.sql
+   your.upgrade.package.YourPostUpgrade.class
 ------------------------------------
 
   * Setting up your plugin configuration
