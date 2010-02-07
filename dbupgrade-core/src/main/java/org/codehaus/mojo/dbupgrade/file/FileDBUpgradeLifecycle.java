@@ -45,11 +45,6 @@ public class FileDBUpgradeLifecycle
 
     private String initialDBVersion = null;
 
-    public void setSqlexec( DefaultSQLExec sqlexec )
-    {
-        this.sqlexec = sqlexec;
-    }
-
     public FileDBUpgradeLifecycle( DBUpgradeConfiguration config )
         throws DBUpgradeException
     {

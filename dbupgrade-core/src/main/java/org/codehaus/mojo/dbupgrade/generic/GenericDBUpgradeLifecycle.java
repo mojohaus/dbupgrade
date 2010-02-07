@@ -47,11 +47,6 @@ public class GenericDBUpgradeLifecycle
 
     private DBUpgradeConfiguration config;
 
-    public void setSqlexec( DefaultSQLExec sqlexec )
-    {
-        this.sqlexec = sqlexec;
-    }
-
     public GenericDBUpgradeLifecycle( DBUpgradeConfiguration config )
         throws DBUpgradeException
     {
@@ -151,27 +146,7 @@ public class GenericDBUpgradeLifecycle
     private int  incrementalUpgrade()
         throws DBUpgradeException
     {
-        int latestVersion = 0;
-
-        String packageName = config.getPackageName();
-        String versionResourcePath = packageName.replace( '.', '/' ) + "/" + config.getVersionResourceName();
-
-        InputStream versionResource = this.getClass().getClassLoader().getResourceAsStream( versionResourcePath );
-        if ( versionResource == null )
-        {
-            throw new DBUpgradeException( "Could not find " + versionResourcePath + " resource in classpath" );
-        }
-
-        try
-        {
-            Properties properties = new Properties();
-            properties.load( versionResource );
-            latestVersion = Integer.parseInt( properties.getProperty( "version" ) );
-        }
-        catch ( IOException e )
-        {
-            throw new DBUpgradeException( "Could not read " + versionResourcePath + " resource in classpath", e );
-        }
+        int latestVersion = this.getResourceVersion();
 
         int upgradeCount = 0;
         while ( !internalUpgrade( latestVersion ) )
@@ -180,6 +155,34 @@ public class GenericDBUpgradeLifecycle
         }
 
         return upgradeCount;
+    }
+    
+    private int getResourceVersion()
+        throws DBUpgradeException
+    {
+        int version = 0;
+
+        String packageName = config.getPackageName();
+        String versionResourcePath = packageName.replace( '.', '/' ) + "/" + config.getVersionResourceName();
+
+        InputStream versionResourceStream = this.getClass().getClassLoader().getResourceAsStream( versionResourcePath );
+        if ( versionResourceStream == null )
+        {
+            throw new DBUpgradeException( "Could not find " + versionResourcePath + " resource in classpath" );
+        }
+
+        try
+        {
+            Properties properties = new Properties();
+            properties.load( versionResourceStream );
+            version = Integer.parseInt( properties.getProperty( "version" ) );
+        }
+        catch ( IOException e )
+        {
+            throw new DBUpgradeException( "Could not read " + versionResourcePath + " resource in classpath", e );
+        }    
+        
+        return version;
     }
 
     /**
