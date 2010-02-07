@@ -203,7 +203,19 @@ public class DefaultSQLExec
         }
 
         Properties info = new Properties();
+        
         info.put( "user", config.getUsername() );
+        
+        if ( "net.sourceforge.jtds.jdbc.Driver".equals( config.getDriver() ) )
+        {
+            String[] tokens = StringUtils.split( config.getUsername(), "\\" );
+
+            if ( tokens != null && tokens.length == 2 )
+            {
+                info.put( "user", tokens[1] );
+                info.put( "domain", tokens[0] );
+            }
+        }
 
         if ( !config.isEnableAnonymousPassword() )
         {
