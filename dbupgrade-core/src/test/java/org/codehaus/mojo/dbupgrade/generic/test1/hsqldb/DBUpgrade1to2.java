@@ -2,6 +2,7 @@ package org.codehaus.mojo.dbupgrade.generic.test1.hsqldb;
 
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -20,12 +21,12 @@ import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
 public class DBUpgrade1to2
     extends AbstractDBUpgrade
 {
-    public void upgradeDB( String dialect )
+    public void upgradeDB( SQLExec sqlexec, String dialect )
         throws DBUpgradeException
     {
         System.out.println( this.getClass().getName() );
         String sql = "update version set version = 2";
-        executeSQL( sql );
+        executeSQL( sqlexec, sql );
     }
 
 }

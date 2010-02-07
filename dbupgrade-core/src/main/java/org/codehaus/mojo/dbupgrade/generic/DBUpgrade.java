@@ -27,7 +27,5 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
  */
 public interface DBUpgrade
 {
-    void upgradeDB( String dialect ) throws DBUpgradeException;
-    
-    void setSqlexec( SQLExec sqlExec );
+    void upgradeDB( SQLExec sqlExec, String dialect ) throws DBUpgradeException;
 }

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -38,7 +39,7 @@ public class DBUpgradeUsingSQLNoParser
         this.sqlResouceName = sqlResourceName;
     }
 
-    public void upgradeDB( String dialect )
+    public void upgradeDB( SQLExec sqlexec, String dialect )
         throws DBUpgradeException
     {
         InputStream is = null;

@@ -2,6 +2,7 @@ package org.codehaus.mojo.dbupgrade.generic.test1.hsqldb;
 
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -20,13 +21,13 @@ import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
 public class PreDBUpgrade
     extends AbstractDBUpgrade
 {
-    public void upgradeDB( String dialect )
+    public void upgradeDB( SQLExec sqlexec, String dialect )
         throws DBUpgradeException
     {
         try
         {
-            this.executeSQL( "create table version ( version integer ) " );
-            this.executeSQL( "insert into version values ( '-2' )" );
+            this.executeSQL( sqlexec, "create table version ( version integer ) " );
+            this.executeSQL( sqlexec, "insert into version values ( '-2' )" );
         }
         catch ( Exception e )
         {

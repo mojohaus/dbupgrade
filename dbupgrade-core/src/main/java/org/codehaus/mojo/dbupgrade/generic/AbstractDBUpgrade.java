@@ -24,14 +24,7 @@ public abstract class AbstractDBUpgrade
     implements DBUpgrade
 {
 
-    protected SQLExec sqlexec;
-
-    public void setSqlexec( SQLExec sqlexec )
-    {
-        this.sqlexec = sqlexec;
-    }
-
-    protected void executeSQL( InputStream istream )
+    protected void executeSQL( SQLExec sqlexec, InputStream istream )
         throws DBUpgradeException
     {
         try
@@ -44,7 +37,7 @@ public abstract class AbstractDBUpgrade
         }
     }
 
-    protected void executeSQL( String sqlString )
+    protected void executeSQL( SQLExec sqlexec, String sqlString )
         throws DBUpgradeException
     {
         try
@@ -59,19 +52,20 @@ public abstract class AbstractDBUpgrade
 
     /**
      * Helper method to run a SQL resource file in the same package of a class with option to commit
+     * @param sqlexec
      * @param clazz
      * @param name
      * @param commit
      * @throws DBUpgradeException
      */
-    protected void executeSQL( Class<?> clazz, String dialect, boolean commit )
+    protected void executeSQL( SQLExec sqlexec, Class<?> clazz, String dialect, boolean commit )
         throws DBUpgradeException
     {
         String packageName = clazz.getPackage().getName().replace( ".", "/" );
         String resourceName = packageName + "/" + dialect;
 
         DBUpgradeUsingSQL dbupgrader = new DBUpgradeUsingSQL( resourceName );
-        dbupgrader.upgradeDB( dialect );
+        dbupgrader.upgradeDB( sqlexec, dialect );
 
         try
         {
@@ -88,19 +82,20 @@ public abstract class AbstractDBUpgrade
 
     /**
      * Helper method to run a SQL resource file in the same package of a class with option to commit
+     * @param sqlexec
      * @param clazz
      * @param name
      * @param commit
      * @throws DBUpgradeException
      */
-    protected void executeSQLNoParser( Class<?> clazz, String dialect, boolean commit )
+    protected void executeSQLNoParser( SQLExec sqlexec, Class<?> clazz, String dialect, boolean commit )
         throws DBUpgradeException
     {
         String packageName = clazz.getPackage().getName().replace( ".", "/" );
         String resourceName = packageName + "/" + dialect;
 
         DBUpgrade dbupgrader = new DBUpgradeUsingSQLNoParser( resourceName );
-        dbupgrader.upgradeDB( dialect );
+        dbupgrader.upgradeDB( sqlexec, dialect );
 
         try
         {

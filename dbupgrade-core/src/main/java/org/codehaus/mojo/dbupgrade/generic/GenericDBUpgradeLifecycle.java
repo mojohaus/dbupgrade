@@ -281,12 +281,11 @@ public class GenericDBUpgradeLifecycle
             }
 
             DBUpgrade upgrade = this.getUpgrader( version, toVersion );
-            upgrade.setSqlexec( sqlexec );
 
             try
             {
                 log.info( "Database Upgrade: " + config.getDialect() + ":" + upgrade );
-                upgrade.upgradeDB( config.getDialect() );
+                upgrade.upgradeDB( sqlexec, config.getDialect() );
             }
             catch ( Exception e )
             {
@@ -464,7 +463,7 @@ public class GenericDBUpgradeLifecycle
         {
             try
             {
-                upgrader.upgradeDB( config.getDialect() );
+                upgrader.upgradeDB( sqlexec, config.getDialect() );
                 sqlexec.commit();
             }
             catch ( Exception e )

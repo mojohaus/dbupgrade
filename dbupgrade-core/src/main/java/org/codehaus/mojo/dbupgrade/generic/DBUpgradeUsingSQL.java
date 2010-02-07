@@ -3,6 +3,7 @@ package org.codehaus.mojo.dbupgrade.generic;
 import java.sql.SQLException;
 
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -28,12 +29,12 @@ public class DBUpgradeUsingSQL
         this.sqlResouceName = sqlResourceName;
     }
 
-    public void upgradeDB( String dialect )
+    public void upgradeDB( SQLExec sqlexec, String dialect )
         throws DBUpgradeException
     {
         try
         {
-            this.sqlexec.execute( DBUpgradeUsingSQL.class.getClassLoader().getResourceAsStream( this.sqlResouceName ) );
+            sqlexec.execute( DBUpgradeUsingSQL.class.getClassLoader().getResourceAsStream( this.sqlResouceName ) );
         }
         catch ( SQLException e )
         {
