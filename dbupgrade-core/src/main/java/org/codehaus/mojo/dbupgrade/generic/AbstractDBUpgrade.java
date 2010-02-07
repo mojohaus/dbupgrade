@@ -1,7 +1,6 @@
 package org.codehaus.mojo.dbupgrade.generic;
 
 import java.io.InputStream;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
@@ -59,14 +58,13 @@ public abstract class AbstractDBUpgrade
     }
 
     /**
-     * run a sql resource file in the same package of a class of option commit
-     * @param c
+     * Helper method to run a SQL resource file in the same package of a class with option to commit
      * @param clazz
      * @param name
      * @param commit
      * @throws DBUpgradeException
      */
-    protected void executeSQL( Connection c, Class<?> clazz, String dialect, boolean commit )
+    protected void executeSQL( Class<?> clazz, String dialect, boolean commit )
         throws DBUpgradeException
     {
         String packageName = clazz.getPackage().getName().replace( ".", "/" );
@@ -79,7 +77,7 @@ public abstract class AbstractDBUpgrade
         {
             if ( commit )
             {
-                c.commit();
+                sqlexec.commit();
             }
         }
         catch ( SQLException e )
@@ -88,7 +86,14 @@ public abstract class AbstractDBUpgrade
         }
     }
 
-    protected void executeSQLNoParser( Connection c, Class<?> clazz, String dialect, boolean commit )
+    /**
+     * Helper method to run a SQL resource file in the same package of a class with option to commit
+     * @param clazz
+     * @param name
+     * @param commit
+     * @throws DBUpgradeException
+     */
+    protected void executeSQLNoParser( Class<?> clazz, String dialect, boolean commit )
         throws DBUpgradeException
     {
         String packageName = clazz.getPackage().getName().replace( ".", "/" );
@@ -101,7 +106,7 @@ public abstract class AbstractDBUpgrade
         {
             if ( commit )
             {
-                c.commit();
+                sqlexec.commit();
             }
         }
         catch ( SQLException e )

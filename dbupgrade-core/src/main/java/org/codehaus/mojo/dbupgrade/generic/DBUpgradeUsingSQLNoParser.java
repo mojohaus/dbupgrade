@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 
@@ -23,7 +24,7 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeException;
  */
 
 /**
- * Submit the resource to jdbc in one shot
+ * Submit the resource to jdbc in one shot. Use this to execute SQL function/store procedure
  * @author dtran
  *
  */
@@ -70,17 +71,7 @@ public class DBUpgradeUsingSQLNoParser
         }
         finally
         {
-            if ( statement != null )
-            {
-                try
-                {
-                    statement.close();
-                }
-                catch ( SQLException e )
-                {
-
-                }
-            }
+            DbUtils.closeQuietly( statement );
         }
 
     }

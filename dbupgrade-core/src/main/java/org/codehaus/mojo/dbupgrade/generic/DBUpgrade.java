@@ -27,8 +27,7 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
  */
 public interface DBUpgrade
 {
-    String ROLE = DBUpgrade.class.getName();
-    
     void upgradeDB( String dialect ) throws DBUpgradeException;
+    
     void setSqlexec( SQLExec sqlExec );
 }

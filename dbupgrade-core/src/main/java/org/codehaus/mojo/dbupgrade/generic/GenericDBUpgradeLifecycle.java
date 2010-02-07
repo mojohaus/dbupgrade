@@ -444,16 +444,14 @@ public class GenericDBUpgradeLifecycle
     {
         String className = null;
 
-        Connection connection = getConnection();
-
         className = config.getPackageName() + "." + upgraderName;
-        runUpgrade( this.getJavaUpgrader( className ), connection );
+        runUpgrade( this.getJavaUpgrader( className ) );
 
         className = config.getPackageName() + "." + config.getDialect() + "." + upgraderName;
-        runUpgrade( this.getJavaUpgrader( className ), connection );
+        runUpgrade( this.getJavaUpgrader( className ) );
     }
 
-    private void runUpgrade( DBUpgrade upgrader, Connection connection )
+    private void runUpgrade( DBUpgrade upgrader  )
         throws DBUpgradeException
     {
         if ( upgrader != null )
@@ -461,7 +459,7 @@ public class GenericDBUpgradeLifecycle
             try
             {
                 upgrader.upgradeDB( config.getDialect() );
-                connection.commit();
+                sqlexec.commit();
             }
             catch ( Exception e )
             {

@@ -32,12 +32,12 @@ Generic Upgrade
 	
 	* Retrieves database version and uses it to lookup next available incremental upgrade (see next).
 	
-	* Incrementally looks up the upgrade starting with the database version + 1 and execute them one by one until
+	* Looks up the upgrades starting with the database version + 1, execute and commit them one by one until
 	  the upgrade version reaches the resource version . The upgrade must locate either at
 	  root of your database upgrade java package or under your package/dialect resource.  The upgrade can be either 
 	  a Java implementation of DBUpgrader interface or a SQL script. 
 	
-	* Lookup global java post-upgrader and executed if available. The java post-upgrader must implement DBUpgrade interface.
+	* Lookup global java post-upgrader if available and execute it. The java post-upgrader must implement DBUpgrade interface.
 	
 
 ** Generic Upgrade Setup
@@ -87,10 +87,10 @@ Generic Upgrade
         </goals>
         <configuration>
           <dialect>${dialect}</dialect>
-          [Your SQL configuration, see SQLExec maven plugin for details]
+          [Your SQL configuration, similar to SQLExec maven plugin configuration]
           <packageName>com.your.comp.app.upgrade.package</package>
           
-          <!-- the following are optional since they have default value -->
+          <!-- the following are optional since they have default values -->
           <versionResourceName>version.properties</versionResourceName>
           <upgraderPrefix>DBUpgrader</upgraderPrefix>
           <versionTableName>version</versionTableName>
@@ -182,7 +182,7 @@ Generic Upgrade
           [Your SQL configuration, see SQLExec maven plugin for details]
           <scriptDirectory>${basedir}/src/upgrade</scriptDirectory>          
           <upgradeFile>${basedir}/src/upgrade/filelist.txt</upgradeFile>          
-          <!-- the following are optional since they have default value -->
+          <!-- the following are optional since they have default values -->
           <versionTableName>version</versionTableName>
           <versionColumnName>version</versionColumnName>
         </configuration>
@@ -190,17 +190,18 @@ Generic Upgrade
     </executions>
   </plugin>
   [...]
+
+------------------------------------
     
 * Integration with Java Application
 
   To integrate with your java application
   
-  1. Construct the DBUpgradeConfigution of our choice ( generic or file ).
+  * Construct a DBUpgradeLifecycle implementation with an associated DBUpgradeConfigution of your choice.
   
-  2. Construct FileDBUpgradeLifeCycle or GenericDBUpgradeLifeCycle
-  
-  3. Invoke the upgrade interface.
+  * Invoke the upgrade() interface.
   
   []
+  
   
   * See JUnit test for samples  

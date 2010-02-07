@@ -2,9 +2,10 @@ package org.codehaus.mojo.dbupgrade.file;
 
 import java.io.File;
 
-import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
-
 import junit.framework.TestCase;
+
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 
 /*
  * Copyright 2000-20010 The Apache Software Foundation
@@ -29,9 +30,9 @@ public class FileDBUpgradeExecutorTest
     extends TestCase
 {
     private DBUpgradeConfiguration config;
-    
+
     private DBUpgradeLifecycle upgrader;
-    
+
     private File dataDirectory = new File( "src/test/resources/org/codehaus/mojo/dbupgrade/file" );
 
     protected void setUp()
@@ -46,7 +47,7 @@ public class FileDBUpgradeExecutorTest
         config.setVersionColumnName( "version" );
         config.setScriptDirectory( dataDirectory );
         upgrader = new FileDBUpgradeLifecycle( config );
-        
+
     }
 
     /**
@@ -57,42 +58,58 @@ public class FileDBUpgradeExecutorTest
         throws Exception
     {
         //version 1
-        config.setUpgradeFile( new File( dataDirectory, "version-1.lst"  ) );
+        config.setUpgradeFile( new File( dataDirectory, "version-1.lst" ) );
         assertEquals( 2, upgrader.upgrade() );
 
         //version 1.1
         upgrader = new FileDBUpgradeLifecycle( config );
-        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst"  ) );
+        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
         assertEquals( 1, upgrader.upgrade() );
-        
+
         //version 1.1 again
         upgrader = new FileDBUpgradeLifecycle( config );
-        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst"  ) );
+        config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
         assertEquals( 0, upgrader.upgrade() );
 
         //version 2
         upgrader = new FileDBUpgradeLifecycle( config );
-        config.setUpgradeFile( new File( dataDirectory, "version-2.lst"  ) );
+        config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
         assertEquals( 2, upgrader.upgrade() );
 
         //version 2
         upgrader = new FileDBUpgradeLifecycle( config );
-        config.setUpgradeFile( new File( dataDirectory, "version-2.lst"  ) );
+        config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
         assertEquals( 0, upgrader.upgrade() );
-        
+
     }
 
-    public void testMissingDBUpgraderTest()
+    public void testMissingDBUpgraderFileTest()
         throws Exception
     {
         try
         {
-            config.setUpgradeFile( new File( dataDirectory, "version-bogus.lst"  ) );
+            config.setUpgradeFile( new File( dataDirectory, "version-bogus.lst" ) );
             upgrader.upgrade();
             fail( "Exception expected." );
         }
-        catch ( Exception e )
+        catch ( DBUpgradeException e )
         {
+        }
+    }
+
+    public void testMissingDBUpgraderScriptFileTest()
+        throws Exception
+    {
+        //version 3
+        config.setUpgradeFile( new File( dataDirectory, "bad.lst" ) );
+        try
+        {
+            upgrader.upgrade();
+            fail( "Missing SQL script not detected." );
+        }
+        catch ( DBUpgradeException e )
+        {
+
         }
     }
 
