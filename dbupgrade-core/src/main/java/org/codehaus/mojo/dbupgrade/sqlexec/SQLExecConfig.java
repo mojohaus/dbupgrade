@@ -56,8 +56,7 @@ public class SQLExecConfig
      * Database username. If not given, it will be looked up through <code>settings.xml</code>'s
      * server with <code>${settingsKey}</code> as key.
      *
-     * @since 1.0
-     * @parameter expression="${username}"
+     * @since 1.0-beta-1
      */
     private String username;
 
@@ -65,8 +64,7 @@ public class SQLExecConfig
      * Database password. If not given, it will be looked up through <code>settings.xml</code>'s
      * server with <code>${settingsKey}</code> as key.
      *
-     * @since 1.0
-     * @parameter expression="${password}"
+     * @since 1.0-beta-1
      */
     private String password;
 
@@ -74,16 +72,13 @@ public class SQLExecConfig
      * Ignore the password and use anonymous access. This may be useful for databases like MySQL
      * which do not allow empty password parameters in the connection initialization.
      *
-     * @since 1.4
-     * @parameter default-value="false"
+     * @since 1.0-beta-1
      */
     private boolean enableAnonymousPassword;
 
     /**
      * Additional key=value pairs separated by comma to be passed into JDBC driver.
-     *
-     * @since 1.0
-     * @parameter expression="${driverProperties}" default-value = ""
+     * @since 1.0-beta-1
      */
     private String driverProperties;
 
@@ -92,8 +87,7 @@ public class SQLExecConfig
      * support databases, such as embedded Derby, that can shutdown the database via the URL (i.e.
      * <code>shutdown=true</code>).
      *
-     * @since 1.1
-     * @parameter expression="${skipOnConnectionError}" default-value="false"
+     * @since 1.0-beta-1
      */
     private boolean skipOnConnectionError;
 
@@ -103,8 +97,6 @@ public class SQLExecConfig
     /**
      * Database URL.
      *
-     * @parameter expression="${url}"
-     * @required
      * @since 1.0-beta-1
      */
     private String url;
@@ -112,9 +104,7 @@ public class SQLExecConfig
     /**
      * Database driver classname.
      *
-     * @since 1.0
-     * @parameter expression="${driver}"
-     * @required
+     * @since 1.0-beta-1
      */
     private String driver;
 
@@ -122,8 +112,7 @@ public class SQLExecConfig
     /**
      * Set to <code>true</code> to execute none-transactional SQL.
      *
-     * @since 1.0
-     * @parameter expression="${autocommit}" default-value="false"
+     * @since 1.0-beta-1
      */
     private boolean autocommit;
 
@@ -131,8 +120,7 @@ public class SQLExecConfig
      * Action to perform if an error is found. Possible values are <code>abort</code> and
      * <code>continue</code>.
      *
-     * @since 1.0
-     * @parameter expression="${onError}" default-value="abort"
+     * @since 1.0-beta-1
      */
     private String onError = ON_ERROR_ABORT;
 
@@ -141,8 +129,7 @@ public class SQLExecConfig
     /**
      * Set the delimiter that separates SQL statements.
      *
-     * @since 1.0
-     * @parameter expression="${delimiter}" default-value=";"
+     * @since 1.0-beta-1
      */
     private String delimiter = ";";
 
@@ -156,8 +143,7 @@ public class SQLExecConfig
      * For example, set this to "go" and delimiterType to "row" for Sybase ASE or MS SQL Server.
      * </p>
      *
-     * @since 1.2
-     * @parameter expression="${delimiterType}" default-value="NORMAL"
+     * @since 1.0-beta-1
      */
     private DelimiterType delimiterType = DelimiterType.NORMAL;
 
@@ -166,16 +152,14 @@ public class SQLExecConfig
      * <code>ascending</code> and <code>descending</code>. Any other value means that no sorting
      * will be performed.
      *
-     * @since 1.1
-     * @parameter expression="${orderFile}"
+     * @since 1.0-beta-1
      */
     private String orderFile = null;
 
     /**
      * Keep the format of an SQL block.
      *
-     * @since 1.1
-     * @parameter expression="${keepFormat}" default-value="false"
+     * @since 1.0-beta-1
      */
     private boolean keepFormat = false;
 
@@ -183,8 +167,7 @@ public class SQLExecConfig
     /**
      * Print SQL results.
      *
-     * @parameter
-     * @since 1.3
+     * @since 1.0-beta-1
      */
     private boolean printResultSet = false;
 
@@ -196,16 +179,14 @@ public class SQLExecConfig
     /**
      * Dump the SQL exection's output to a file. Default is stdout.
      *
-     * @parameter
-     * @since 1.3
+     * @since 1.0-beta-1
      */
     private File outputFile;
 
     /**
      * Encoding to use when reading SQL statements from a file.
      *
-     * @parameter expression="${encoding}" default-value= "${project.build.sourceEncoding}"
-     * @since 1.1
+     * @since 1.0-beta-1
      */
     private String encoding = "";
 
@@ -218,15 +199,26 @@ public class SQLExecConfig
      * Argument to Statement.setEscapeProcessing If you want the driver to use regular SQL syntax
      * then set this to false.
      *
-     * @since 1.4
-     * @parameter expression="${escapeProcessing}" default-value="true"
+     * @since 1.0-beta-1
      */
     private boolean escapeProcessing = true;
 
+    /**
+     * Repeats the execution for stress test purpose
+     * @since 1.0-beta-1
+     */
     private int repeats = 1;
 
+    /**
+     * Pause between repeat for stress test purpose
+     * @since 1.0-beta-1
+     */
     private long sleepTimeBetweenRepeats = 0;
 
+    /**
+     * Transactions per connection execution for stress test purpose
+     * @since 1.0-beta-1
+     */
     private int transactionsPerConnection = 1;
 
     // /////////////////////////////////////////////////////////////////////////////////////

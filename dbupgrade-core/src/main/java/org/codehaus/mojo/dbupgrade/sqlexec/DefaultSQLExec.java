@@ -261,6 +261,7 @@ public class DefaultSQLExec
      */
     protected Properties getDriverProperties()
     {
+        //set as protected scopy for unit test purpose
         Properties properties = new Properties();
 
         if ( !StringUtils.isEmpty( this.config.getDriverProperties() ) )
