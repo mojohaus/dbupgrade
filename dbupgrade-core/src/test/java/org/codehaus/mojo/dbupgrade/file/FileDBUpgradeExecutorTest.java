@@ -21,11 +21,6 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
  * the License.
  */
 
-/**
- * 
- * @author dan.tran
- *
- */
 public class FileDBUpgradeExecutorTest
     extends TestCase
 {

@@ -21,10 +21,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
  */
 
 
-/**
- * @author dtran
- *
- */
 public interface DBUpgrade
 {
     /**

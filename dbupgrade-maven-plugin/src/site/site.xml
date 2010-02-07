@@ -29,6 +29,9 @@
       <item name="Usage" href="usage.html"/>
       <item name="Goals" href="plugin-info.html"/>
     </menu>
-   </body>
+    <menu name="Others">
+      <item name="Similar Implementations" href="other-implementations.html"/>
+    </menu>
+  </body>
 </project>
 
