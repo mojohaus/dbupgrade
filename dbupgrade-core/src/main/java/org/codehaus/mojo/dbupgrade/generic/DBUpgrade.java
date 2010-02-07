@@ -27,5 +27,11 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
  */
 public interface DBUpgrade
 {
+    /**
+     * Incremental upgrade interface
+     * @param sqlExec. The implementation uses this param to have access to SQLExec utils and connection
+     * @param dialect. The implementation uses this param to locate the database specific resource
+     * @throws DBUpgradeException
+     */
     void upgradeDB( SQLExec sqlExec, String dialect ) throws DBUpgradeException;
 }

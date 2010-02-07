@@ -221,6 +221,14 @@ public class SQLExecConfig
      */
     private int transactionsPerConnection = 1;
 
+    /**
+     * Number of retries to open connection before giving up.
+     * Mainly to handle the case where application and database colocated and
+     * database is much slower to accept connection at system startup 
+     * @since 1.0-beta-1
+     */
+    private int connectionRetries = 1;
+    
     // /////////////////////////////////////////////////////////////////////////////////////
     // Accessor
     // /////////////////////////////////////////////////////////////////////////////////////
@@ -512,6 +520,16 @@ public class SQLExecConfig
     public long getSleepTimeBetweenRepeats()
     {
         return sleepTimeBetweenRepeats;
+    }
+
+    public int getConnectionRetries()
+    {
+        return connectionRetries;
+    }
+
+    public void setConnectionRetries( int connectionRetries )
+    {
+        this.connectionRetries = connectionRetries;
     }
     
 }

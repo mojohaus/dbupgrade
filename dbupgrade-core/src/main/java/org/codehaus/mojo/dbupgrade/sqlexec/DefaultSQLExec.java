@@ -202,28 +202,44 @@ public class DefaultSQLExec
             return conn;
         }
 
-        Properties info = new Properties();
-        
-        info.put( "user", config.getUsername() );
-        
+        Properties driverProperties = new Properties();
+
+        driverProperties.put( "user", config.getUsername() );
+
+        handleWindowsDomainUser( driverProperties );
+
+        if ( !config.isEnableAnonymousPassword() )
+        {
+            driverProperties.put( "password", this.config.getPassword() );
+        }
+
+        driverProperties.putAll( this.getDriverProperties() );
+
+        Driver driverInstance = this.createJDBCDriver();
+
+        conn = this.createConnection( driverInstance, driverProperties );
+
+        conn.setAutoCommit( config.isAutocommit() );
+
+        return conn;
+    }
+    
+    private void handleWindowsDomainUser( Properties driverProperties )
+    {
         if ( "net.sourceforge.jtds.jdbc.Driver".equals( config.getDriver() ) )
         {
             String[] tokens = StringUtils.split( config.getUsername(), "\\" );
 
             if ( tokens != null && tokens.length == 2 )
             {
-                info.put( "user", tokens[1] );
-                info.put( "domain", tokens[0] );
+                driverProperties.put( "user", tokens[1] );
+                driverProperties.put( "domain", tokens[0] );
             }
         }
-
-        if ( !config.isEnableAnonymousPassword() )
-        {
-            info.put( "password", this.config.getPassword() );
-        }
-
-        info.putAll( this.getDriverProperties() );
-
+    }
+    
+    private Driver createJDBCDriver()
+    {
         Driver driverInstance = null;
 
         try
@@ -239,18 +255,51 @@ public class DefaultSQLExec
         {
             throw new RuntimeException( "Failure loading driver: " + config.getDriver(), e );
         }
+        
+        return driverInstance;
+    }
 
-        conn = driverInstance.connect( config.getUrl(), info );
-
-        if ( conn == null )
+    private Connection createConnection( Driver driverInstance, Properties driverProperties )
+        throws SQLException
+    {
+        Connection connection = null;
+        
+        for ( int i = 0; i < config.getConnectionRetries(); ++i )
         {
-            // Driver doesn't understand the URL
-            throw new RuntimeException( "No suitable Driver for " + config.getUrl() );
+            try
+            {
+                connection = driverInstance.connect( config.getUrl(), driverProperties );
+                if ( connection == null )
+                {
+                    // Driver doesn't understand the URL
+                    throw new RuntimeException( "No suitable Driver for " + config.getUrl() );
+                }
+
+                break;
+
+            }
+            catch ( SQLException e )
+            {
+                if ( i < config.getConnectionRetries() )
+                {
+                    try
+                    {
+                        Thread.sleep( 10000 ); //fixme
+                    }
+                    catch ( Exception iex )
+                    {
+                        throw new SQLException( "Unable to connect to " + config.getUrl(), iex );
+                    }
+                    continue;
+                }
+
+                throw new SQLException( "Unable to connect to " + config.getUrl(), e );
+            }
+
         }
 
-        conn.setAutoCommit( config.isAppend() );
+        return connection;
 
-        return conn;
     }
 
     /**

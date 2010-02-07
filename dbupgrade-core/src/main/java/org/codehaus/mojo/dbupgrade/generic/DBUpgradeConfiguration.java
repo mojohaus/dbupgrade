@@ -20,6 +20,9 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
 public class DBUpgradeConfiguration
     extends SQLExecConfig
 {
+    /**
+     * Database type
+     */
     private String dialect;
     
     /**
@@ -52,8 +55,6 @@ public class DBUpgradeConfiguration
      * version to be inserted when version table first created
      */
     private int initialVersion = 0;
-    
-    private int connectionRetries = 10 ; 
     
     public void setDialect( String dialect )
     {
@@ -128,16 +129,6 @@ public class DBUpgradeConfiguration
     public void setInitialVersion( int initialVersion )
     {
         this.initialVersion = initialVersion;
-    }
-
-    public void setConnectionRetries( int retries )
-    {
-        this.connectionRetries = retries;
-    }
-
-    public int getConnectionRetries( )
-    {
-        return this.connectionRetries;
     }
     
 }

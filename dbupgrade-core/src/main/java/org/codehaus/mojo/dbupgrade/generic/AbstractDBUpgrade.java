@@ -24,6 +24,12 @@ public abstract class AbstractDBUpgrade
     implements DBUpgrade
 {
 
+    /**
+     * SQLExec wrapper to throw DBUpgradeException on error
+     * @param sqlexec
+     * @param istream
+     * @throws DBUpgradeException
+     */
     protected void executeSQL( SQLExec sqlexec, InputStream istream )
         throws DBUpgradeException
     {
@@ -37,6 +43,12 @@ public abstract class AbstractDBUpgrade
         }
     }
 
+    /**
+     * SQLExec wrapper to throw DBUpgradeException on error
+     * @param sqlexec
+     * @param sqlString
+     * @throws DBUpgradeException
+     */
     protected void executeSQL( SQLExec sqlexec, String sqlString )
         throws DBUpgradeException
     {
