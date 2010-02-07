@@ -116,7 +116,7 @@ public class FileDBUpgradeExecutorTest
     public void testBadList()
         throws Exception
     {
-        //version 3
+        //version 3. This test depends on testGoodDBUpgradeExecutorTest()
         config.setUpgradeFile( new File( dataDirectory, "version-3.lst" ) );
         try
         {

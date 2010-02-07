@@ -85,6 +85,7 @@ public class FileDBUpgradeLifecycle
                     line = line.trim();
                     if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
                     {
+                        line = reader.readLine();
                         continue;
                     }
 

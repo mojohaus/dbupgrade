@@ -19,7 +19,7 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
  * the License.
  */
 
-public class DefaultDBUpgradeExecutorTest
+public class GenericDBUpgradeExecutorTest
     extends TestCase
 {
     private DBUpgradeConfiguration config;
@@ -35,6 +35,7 @@ public class DefaultDBUpgradeExecutorTest
         config.setPackageName( "org.codehaus.mojo.dbupgrade.generic.test1" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
+        config.setInitialVersion( -2 );
     }
 
     /**
@@ -45,10 +46,10 @@ public class DefaultDBUpgradeExecutorTest
         throws Exception
     {
         DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
-        upgrader.upgrade();
+        assertEquals( 4, upgrader.upgrade() );
 
         //do it one more time
-        upgrader.upgrade();
+        assertEquals( 0, upgrader.upgrade() );
     }
 
     public void testMissingDBUpgraderTest()

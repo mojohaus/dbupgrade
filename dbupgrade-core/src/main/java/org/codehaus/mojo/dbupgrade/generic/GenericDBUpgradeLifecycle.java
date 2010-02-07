@@ -66,11 +66,12 @@ public class GenericDBUpgradeLifecycle
     public int upgrade()
         throws DBUpgradeException
     {
+        int upgradeCount = 0;
         try
         {
             runJavaUpgrader( "PreDBUpgrade" );
 
-            this.incrementalUpgrade();
+            upgradeCount = this.incrementalUpgrade();
 
             runJavaUpgrader( "PostDBUpgrade" );
         }
@@ -79,7 +80,7 @@ public class GenericDBUpgradeLifecycle
             throw new DBUpgradeException( "Unable to upgrade", e );
         }
 
-        return 0; //until we figure out how to do this
+        return upgradeCount; 
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -147,7 +148,7 @@ public class GenericDBUpgradeLifecycle
             + " ) values ( " + config.getInitialVersion() + " )" );
     }
 
-    private void incrementalUpgrade()
+    private int  incrementalUpgrade()
         throws DBUpgradeException
     {
         int latestVersion = 0;
@@ -172,8 +173,13 @@ public class GenericDBUpgradeLifecycle
             throw new DBUpgradeException( "Could not read " + versionResourcePath + " resource in classpath", e );
         }
 
-        while ( !internalUpgrade( latestVersion ) );
+        int upgradeCount = 0;
+        while ( !internalUpgrade( latestVersion ) )
+        {
+            upgradeCount++;
+        }
 
+        return upgradeCount;
     }
 
     /**
@@ -451,7 +457,7 @@ public class GenericDBUpgradeLifecycle
         runUpgrade( this.getJavaUpgrader( className ) );
     }
 
-    private void runUpgrade( DBUpgrade upgrader  )
+    private void runUpgrade( DBUpgrade upgrader )
         throws DBUpgradeException
     {
         if ( upgrader != null )
