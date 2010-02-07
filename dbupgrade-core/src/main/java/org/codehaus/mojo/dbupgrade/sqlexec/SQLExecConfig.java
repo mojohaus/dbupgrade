@@ -229,9 +229,16 @@ public class SQLExecConfig
      */
     private int connectionRetries = 1;
     
+    /**
+     * Number of delay in msec between each connection retry
+     * @since 1.0-beta-1
+     */
+    private int connectionRetryDelay = 10000; //msec
+    
     // /////////////////////////////////////////////////////////////////////////////////////
     // Accessor
     // /////////////////////////////////////////////////////////////////////////////////////
+
 
     public void setRepeatesPerConnection( int num )
     {
@@ -530,6 +537,16 @@ public class SQLExecConfig
     public void setConnectionRetries( int connectionRetries )
     {
         this.connectionRetries = connectionRetries;
+    }
+
+    public int getConnectionRetryDelay()
+    {
+        return connectionRetryDelay;
+    }
+
+    public void setConnectionRetryDelay( int connectionRetryDelay )
+    {
+        this.connectionRetryDelay = connectionRetryDelay;
     }
     
 }

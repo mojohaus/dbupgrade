@@ -284,7 +284,7 @@ public class DefaultSQLExec
                 {
                     try
                     {
-                        Thread.sleep( 10000 ); //fixme
+                        Thread.sleep( config.getConnectionRetryDelay() );
                     }
                     catch ( Exception iex )
                     {
