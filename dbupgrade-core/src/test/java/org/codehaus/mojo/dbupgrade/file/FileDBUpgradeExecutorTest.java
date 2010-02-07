@@ -113,4 +113,20 @@ public class FileDBUpgradeExecutorTest
         }
     }
 
+    public void testBadList()
+        throws Exception
+    {
+        //version 3
+        config.setUpgradeFile( new File( dataDirectory, "version-3.lst" ) );
+        try
+        {
+            upgrader.upgrade();
+            fail( "Exception expected." );
+        }
+        catch ( DBUpgradeException e )
+        {
+
+        }
+    }
+
 }

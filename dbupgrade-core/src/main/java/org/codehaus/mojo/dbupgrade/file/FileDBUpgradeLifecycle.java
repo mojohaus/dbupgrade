@@ -79,6 +79,7 @@ public class FileDBUpgradeLifecycle
             if ( !StringUtils.isBlank( this.initialDBVersion ) )
             {
                 line = reader.readLine();
+                
                 while ( line != null )
                 {
                     line = line.trim();
@@ -87,6 +88,12 @@ public class FileDBUpgradeLifecycle
                         continue;
                     }
 
+                    File upgradeFile = new File( config.getScriptDirectory(), line );
+                    if ( !upgradeFile.exists() )
+                    {
+                        throw new DBUpgradeException( upgradeFile.getAbsolutePath() + " not found." );
+                    }
+                    
                     if ( initialDBVersion.equals( line ) )
                     {
                         break; //so that we can continue with upgrade
@@ -94,8 +101,13 @@ public class FileDBUpgradeLifecycle
 
                     line = reader.readLine();
                 }
+                
+                if ( line == null )
+                {
+                    throw new DBUpgradeException( "Database version value: " + initialDBVersion + " not found in the list. Are you upgrading the right database?" );
+                }
+                
             }
-
             
             //continue on with last upgrade
             line = reader.readLine();
@@ -248,10 +260,10 @@ public class FileDBUpgradeLifecycle
         return version;
     }
 
-    private void upgrade( File workingDirectory, String upgradeFileName )
+    private void upgrade( File scriptDirectory, String upgradeFileName )
         throws DBUpgradeException
     {
-        File upgradeFile = new File( workingDirectory, upgradeFileName );
+        File upgradeFile = new File( scriptDirectory, upgradeFileName );
 
         try
         {
