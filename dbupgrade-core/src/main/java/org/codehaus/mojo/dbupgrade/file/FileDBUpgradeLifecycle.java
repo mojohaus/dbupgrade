@@ -65,7 +65,7 @@ public class FileDBUpgradeLifecycle
         throws DBUpgradeException
     {
         int upgraderCount = 0;
-        
+
         FileReader fileReader = null;
 
         try
@@ -78,52 +78,40 @@ public class FileDBUpgradeLifecycle
             //find where we left off last upgrade
             if ( !StringUtils.isBlank( this.initialDBVersion ) )
             {
-                line = reader.readLine();
-                
-                while ( line != null )
+                while ( ( line = this.readLine( reader ) ) != null )
                 {
-                    line = line.trim();
-                    if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
+                    if ( !StringUtils.isBlank( line ) )
                     {
-                        line = reader.readLine();
-                        continue;
+                        File upgradeFile = new File( config.getScriptDirectory(), line );
+                        if ( !upgradeFile.exists() )
+                        {
+                            throw new DBUpgradeException( upgradeFile.getAbsolutePath() + " not found." );
+                        }
+
+                        if ( initialDBVersion.equals( line ) )
+                        {
+                            break; //so that we can continue with upgrade
+                        }
                     }
 
-                    File upgradeFile = new File( config.getScriptDirectory(), line );
-                    if ( !upgradeFile.exists() )
-                    {
-                        throw new DBUpgradeException( upgradeFile.getAbsolutePath() + " not found." );
-                    }
-                    
-                    if ( initialDBVersion.equals( line ) )
-                    {
-                        break; //so that we can continue with upgrade
-                    }
-
-                    line = reader.readLine();
                 }
-                
+
                 if ( line == null )
                 {
-                    throw new DBUpgradeException( "Database version value: " + initialDBVersion + " not found in the list. Are you upgrading the right database?" );
+                    throw new DBUpgradeException( "Database version value: " + initialDBVersion
+                        + " not found in the list. Are you upgrading the right database?" );
                 }
-                
+
             }
-            
+
             //continue on with last upgrade
-            line = reader.readLine();
-            while ( line != null )
+            while ( ( line = this.readLine( reader ) ) != null )
             {
-                line = line.trim();
-                if ( StringUtils.isBlank( line ) )
+                if ( !StringUtils.isBlank( line ) )
                 {
-                    continue;
+                    upgrade( config.getScriptDirectory(), line.trim() );
+                    upgraderCount++;
                 }
-
-                upgrade( config.getScriptDirectory(), line.trim() );
-                upgraderCount++;
-
-                line = reader.readLine();
             }
 
         }
@@ -135,8 +123,23 @@ public class FileDBUpgradeLifecycle
         {
             IOUtil.close( fileReader );
         }
-        
+
         return upgraderCount;
+    }
+
+    private String readLine( BufferedReader reader )
+        throws IOException
+    {
+        String line = reader.readLine();
+        if ( line != null )
+        {
+            line = line.trim();
+            if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
+            {
+                line = "";
+            }
+        }
+        return line;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -214,7 +217,6 @@ public class FileDBUpgradeLifecycle
             + " ) values ( '' )" );
         sqlexec.commit();
     }
-
 
     private String getDBVersion()
         throws DBUpgradeException
