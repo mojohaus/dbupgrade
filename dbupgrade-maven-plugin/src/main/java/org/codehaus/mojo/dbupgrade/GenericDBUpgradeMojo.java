@@ -31,7 +31,7 @@ public class GenericDBUpgradeMojo
     /**
      * @parameter
      */
-    private org.codehaus.mojo.dbupgrade.generic.DBUpgradeConfiguration config;
+    private org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeConfiguration config;
     
     public void execute()
         throws MojoExecutionException, MojoFailureException

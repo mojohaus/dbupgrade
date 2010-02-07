@@ -2,7 +2,7 @@ package org.codehaus.mojo.dbupgrade.file;
 
 import java.io.File;
 
-import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
+import org.codehaus.mojo.dbupgrade.DBUpgradeConfiguration;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -18,8 +18,8 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
  * the License.
  */
 
-public class DBUpgradeConfiguration
-    extends SQLExecConfig
+public class FileListDBUpgradeConfiguration
+    extends DBUpgradeConfiguration
 {
  
     private File upgradeFile;

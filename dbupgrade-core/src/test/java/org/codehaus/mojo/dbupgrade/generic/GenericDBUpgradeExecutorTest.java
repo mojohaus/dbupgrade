@@ -22,11 +22,11 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 public class GenericDBUpgradeExecutorTest
     extends TestCase
 {
-    private DBUpgradeConfiguration config;
+    private GenericDBUpgradeConfiguration config;
 
     protected void setUp()
     {
-        config = new DBUpgradeConfiguration();
+        config = new GenericDBUpgradeConfiguration();
         config.setUsername( "sa" );
         config.setPassword( "" );
         config.setDriver( "org.hsqldb.jdbcDriver" );

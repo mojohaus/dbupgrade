@@ -45,9 +45,9 @@ public class GenericDBUpgradeLifecycle
 
     private DefaultSQLExec sqlexec;
 
-    private DBUpgradeConfiguration config;
+    private GenericDBUpgradeConfiguration config;
 
-    public GenericDBUpgradeLifecycle( DBUpgradeConfiguration config )
+    public GenericDBUpgradeLifecycle( GenericDBUpgradeConfiguration config )
         throws DBUpgradeException
     {
         this.config = config;

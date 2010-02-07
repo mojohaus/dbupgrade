@@ -26,7 +26,7 @@ Generic Upgrade
 	
 	* Creates version table and its data row with version column set to 0 if not available.
 	
-	* Lookups global java pre-upgrader and executes it if available. The java pre-upgrader must implement DBUpgrade interface.
+	* Lookups global java pre-upgrader and executes it if available. The java pre-upgrader must implement {{{../dbupgrade-core/apidocs}DBUpgrade interface}}.
 
 	* Retrieves resource version under your package/version.properties resource.
 	
@@ -35,9 +35,9 @@ Generic Upgrade
 	* Looks up the upgrades starting with the database version + 1, execute and commit them one by one until
 	  the upgrade version reaches the resource version . The upgrade must locate either at
 	  root of your database upgrade java package or under your package/dialect resource.  The upgrade can be either 
-	  a Java implementation of DBUpgrader interface or a SQL script. 
+	  a Java implementation of {{{../dbupgrade-core/apidocs}DBUpgrade interface}} or a SQL script. 
 	
-	* Lookup global java post-upgrader if available and execute it. The java post-upgrader must implement DBUpgrade interface.
+	* Lookup global java post-upgrader if available and execute it. The java post-upgrader must implement {{{../dbupgrade-core/apidocs}DBUpgrade interface}}.
 	
 
 ** Generic Upgrade Setup

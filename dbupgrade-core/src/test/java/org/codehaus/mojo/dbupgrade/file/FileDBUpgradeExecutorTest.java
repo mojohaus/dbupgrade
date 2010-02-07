@@ -24,7 +24,7 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 public class FileDBUpgradeExecutorTest
     extends TestCase
 {
-    private DBUpgradeConfiguration config;
+    private FileListDBUpgradeConfiguration config;
 
     private DBUpgradeLifecycle upgrader;
 
@@ -33,7 +33,7 @@ public class FileDBUpgradeExecutorTest
     protected void setUp()
         throws Exception
     {
-        config = new DBUpgradeConfiguration();
+        config = new FileListDBUpgradeConfiguration();
         config.setUsername( "sa" );
         config.setPassword( "" );
         config.setDriver( "org.hsqldb.jdbcDriver" );

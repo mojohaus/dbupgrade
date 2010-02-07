@@ -41,11 +41,11 @@ public class FileDBUpgradeLifecycle
 
     private DefaultSQLExec sqlexec;
 
-    private DBUpgradeConfiguration config;
+    private FileListDBUpgradeConfiguration config;
 
     private String initialDBVersion = null;
 
-    public FileDBUpgradeLifecycle( DBUpgradeConfiguration config )
+    public FileDBUpgradeLifecycle( FileListDBUpgradeConfiguration config )
         throws DBUpgradeException
     {
         this.config = config;

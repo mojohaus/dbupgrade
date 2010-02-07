@@ -1,6 +1,6 @@
 package org.codehaus.mojo.dbupgrade.generic;
 
-import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
+import org.codehaus.mojo.dbupgrade.DBUpgradeConfiguration;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -17,8 +17,8 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
  */
 
 
-public class DBUpgradeConfiguration
-    extends SQLExecConfig
+public class GenericDBUpgradeConfiguration
+    extends DBUpgradeConfiguration
 {
     /**
      * Database type

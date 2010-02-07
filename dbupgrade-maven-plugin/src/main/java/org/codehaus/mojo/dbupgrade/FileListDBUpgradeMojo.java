@@ -33,7 +33,7 @@ public class FileListDBUpgradeMojo
     /**
      * @parameter
      */
-    private org.codehaus.mojo.dbupgrade.file.DBUpgradeConfiguration config;
+    private org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration config;
     
     public void execute()
         throws MojoExecutionException, MojoFailureException
