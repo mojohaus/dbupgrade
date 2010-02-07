@@ -35,6 +35,7 @@ public class GenericDBUpgradeExecutorTest
         config.setPackageName( "org.codehaus.mojo.dbupgrade.generic.test1" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
+        //show that we can start the db version using negative number, normally it starts as 0
         config.setInitialVersion( -2 );
     }
 
