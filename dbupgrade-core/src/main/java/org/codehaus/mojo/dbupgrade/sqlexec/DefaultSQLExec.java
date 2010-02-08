@@ -846,7 +846,7 @@ public class DefaultSQLExec
         catch ( SQLException e )
         {
             //unexpected exception, throw runtime to get more attention
-            throw new RuntimeException( "Unable to rollback upgrade." );
+            throw new RuntimeException( "Unable to rollback." );
         }
     }
 

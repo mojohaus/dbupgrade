@@ -163,7 +163,7 @@ public class FileDBUpgradeLifecycle
         }
         catch ( SQLException e )
         {
-            throw new DBUpgradeException( "Unable to create version table", e );
+            throw new DBUpgradeException( "Unable to create version table:" + config.getVersionTableName(), e );
         }
 
     }
@@ -240,13 +240,13 @@ public class FileDBUpgradeLifecycle
             }
             else
             {
-                throw new DBUpgradeException( "Version row not found" );
+                throw new DBUpgradeException( "Version row not found in: " + config.getVersionTableName() + " table." );
             }
         }
         catch ( SQLException e )
         {
             sqlexec.rollbackQuietly();
-            throw new DBUpgradeException( "Version row not found" );
+            throw new DBUpgradeException( "Version row not found in: " + config.getVersionTableName() + " table." );
         }
 
         finally
