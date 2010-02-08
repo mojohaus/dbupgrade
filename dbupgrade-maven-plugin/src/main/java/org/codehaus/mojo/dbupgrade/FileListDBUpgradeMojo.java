@@ -3,6 +3,7 @@ package org.codehaus.mojo.dbupgrade;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.mojo.dbupgrade.file.FileDBUpgradeLifecycle;
+import org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -31,9 +32,11 @@ public class FileListDBUpgradeMojo
     extends AbstractDBUpgradeMojo
 {
     /**
+     * Necessary configuration to run database upgrade. 
      * @parameter
+     * @required
      */
-    private org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration config;
+    private FileListDBUpgradeConfiguration config;
     
     public void execute()
         throws MojoExecutionException, MojoFailureException

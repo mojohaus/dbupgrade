@@ -4,10 +4,6 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
-import org.codehaus.mojo.dbupgrade.sqlexec.FileSet;
-import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
-
 import junit.framework.TestCase;
 
 

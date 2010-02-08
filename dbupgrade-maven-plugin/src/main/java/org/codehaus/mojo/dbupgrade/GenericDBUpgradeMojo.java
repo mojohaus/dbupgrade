@@ -2,6 +2,7 @@ package org.codehaus.mojo.dbupgrade;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeConfiguration;
 import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeLifecycle;
 
 /*
@@ -29,9 +30,11 @@ public class GenericDBUpgradeMojo
     extends AbstractDBUpgradeMojo
 {
     /**
+     * Necessary configuration to run database upgrade. 
      * @parameter
+     * @required
      */
-    private org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeConfiguration config;
+    private GenericDBUpgradeConfiguration config;
     
     public void execute()
         throws MojoExecutionException, MojoFailureException
