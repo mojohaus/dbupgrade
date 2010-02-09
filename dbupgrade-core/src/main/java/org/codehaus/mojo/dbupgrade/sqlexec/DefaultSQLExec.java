@@ -294,6 +294,10 @@ public class DefaultSQLExec
 
             if ( !config.isKeepFormat() )
             {
+                if ( line.startsWith( "#" ) )
+                {
+                    continue;
+                }
                 if ( line.startsWith( "//" ) )
                 {
                     continue;

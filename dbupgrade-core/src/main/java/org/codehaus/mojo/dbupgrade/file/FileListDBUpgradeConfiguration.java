@@ -21,9 +21,15 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeConfiguration;
 public class FileListDBUpgradeConfiguration
     extends DBUpgradeConfiguration
 {
- 
+
+    /**
+     * Path to a file that contains incremental upgrade scripts
+     */
     private File upgradeFile;
     
+    /**
+     * Directory containing the script files specified in <i>upgradeFile</i>
+     */
     private File scriptDirectory;
 
     /**
@@ -36,9 +42,10 @@ public class FileListDBUpgradeConfiguration
      */
     private String versionColumnName = "lastUpdateName";
     
-    private int connectionRetries = 10 ; 
     
-        
+    private String postIncrementalStatement;
+    
+
     public void setVersionTableName( String versionTableName )
     {
         this.versionTableName = versionTableName;
@@ -59,16 +66,6 @@ public class FileListDBUpgradeConfiguration
         return this.versionColumnName;
     }
 
-    public void setConnectionRetries( int retries )
-    {
-        this.connectionRetries = retries;
-    }
-
-    public int getConnectionRetries( )
-    {
-        return this.connectionRetries;
-    }
-
     public File getUpgradeFile()
     {
         return upgradeFile;
@@ -87,6 +84,16 @@ public class FileListDBUpgradeConfiguration
     public void setScriptDirectory( File dir )
     {
         this.scriptDirectory = dir;
+    }
+    
+    public String getPostIncrementalStatement()
+    {
+        return postIncrementalStatement;
+    }
+
+    public void setPostIncrementalStatement( String postIncrementalStatement )
+    {
+        this.postIncrementalStatement = postIncrementalStatement;
     }
     
 }

@@ -266,6 +266,10 @@ public class FileDBUpgradeLifecycle
         try
         {
             sqlexec.execute( upgradeFile );
+            if ( ! StringUtils.isBlank( config.getPostIncrementalStatement() ) )
+            {
+                sqlexec.execute( config.getPostIncrementalStatement() );
+            }
             sqlexec.execute( "update " + this.config.getVersionTableName() + " set " + this.config.getVersionColumnName() +  " ='" + upgradeFileName + "'" );
             sqlexec.commit();
         }
