@@ -201,7 +201,7 @@ public class FileDBUpgradeLifecycle
         throws SQLException
     {
         sqlexec.execute( "create table " + config.getVersionTableName() + " ( " + config.getVersionColumnName()
-            + " varchar )" );
+            + " varchar(256) )" );
         sqlexec.commit();
     }
 

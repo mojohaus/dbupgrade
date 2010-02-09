@@ -476,7 +476,7 @@ public class DefaultSQLExec
         {
             if ( SQLExecConfig.ON_ERROR_ABORT.equalsIgnoreCase( config.getOnError() ) )
             {
-                throw e;
+                throw new SQLException( "Unable to execute: " + sql, e );
             }
         }
         finally

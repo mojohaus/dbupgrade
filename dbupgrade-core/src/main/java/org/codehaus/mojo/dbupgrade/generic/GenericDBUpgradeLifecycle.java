@@ -35,7 +35,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  * database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java resource, if any.
  *   
  * Original source is from http://code.google.com/p/dbmigrate
- * @author dan.tran
  */
 public class GenericDBUpgradeLifecycle
     implements DBUpgradeLifecycle
