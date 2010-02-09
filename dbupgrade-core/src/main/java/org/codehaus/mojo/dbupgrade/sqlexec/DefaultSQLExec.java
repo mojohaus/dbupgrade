@@ -63,26 +63,6 @@ public class DefaultSQLExec
     private int totalStatements = 0;
 
     /**
-     * Number of SQL statements executed so far that caused errors.
-     *
-     * @return the number
-     */
-    public int getSuccessfulStatements()
-    {
-        return successfulStatements;
-    }
-
-    /**
-     * Number of SQL statements executed so far, including the ones that caused errors.
-     *
-     * @return the number
-     */
-    public int getTotalStatements()
-    {
-        return totalStatements;
-    }
-
-    /**
      * Database connection
      */
     private Connection conn = null;
@@ -95,7 +75,7 @@ public class DefaultSQLExec
     /**
      * Add a SQL transaction to execute
      */
-    public Transaction createTransaction()
+    private Transaction createTransaction()
     {
         Transaction t = new Transaction();
         // transactions.add( t );
@@ -183,49 +163,7 @@ public class DefaultSQLExec
         }
     }
 
-    /**
-     * Creates a new Connection as using the driver, url, userid and password specified.
-     *
-     * The calling method is responsible for closing the connection.
-     *
-     * @return Connection the newly created connection.
-     * @throws SQLException if the UserId/Password/Url is not set or there is no suitable driver
-     *             or the driver fails to load.
-     * @throws SQLException if there is problem getting connection with valid url
-     *
-     */
-    public Connection getConnection()
-        throws SQLException
-    {
-        if ( conn != null )
-        {
-            return conn;
-        }
 
-        Properties driverProperties = new Properties();
-
-        driverProperties.put( "user", config.getUsername() );
-
-        handleWindowsDomainUser( driverProperties );
-
-        if ( !config.isEnableAnonymousPassword() )
-        {
-            if ( !StringUtils.isBlank( this.config.getPassword() ) )
-            {
-                driverProperties.put( "password", this.config.getPassword() );
-            }
-        }
-
-        driverProperties.putAll( this.getDriverProperties() );
-
-        Driver driverInstance = this.createJDBCDriver();
-
-        conn = this.createConnection( driverInstance, driverProperties );
-
-        conn.setAutoCommit( config.isAutocommit() );
-
-        return conn;
-    }
     
     private void handleWindowsDomainUser( Properties driverProperties )
     {
@@ -712,6 +650,49 @@ public class DefaultSQLExec
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Creates a new Connection as using the driver, url, userid and password specified.
+     *
+     * The calling method is responsible for closing the connection.
+     *
+     * @return Connection the newly created connection.
+     * @throws SQLException if the UserId/Password/Url is not set or there is no suitable driver
+     *             or the driver fails to load.
+     * @throws SQLException if there is problem getting connection with valid url
+     *
+     */
+    public Connection getConnection()
+        throws SQLException
+    {
+        if ( conn != null )
+        {
+            return conn;
+        }
+
+        Properties driverProperties = new Properties();
+
+        driverProperties.put( "user", config.getUsername() );
+
+        handleWindowsDomainUser( driverProperties );
+
+        if ( !config.isEnableAnonymousPassword() )
+        {
+            if ( !StringUtils.isBlank( this.config.getPassword() ) )
+            {
+                driverProperties.put( "password", this.config.getPassword() );
+            }
+        }
+
+        driverProperties.putAll( this.getDriverProperties() );
+
+        Driver driverInstance = this.createJDBCDriver();
+
+        conn = this.createConnection( driverInstance, driverProperties );
+
+        conn.setAutoCommit( config.isAutocommit() );
+
+        return conn;
+    }    
     public void execute( String sqlCommand )
         throws SQLException
     {
@@ -877,5 +858,25 @@ public class DefaultSQLExec
         Reader reader = new InputStreamReader( istream );
         this.execute( reader );
     }
+    
+    /**
+     * Number of SQL statements executed so far that caused errors.
+     *
+     * @return the number
+     */
+    public int getSuccessfulStatements()
+    {
+        return successfulStatements;
+    }
+
+    /**
+     * Number of SQL statements executed so far, including the ones that caused errors.
+     *
+     * @return the number
+     */
+    public int getTotalStatements()
+    {
+        return totalStatements;
+    }    
 
 }
