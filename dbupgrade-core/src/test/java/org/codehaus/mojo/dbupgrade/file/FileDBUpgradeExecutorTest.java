@@ -38,8 +38,8 @@ public class FileDBUpgradeExecutorTest
         config.setPassword( "" );
         config.setDriver( "org.hsqldb.jdbcDriver" );
         config.setUrl( "jdbc:hsqldb:mem:target/testdb2s" );
-        config.setVersionTableName( "version" );
-        config.setVersionColumnName( "version" );
+        config.setVersionTableName( "upgradeinfo" );
+        config.setVersionColumnName( "upgradeversion" );
         config.setScriptDirectory( dataDirectory );
         upgrader = new FileDBUpgradeLifecycle( config );
 

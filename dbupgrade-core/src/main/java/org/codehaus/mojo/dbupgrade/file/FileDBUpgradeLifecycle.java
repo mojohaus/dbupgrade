@@ -266,7 +266,7 @@ public class FileDBUpgradeLifecycle
         try
         {
             sqlexec.execute( upgradeFile );
-            sqlexec.execute( "update version set version = '" + upgradeFileName + "'" );
+            sqlexec.execute( "update " + this.config.getVersionTableName() + " set " + this.config.getVersionColumnName() +  " ='" + upgradeFileName + "'" );
             sqlexec.commit();
         }
         catch ( SQLException e )
