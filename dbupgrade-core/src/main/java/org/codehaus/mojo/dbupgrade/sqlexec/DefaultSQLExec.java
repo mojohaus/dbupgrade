@@ -210,7 +210,10 @@ public class DefaultSQLExec
 
         if ( !config.isEnableAnonymousPassword() )
         {
-            driverProperties.put( "password", this.config.getPassword() );
+            if ( !StringUtils.isBlank( this.config.getPassword() ) )
+            {
+                driverProperties.put( "password", this.config.getPassword() );
+            }
         }
 
         driverProperties.putAll( this.getDriverProperties() );
