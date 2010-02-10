@@ -28,6 +28,9 @@ Database Upgrade Maven Plugin
     lets you hookup your sql upgrade script locations contained in a text file ( ie the text file contains a list of SQL script paths ). 
     After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
     your database version's value ( a SQL script name ) to pickup the next upgrade script, if any.
+
+  * {{{clean-database-mojo.html}dbupgrade:clean-database}}
+    Use this goal to clean your database via a provided script
   
   []
   
