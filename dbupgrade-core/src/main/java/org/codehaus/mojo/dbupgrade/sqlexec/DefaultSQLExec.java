@@ -325,15 +325,22 @@ public class DefaultSQLExec
             {
                 sql.append( "\n" ).append( line );
             }
-
-            // SQL defines "--" as a comment to EOL
+            
+            // SQL defines "--" and "#" as a line comment to EOL
             // and in Oracle it may contain a hint
             // so we cannot just remove it, instead we must end it
+            // so the comment line will be sent to the server 
             if ( !config.isKeepFormat() )
             {
-                if ( line.indexOf( "--" ) >= 0 )
+                String [] tokens = StringUtils.split( line );
                 {
-                    sql.append( "\n" );
+                    for ( int i = 0; i < tokens.length; ++i )
+                    {
+                        if ( tokens[i].startsWith( "--" ) || tokens[i].startsWith( "#" ) )
+                        {
+                            sql.append( "\n" );
+                        }
+                    }
                 }
             }
 
