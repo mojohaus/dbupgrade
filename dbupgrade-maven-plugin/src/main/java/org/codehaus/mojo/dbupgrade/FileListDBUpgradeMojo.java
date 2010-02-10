@@ -45,6 +45,7 @@ public class FileListDBUpgradeMojo
         {
             FileDBUpgradeLifecycle dbupgrade = new FileDBUpgradeLifecycle( config );
             dbupgrade.upgrade();
+            this.getLog().info( "Database upgrade using file list method: " + config.getUpgradeFile() );
         }
         catch ( DBUpgradeException e )
         {

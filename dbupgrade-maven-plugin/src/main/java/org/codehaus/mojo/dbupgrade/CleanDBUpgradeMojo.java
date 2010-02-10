@@ -52,6 +52,9 @@ public class CleanDBUpgradeMojo
         {
             SQLExec sqlExec = new DefaultSQLExec( config );
             sqlExec.execute( cleanScript );
+            sqlExec.commit();
+            sqlExec.close();
+            this.getLog().info( "Clean database script was invoked via " + cleanScript );
         }
         catch ( SQLException e )
         {
