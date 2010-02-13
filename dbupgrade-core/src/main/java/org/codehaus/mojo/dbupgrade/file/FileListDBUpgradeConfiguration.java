@@ -42,10 +42,16 @@ public class FileListDBUpgradeConfiguration
      */
     private String versionColumnName = "lastUpdateName";
     
-    
+    /**
+     * SQL Statement to run after each incremental upgrade
+     */
     private String postIncrementalStatement;
     
-
+    /**
+     * Send raw content of SQL file to the server when true
+     */
+    private boolean disableSQLParser = false;
+    
     public void setVersionTableName( String versionTableName )
     {
         this.versionTableName = versionTableName;
@@ -94,6 +100,16 @@ public class FileListDBUpgradeConfiguration
     public void setPostIncrementalStatement( String postIncrementalStatement )
     {
         this.postIncrementalStatement = postIncrementalStatement;
+    }
+
+    public boolean isDisableSQLParser()
+    {
+        return disableSQLParser;
+    }
+
+    public void setDisableSQLParser( boolean disableSQLParser )
+    {
+        this.disableSQLParser = disableSQLParser;
     }
     
 }

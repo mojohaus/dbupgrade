@@ -265,7 +265,7 @@ public class FileDBUpgradeLifecycle
 
         try
         {
-            sqlexec.execute( upgradeFile );
+            sqlexec.execute( upgradeFile, config.isDisableSQLParser() );
             if ( ! StringUtils.isBlank( config.getPostIncrementalStatement() ) )
             {
                 sqlexec.execute( config.getPostIncrementalStatement() );
@@ -273,7 +273,7 @@ public class FileDBUpgradeLifecycle
             sqlexec.execute( "update " + this.config.getVersionTableName() + " set " + this.config.getVersionColumnName() +  " ='" + upgradeFileName + "'" );
             sqlexec.commit();
         }
-        catch ( SQLException e )
+        catch ( Exception e )
         {
             sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Unable to run upgrade on: " + upgradeFile, e );

@@ -26,6 +26,9 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.io.IOUtils;
+import org.codehaus.mojo.dbupgrade.DBUpgradeException;
+import org.codehaus.mojo.dbupgrade.generic.DBUpgradeUsingSQL;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -320,18 +323,11 @@ public class DefaultSQLExec
             if ( !config.isKeepFormat() )
             {
                 sql.append( " " ).append( line );
-            }
-            else
-            {
-                sql.append( "\n" ).append( line );
-            }
-            
-            // SQL defines "--" and "#" as a line comment to EOL
-            // and in Oracle it may contain a hint
-            // so we cannot just remove it, instead we must end it
-            // so the comment line will be sent to the server 
-            if ( !config.isKeepFormat() )
-            {
+                
+                // SQL defines "--" and "#" as a line comment to EOL
+                // and in Oracle it may contain a hint
+                // so we cannot just remove it, instead we must end it
+                // so the comment line will be sent to the server 
                 String [] tokens = StringUtils.split( line );
                 {
                     for ( int i = 0; i < tokens.length; ++i )
@@ -339,10 +335,16 @@ public class DefaultSQLExec
                         if ( tokens[i].startsWith( "--" ) || tokens[i].startsWith( "#" ) )
                         {
                             sql.append( "\n" );
+                            break;
                         }
                     }
                 }
             }
+            else
+            {
+                sql.append( "\n" ).append( line );
+            }
+            
 
             if ( ( config.getDelimiterType().equals( DelimiterType.NORMAL ) && sql.toString()
                 .endsWith( config.getDelimiter() ) )
@@ -824,6 +826,43 @@ public class DefaultSQLExec
             IOUtil.close( reader );
         }
 
+    }
+    
+    public void execute( File sqlFile, boolean disableSQLParser )
+        throws SQLException, IOException
+    {
+        if ( ! disableSQLParser )
+        {
+            this.execute( sqlFile );
+        }
+        else
+        {
+            InputStream is = null;
+            Statement statement = null;
+            String sql = null;
+
+            try
+            {
+                is = new FileInputStream( sqlFile );
+                sql = IOUtils.toString( is );
+                
+                statement = getConnection().createStatement();
+                statement.setEscapeProcessing( false );
+                
+                if ( statement.execute( sql ) )
+                {
+                    //we expect a false return since the execution has no result set
+                    throw new SQLException( "Unable execute SQL Statement:" + sql );
+                }
+
+            }
+            finally
+            {
+                DbUtils.closeQuietly( statement );
+                IOUtils.closeQuietly( is );
+            }        
+        } 
+    
     }
 
     public void commit()

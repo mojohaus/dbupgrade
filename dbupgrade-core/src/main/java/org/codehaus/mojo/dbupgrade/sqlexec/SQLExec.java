@@ -1,6 +1,7 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
@@ -54,6 +55,9 @@ public interface SQLExec
 
     void execute( File sqlFile )
         throws SQLException;
+    
+    void execute( File sqlFile, boolean disableSQLParser )    
+        throws SQLException, IOException;
     
     void execute( String sqlCommand, File[] srcFiles, FileSet fileset )
         throws SQLException;
