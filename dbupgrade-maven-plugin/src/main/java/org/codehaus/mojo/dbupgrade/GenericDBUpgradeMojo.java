@@ -46,7 +46,7 @@ public class GenericDBUpgradeMojo
         }
         catch ( DBUpgradeException e )
         {
-            throw new MojoExecutionException( "Unable to run upgrade", e );
+            throw new MojoExecutionException( "Unable to run upgrade. " + getExceptionMessages( e ) );
         }
         
     }

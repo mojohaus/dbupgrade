@@ -1,5 +1,8 @@
 package org.codehaus.mojo.dbupgrade;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 
@@ -31,4 +34,21 @@ public abstract class AbstractDBUpgradeMojo
      */
     protected MavenProject project;
 
+    
+    /**
+     * Retrieve all messages in the stack trace
+     * @param t
+     */
+    protected static String getExceptionMessages( Throwable t )
+    {
+        StringBuffer buffer = new StringBuffer();
+        
+        while ( t != null )
+        {
+            buffer.append( t.getCause() ).append( " " );
+        }
+
+        return buffer.toString();
+    }
+    
 }
