@@ -1,8 +1,5 @@
 package org.codehaus.mojo.dbupgrade;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 
@@ -45,7 +42,8 @@ public abstract class AbstractDBUpgradeMojo
         
         while ( t != null )
         {
-            buffer.append( t.getCause() ).append( " " );
+            buffer.append( t.getMessage() ).append( " " );
+            t = t.getCause();
         }
 
         return buffer.toString();

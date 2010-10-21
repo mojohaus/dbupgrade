@@ -58,7 +58,7 @@ public class CleanDBUpgradeMojo
         }
         catch ( SQLException e )
         {
-            throw new MojoExecutionException( "Unable to clean database. " + getExceptionMessages( e ) );
+            throw new MojoExecutionException( getExceptionMessages( e ) );
         }
         
     }

@@ -112,7 +112,7 @@ public class FileDBUpgradeLifecycle
         }
         catch ( IOException e )
         {
-            throw new DBUpgradeException( "Unable to run upgrade on: " + this.config.getUpgradeFile(), e );
+            throw new DBUpgradeException( "Unable to perform file upgrade: " + this.config.getUpgradeFile(), e );
         }
         finally
         {
@@ -163,7 +163,7 @@ public class FileDBUpgradeLifecycle
         }
         catch ( SQLException e )
         {
-            throw new DBUpgradeException( "Unable to create version table:" + config.getVersionTableName(), e );
+            throw new DBUpgradeException( "Unable to create version table:" + config.getVersionTableName() + ".", e );
         }
 
     }
@@ -235,7 +235,7 @@ public class FileDBUpgradeLifecycle
                 if ( rs.next() )
                 {
                     throw new DBUpgradeException( "Multiple versions found in " + config.getVersionTableName()
-                        + " table" );
+                        + " table." );
                 }
             }
             else
@@ -276,7 +276,7 @@ public class FileDBUpgradeLifecycle
         catch ( Exception e )
         {
             sqlexec.rollbackQuietly();
-            throw new DBUpgradeException( "Unable to run upgrade on: " + upgradeFile, e );
+            throw new DBUpgradeException( "Unable to perform file upgrade: " + upgradeFile  + ".", e );
         }
     }
 }
