@@ -27,8 +27,6 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.mojo.dbupgrade.DBUpgradeException;
-import org.codehaus.mojo.dbupgrade.generic.DBUpgradeUsingSQL;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -323,36 +321,31 @@ public class DefaultSQLExec
             if ( !config.isKeepFormat() )
             {
                 sql.append( " " ).append( line );
-                
-                // SQL defines "--" and "#" as a line comment to EOL
-                // and in Oracle it may contain a hint
-                // so we cannot just remove it, instead we must end it
-                // so the comment line will be sent to the server 
-                String [] tokens = StringUtils.split( line );
-                {
-                    for ( int i = 0; i < tokens.length; ++i )
-                    {
-                        if ( tokens[i].startsWith( "--" ) || tokens[i].startsWith( "#" ) )
-                        {
-                            sql.append( "\n" );
-                            break;
-                        }
-                    }
-                }
             }
             else
             {
                 sql.append( "\n" ).append( line );
             }
-            
 
-            if ( ( config.getDelimiterType().equals( DelimiterType.NORMAL ) && sql.toString()
-                .endsWith( config.getDelimiter() ) )
-                || ( config.getDelimiterType().equals( DelimiterType.ROW ) && line.trim()
-                    .equals( config.getDelimiter() ) ) )
+            // SQL defines "--" as a comment to EOL
+            // and in Oracle it may contain a hint
+            // so we cannot just remove it, instead we must end it
+            if ( !config.isKeepFormat() )
             {
-                execSQL( sql.substring( 0, sql.length() - config.getDelimiter().length() ), out );
-                sql.replace( 0, sql.length(), "" );
+                if ( SqlSplitter.containsSqlEnd( line, config.getDelimiter() ) == SqlSplitter.NO_END )
+                {
+                    sql.append( "\n" );
+                }
+            }
+            
+            DelimiterType delimiterType = this.config.getDelimiterType();
+            String delimiter = this.config.getDelimiter();
+            
+            if ( ( delimiterType.equals( DelimiterType.NORMAL ) && SqlSplitter.containsSqlEnd( line, delimiter ) > 0 )
+                || ( delimiterType.equals( DelimiterType.ROW ) && line.trim().equals( delimiter ) ) )
+            {
+                execSQL( sql.substring( 0, sql.length() - delimiter.length() ), out );
+                sql.setLength( 0 ); // clean buffer
             }
         }
 
@@ -706,6 +699,7 @@ public class DefaultSQLExec
 
         return conn;
     }    
+    
     public void execute( String sqlCommand )
         throws SQLException
     {
