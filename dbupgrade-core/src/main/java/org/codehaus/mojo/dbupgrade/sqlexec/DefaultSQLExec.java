@@ -51,6 +51,8 @@ public class DefaultSQLExec
     implements SQLExec
 {
     private SQLExecConfig config;
+    
+    private PrintStream outLog = System.out;
 
     public DefaultSQLExec( SQLExecConfig config )
     {
@@ -368,6 +370,10 @@ public class DefaultSQLExec
             return;
         }
 
+        if ( config.isVerbose() ) {
+            out.append( sql ).append( "\n" );
+        }
+        
         ResultSet resultSet = null;
         try
         {
@@ -788,7 +794,7 @@ public class DefaultSQLExec
             statement = this.getConnection().createStatement();
             statement.setEscapeProcessing( config.isEscapeProcessing() );
 
-            this.runStatements( reader, null );
+            this.runStatements( reader, outLog );
         }
         catch ( IOException e )
         {
@@ -862,14 +868,20 @@ public class DefaultSQLExec
     public void commit()
         throws SQLException
     {
-        this.getConnection().commit();
+        if ( ! this.config.isAutocommit() ) 
+        {
+            this.getConnection().commit();
+        }
     }
 
     public void rollback()
     {
         try
         {
-            this.getConnection().rollback();
+            if ( ! this.config.isAutocommit() ) 
+            {
+                this.getConnection().rollback();
+            }
         }
         catch ( SQLException e )
         {

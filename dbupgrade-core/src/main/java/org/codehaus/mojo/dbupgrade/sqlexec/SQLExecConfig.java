@@ -202,6 +202,8 @@ public class SQLExecConfig
      * @since 1.0-beta-1
      */
     private boolean escapeProcessing = true;
+    
+    private boolean verbose = false;
 
     /**
      * Repeats the execution for stress test purpose
@@ -547,6 +549,14 @@ public class SQLExecConfig
     public void setConnectionRetryDelay( int connectionRetryDelay )
     {
         this.connectionRetryDelay = connectionRetryDelay;
+    }
+
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    public void setVerbose( boolean verbose ) {
+        this.verbose = verbose;
     }
     
 }

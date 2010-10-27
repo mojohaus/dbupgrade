@@ -262,6 +262,11 @@ public class FileDBUpgradeLifecycle
         throws DBUpgradeException
     {
         File upgradeFile = new File( scriptDirectory, upgradeFileName );
+        
+        if ( this.config.isVerbose() ) 
+        {
+            System.out.println( "Executing: " + upgradeFile + " ..." );
+        }
 
         try
         {
