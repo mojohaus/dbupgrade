@@ -14,16 +14,16 @@ package org.codehaus.mojo.dbupgrade;
  * the License.
  */
 
-
-public interface DBUpgradeLifecycle 
+public interface DBUpgradeLifecycle
 {
-	String ROLE = DBUpgradeLifecycle.class.getName();
-	
-	/**
-	 * Upgrade database
-	 * @return number of upgrader it executes
-	 * @throws DBUpgradeException
-	 */
-	int upgrade() throws DBUpgradeException;
-	  
+    String ROLE = DBUpgradeLifecycle.class.getName();
+
+    /**
+     * Upgrade database
+     * @return number of upgrader it executes
+     * @throws DBUpgradeException
+     */
+    int upgrade()
+        throws DBUpgradeException;
+
 }

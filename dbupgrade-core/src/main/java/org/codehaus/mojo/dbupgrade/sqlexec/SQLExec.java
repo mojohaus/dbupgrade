@@ -29,7 +29,6 @@ public interface SQLExec
         ROW
     }
 
-    
     Connection getConnection()
         throws SQLException;
 
@@ -38,8 +37,9 @@ public interface SQLExec
      */
     void rollback();
 
-    void commit() throws SQLException;
-    
+    void commit()
+        throws SQLException;
+
     void rollbackQuietly();
 
     void close();
@@ -55,10 +55,10 @@ public interface SQLExec
 
     void execute( File sqlFile )
         throws SQLException;
-    
-    void execute( File sqlFile, boolean disableSQLParser )    
+
+    void execute( File sqlFile, boolean disableSQLParser )
         throws SQLException, IOException;
-    
+
     void execute( String sqlCommand, File[] srcFiles, FileSet fileset )
         throws SQLException;
 

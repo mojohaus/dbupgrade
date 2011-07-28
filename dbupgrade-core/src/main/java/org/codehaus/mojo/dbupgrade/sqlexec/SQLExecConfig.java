@@ -18,7 +18,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec.DelimiterType;
  * the License.
  */
 
-
 public class SQLExecConfig
 {
     /**
@@ -202,7 +201,7 @@ public class SQLExecConfig
      * @since 1.0-beta-1
      */
     private boolean escapeProcessing = true;
-    
+
     private boolean verbose = false;
 
     /**
@@ -230,17 +229,16 @@ public class SQLExecConfig
      * @since 1.0-beta-1
      */
     private int connectionRetries = 1;
-    
+
     /**
      * Number of delay in msec between each connection retry
      * @since 1.0-beta-1
      */
     private int connectionRetryDelay = 10000; //msec
-    
+
     // /////////////////////////////////////////////////////////////////////////////////////
     // Accessor
     // /////////////////////////////////////////////////////////////////////////////////////
-
 
     public void setRepeatesPerConnection( int num )
     {
@@ -354,7 +352,7 @@ public class SQLExecConfig
     {
         this.driverProperties = driverProperties;
     }
-    
+
     /**
      * Set the file encoding to use on the SQL files read in
      *
@@ -551,12 +549,14 @@ public class SQLExecConfig
         this.connectionRetryDelay = connectionRetryDelay;
     }
 
-    public boolean isVerbose() {
+    public boolean isVerbose()
+    {
         return verbose;
     }
 
-    public void setVerbose( boolean verbose ) {
+    public void setVerbose( boolean verbose )
+    {
         this.verbose = verbose;
     }
-    
+
 }

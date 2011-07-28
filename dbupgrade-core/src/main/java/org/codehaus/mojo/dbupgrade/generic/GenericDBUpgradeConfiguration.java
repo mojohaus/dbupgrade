@@ -16,7 +16,6 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeConfiguration;
  * the License.
  */
 
-
 public class GenericDBUpgradeConfiguration
     extends DBUpgradeConfiguration
 {
@@ -24,89 +23,88 @@ public class GenericDBUpgradeConfiguration
      * Database type
      */
     private String dialect;
-    
+
     /**
      * Table name to be used to look for version for
      */
     private String versionTableName = "version";
-    
+
     /**
      * Column name in versionTableName to be used to look for version info
      */
     private String versionColumnName = "version";
-    
-    
+
     /**
      * Contains resource to perform upgrade
      */
     private String packageName;
-    
+
     /**
      * name of the resource under packageName that contains version=??? property
      */
     private String versionResourceName = "version.properties";
-    
+
     /**
      * Prefix name of sql/java upgrade files
      */
     private String upgraderPrefix = "DBUpgrade";
-    
+
     /**
      * version to be inserted when version table first created
      */
     private int initialVersion = 0;
-    
+
     public void setDialect( String dialect )
     {
         this.dialect = dialect;
     }
-    
-    public String getDialect( )
+
+    public String getDialect()
     {
         return this.dialect;
-    } 
-    
+    }
+
     public void setPackageName( String packageName )
     {
         this.packageName = packageName;
     }
-    
-    public String getPackageName( )
+
+    public String getPackageName()
     {
         return this.packageName;
-    }    
-    
+    }
+
     public String getPackageNameSlashFormat()
     {
         return this.packageName.replace( '.', '/' );
     }
-    
+
     public void setVersionResourceName( String versionResourceName )
     {
         this.versionResourceName = versionResourceName;
     }
-    
-    public String getVersionResourceName( )
+
+    public String getVersionResourceName()
     {
         return this.versionResourceName;
-    }      
-        
+    }
+
     public void setVersionTableName( String versionTableName )
     {
         this.versionTableName = versionTableName;
     }
-    
-    public String getVersionTableName( )
+
+    public String getVersionTableName()
     {
         return this.versionTableName;
-    }      
-    
+    }
+
     public void setVersionColumnName( String versionCollumnName )
     {
         this.versionColumnName = versionCollumnName;
     }
-    
-    public String getVersionColumnName( )
+
+    public String getVersionColumnName()
     {
         return this.versionColumnName;
     }
@@ -130,5 +128,5 @@ public class GenericDBUpgradeConfiguration
     {
         this.initialVersion = initialVersion;
     }
-    
+
 }

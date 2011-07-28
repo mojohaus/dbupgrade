@@ -31,7 +31,6 @@ public abstract class AbstractDBUpgradeMojo
      */
     protected MavenProject project;
 
-    
     /**
      * Retrieve all messages in the stack trace
      * @param t
@@ -39,7 +38,7 @@ public abstract class AbstractDBUpgradeMojo
     protected static String getExceptionMessages( Throwable t )
     {
         StringBuffer buffer = new StringBuffer();
-        
+
         while ( t != null )
         {
             buffer.append( t.getMessage() ).append( " " );
@@ -48,5 +47,5 @@ public abstract class AbstractDBUpgradeMojo
 
         return buffer.toString();
     }
-    
+
 }

@@ -19,7 +19,6 @@ import org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration;
  * the License.
  */
 
-
 /**
  * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list of SQL script paths ). 
  * After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
@@ -37,7 +36,7 @@ public class FileListDBUpgradeMojo
      * @required
      */
     private FileListDBUpgradeConfiguration config;
-    
+
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {

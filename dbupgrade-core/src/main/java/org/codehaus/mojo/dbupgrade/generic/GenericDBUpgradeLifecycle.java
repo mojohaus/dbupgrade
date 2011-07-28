@@ -74,7 +74,7 @@ public class GenericDBUpgradeLifecycle
             throw new DBUpgradeException( "Unable to upgrade", e );
         }
 
-        return upgradeCount; 
+        return upgradeCount;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ public class GenericDBUpgradeLifecycle
             + " ) values ( " + config.getInitialVersion() + " )" );
     }
 
-    private int  incrementalUpgrade()
+    private int incrementalUpgrade()
         throws DBUpgradeException
     {
         int latestVersion = this.getResourceVersion();
@@ -155,7 +155,7 @@ public class GenericDBUpgradeLifecycle
 
         return upgradeCount;
     }
-    
+
     private int getResourceVersion()
         throws DBUpgradeException
     {
@@ -179,8 +179,8 @@ public class GenericDBUpgradeLifecycle
         catch ( IOException e )
         {
             throw new DBUpgradeException( "Could not read " + versionResourcePath + " resource in classpath", e );
-        }    
-        
+        }
+
         return version;
     }
 

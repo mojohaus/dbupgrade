@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-
 /*
  * Copyright 2000-2010 The Apache Software Foundation
  * 
@@ -21,7 +20,6 @@ import junit.framework.TestCase;
  * the License.
  */
 
-
 /**
  * Unit test for simple SQLExec taken from sqlexec-maven-plugin 1.3
  */
@@ -29,7 +27,7 @@ public class SQLExecTest
     extends TestCase
 {
     private DefaultSQLExec sqlexec;
-    
+
     private SQLExecConfig config;
 
     private Properties p;
@@ -47,7 +45,7 @@ public class SQLExecTest
         config.setPassword( p.getProperty( "password" ) );
         config.setUrl( p.getProperty( "url" ) );
         config.setDriverProperties( p.getProperty( "driverProperties" ) );
-        
+
         sqlexec = new DefaultSQLExec( config );
 
         // populate parameters

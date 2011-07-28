@@ -60,11 +60,11 @@ public class GenericDBUpgradeExecutorTest
         DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
         try
         {
-            upgrader.upgrade( );
+            upgrader.upgrade();
         }
         catch ( RuntimeException e )
         {
-            assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" )  );
+            assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" ) );
         }
     }
 
@@ -82,7 +82,5 @@ public class GenericDBUpgradeExecutorTest
             System.out.println( "Expected exception: " + e.getMessage() );
         }
     }
-
-
 
 }

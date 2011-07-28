@@ -26,7 +26,7 @@ public class FileListDBUpgradeConfiguration
      * Path to a file that contains incremental upgrade scripts
      */
     private File upgradeFile;
-    
+
     /**
      * Directory containing the script files specified in <i>upgradeFile</i>
      */
@@ -41,33 +41,33 @@ public class FileListDBUpgradeConfiguration
      * Column name in versionTableName to be used to look for version info
      */
     private String versionColumnName = "lastUpdateName";
-    
+
     /**
      * SQL Statement to run after each incremental upgrade
      */
     private String postIncrementalStatement;
-    
+
     /**
      * Send raw content of SQL file to the server when true
      */
     private boolean disableSQLParser = false;
-    
+
     public void setVersionTableName( String versionTableName )
     {
         this.versionTableName = versionTableName;
     }
-    
-    public String getVersionTableName( )
+
+    public String getVersionTableName()
     {
         return this.versionTableName;
-    }      
-    
+    }
+
     public void setVersionColumnName( String versionCollumnName )
     {
         this.versionColumnName = versionCollumnName;
     }
-    
-    public String getVersionColumnName( )
+
+    public String getVersionColumnName()
     {
         return this.versionColumnName;
     }
@@ -91,7 +91,7 @@ public class FileListDBUpgradeConfiguration
     {
         this.scriptDirectory = dir;
     }
-    
+
     public String getPostIncrementalStatement()
     {
         return postIncrementalStatement;
@@ -111,5 +111,5 @@ public class FileListDBUpgradeConfiguration
     {
         this.disableSQLParser = disableSQLParser;
     }
-    
+
 }

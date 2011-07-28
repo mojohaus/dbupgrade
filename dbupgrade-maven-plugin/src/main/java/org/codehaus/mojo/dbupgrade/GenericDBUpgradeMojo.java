@@ -35,7 +35,7 @@ public class GenericDBUpgradeMojo
      * @required
      */
     private GenericDBUpgradeConfiguration config;
-    
+
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
@@ -48,6 +48,6 @@ public class GenericDBUpgradeMojo
         {
             throw new MojoExecutionException( getExceptionMessages( e ) );
         }
-        
+
     }
 }

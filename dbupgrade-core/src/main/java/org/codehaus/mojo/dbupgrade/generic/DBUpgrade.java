@@ -20,7 +20,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
  * the License.
  */
 
-
 public interface DBUpgrade
 {
     /**
@@ -29,5 +28,6 @@ public interface DBUpgrade
      * @param dialect. The implementation uses this param to locate the database specific resource
      * @throws DBUpgradeException
      */
-    void upgradeDB( SQLExec sqlExec, String dialect ) throws DBUpgradeException;
+    void upgradeDB( SQLExec sqlExec, String dialect )
+        throws DBUpgradeException;
 }

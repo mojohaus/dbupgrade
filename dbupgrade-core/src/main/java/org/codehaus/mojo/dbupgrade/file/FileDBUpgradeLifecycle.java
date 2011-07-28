@@ -262,8 +262,8 @@ public class FileDBUpgradeLifecycle
         throws DBUpgradeException
     {
         File upgradeFile = new File( scriptDirectory, upgradeFileName );
-        
-        if ( this.config.isVerbose() ) 
+
+        if ( this.config.isVerbose() )
         {
             System.out.println( "Executing: " + upgradeFile + " ..." );
         }
@@ -271,17 +271,18 @@ public class FileDBUpgradeLifecycle
         try
         {
             sqlexec.execute( upgradeFile, config.isDisableSQLParser() );
-            if ( ! StringUtils.isBlank( config.getPostIncrementalStatement() ) )
+            if ( !StringUtils.isBlank( config.getPostIncrementalStatement() ) )
             {
                 sqlexec.execute( config.getPostIncrementalStatement() );
             }
-            sqlexec.execute( "update " + this.config.getVersionTableName() + " set " + this.config.getVersionColumnName() +  " ='" + upgradeFileName + "'" );
+            sqlexec.execute( "update " + this.config.getVersionTableName() + " set "
+                + this.config.getVersionColumnName() + " ='" + upgradeFileName + "'" );
             sqlexec.commit();
         }
         catch ( Exception e )
         {
             sqlexec.rollbackQuietly();
-            throw new DBUpgradeException( "Unable to perform file upgrade: " + upgradeFile  + ".", e );
+            throw new DBUpgradeException( "Unable to perform file upgrade: " + upgradeFile + ".", e );
         }
     }
 }

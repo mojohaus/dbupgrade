@@ -36,15 +36,14 @@ public class CleanDBUpgradeMojo
      * @required
      */
     private SQLExecConfig config;
-    
+
     /**
      * Path to a SQL script to clean your database
      * @parameter expression="${cleanScript}
      * @required
      */
     private File cleanScript;
-    
-    
+
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
@@ -60,6 +59,6 @@ public class CleanDBUpgradeMojo
         {
             throw new MojoExecutionException( getExceptionMessages( e ) );
         }
-        
+
     }
 }

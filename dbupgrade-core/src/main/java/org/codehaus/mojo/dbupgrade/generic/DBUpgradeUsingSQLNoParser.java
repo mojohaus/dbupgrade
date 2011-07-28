@@ -50,11 +50,10 @@ public class DBUpgradeUsingSQLNoParser
         {
             is = DBUpgradeUsingSQL.class.getClassLoader().getResourceAsStream( this.sqlResouceName );
             sql = IOUtils.toString( is );
-            
+
             statement = sqlexec.getConnection().createStatement();
             statement.setEscapeProcessing( false );
-           
-            
+
             if ( statement.execute( sql ) )
             {
                 //we expect a false return since the execution has no result set
@@ -68,7 +67,7 @@ public class DBUpgradeUsingSQLNoParser
         }
         catch ( SQLException e )
         {
-            throw new DBUpgradeException( "Unable execute SQL Statement:" + sql, e  );
+            throw new DBUpgradeException( "Unable execute SQL Statement:" + sql, e );
         }
         finally
         {
@@ -76,10 +75,10 @@ public class DBUpgradeUsingSQLNoParser
         }
 
     }
-    
+
     public String toString()
     {
         return "DBUpgradeUsingSQLNoParser:" + sqlResouceName;
     }
-    
+
 }

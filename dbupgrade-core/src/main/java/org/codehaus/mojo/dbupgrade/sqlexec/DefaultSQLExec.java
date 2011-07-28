@@ -51,7 +51,7 @@ public class DefaultSQLExec
     implements SQLExec
 {
     private SQLExecConfig config;
-    
+
     private PrintStream outLog = System.out;
 
     public DefaultSQLExec( SQLExecConfig config )
@@ -166,8 +166,6 @@ public class DefaultSQLExec
         }
     }
 
-
-    
     private void handleWindowsDomainUser( Properties driverProperties )
     {
         if ( "net.sourceforge.jtds.jdbc.Driver".equals( config.getDriver() ) )
@@ -181,7 +179,7 @@ public class DefaultSQLExec
             }
         }
     }
-    
+
     private Driver createJDBCDriver()
     {
         Driver driverInstance = null;
@@ -199,7 +197,7 @@ public class DefaultSQLExec
         {
             throw new RuntimeException( "Failure loading driver: " + config.getDriver(), e );
         }
-        
+
         return driverInstance;
     }
 
@@ -207,7 +205,7 @@ public class DefaultSQLExec
         throws SQLException
     {
         Connection connection = null;
-        
+
         for ( int i = 0; i < config.getConnectionRetries(); ++i )
         {
             try
@@ -339,10 +337,10 @@ public class DefaultSQLExec
                     sql.append( "\n" );
                 }
             }
-            
+
             DelimiterType delimiterType = this.config.getDelimiterType();
             String delimiter = this.config.getDelimiter();
-            
+
             if ( ( delimiterType.equals( DelimiterType.NORMAL ) && SqlSplitter.containsSqlEnd( line, delimiter ) > 0 )
                 || ( delimiterType.equals( DelimiterType.ROW ) && line.trim().equals( delimiter ) ) )
             {
@@ -370,10 +368,11 @@ public class DefaultSQLExec
             return;
         }
 
-        if ( config.isVerbose() ) {
+        if ( config.isVerbose() )
+        {
             out.append( sql ).append( "\n" );
         }
-        
+
         ResultSet resultSet = null;
         try
         {
@@ -704,8 +703,8 @@ public class DefaultSQLExec
         conn.setAutoCommit( config.isAutocommit() );
 
         return conn;
-    }    
-    
+    }
+
     public void execute( String sqlCommand )
         throws SQLException
     {
@@ -827,11 +826,11 @@ public class DefaultSQLExec
         }
 
     }
-    
+
     public void execute( File sqlFile, boolean disableSQLParser )
         throws SQLException, IOException
     {
-        if ( ! disableSQLParser )
+        if ( !disableSQLParser )
         {
             this.execute( sqlFile );
         }
@@ -845,10 +844,10 @@ public class DefaultSQLExec
             {
                 is = new FileInputStream( sqlFile );
                 sql = IOUtils.toString( is );
-                
+
                 statement = getConnection().createStatement();
                 statement.setEscapeProcessing( false );
-                
+
                 if ( statement.execute( sql ) )
                 {
                     //we expect a false return since the execution has no result set
@@ -860,15 +859,15 @@ public class DefaultSQLExec
             {
                 DbUtils.closeQuietly( statement );
                 IOUtils.closeQuietly( is );
-            }        
-        } 
-    
+            }
+        }
+
     }
 
     public void commit()
         throws SQLException
     {
-        if ( ! this.config.isAutocommit() ) 
+        if ( !this.config.isAutocommit() )
         {
             this.getConnection().commit();
         }
@@ -878,7 +877,7 @@ public class DefaultSQLExec
     {
         try
         {
-            if ( ! this.config.isAutocommit() ) 
+            if ( !this.config.isAutocommit() )
             {
                 this.getConnection().rollback();
             }
@@ -914,7 +913,7 @@ public class DefaultSQLExec
         Reader reader = new InputStreamReader( istream );
         this.execute( reader );
     }
-    
+
     /**
      * Number of SQL statements executed so far that caused errors.
      *
@@ -933,6 +932,6 @@ public class DefaultSQLExec
     public int getTotalStatements()
     {
         return totalStatements;
-    }    
+    }
 
 }
