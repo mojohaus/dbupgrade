@@ -54,6 +54,15 @@ public class FileDBUpgradeLifecycle
     }
 
     /**
+     * Done with this instance
+     */
+    public void shutdown() 
+    {
+        this.sqlexec.shutdown();
+    }
+    
+
+    /**
      * Execute DB Upgrade lifecycle phases
      */
     public int upgrade()
@@ -285,4 +294,5 @@ public class FileDBUpgradeLifecycle
             throw new DBUpgradeException( "Unable to perform file upgrade: " + upgradeFile + ".", e );
         }
     }
+
 }

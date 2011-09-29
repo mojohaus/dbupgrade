@@ -53,6 +53,15 @@ public class GenericDBUpgradeLifecycle
         this.sqlexec = new DefaultSQLExec( config );
         this.initDBUpgrade();
     }
+    
+    /**
+     * Done with this instance
+     */
+    public void shutdown() 
+    {
+        this.sqlexec.shutdown();
+    }
+    
 
     /**
      * Execute DB Upgrade lifecycle phases

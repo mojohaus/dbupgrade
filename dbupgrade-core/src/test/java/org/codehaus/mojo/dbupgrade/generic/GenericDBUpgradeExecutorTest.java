@@ -49,6 +49,10 @@ public class GenericDBUpgradeExecutorTest
         DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
         assertEquals( 4, upgrader.upgrade() );
 
+        //test whether the component can reconnect after a shutdown
+        upgrader.shutdown();
+        assertEquals( 0, upgrader.upgrade() );
+        
         //do it one more time
         assertEquals( 0, upgrader.upgrade() );
     }

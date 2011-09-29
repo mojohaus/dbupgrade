@@ -25,5 +25,10 @@ public interface DBUpgradeLifecycle
      */
     int upgrade()
         throws DBUpgradeException;
+    
+    /**
+     * Done with this instance
+     */
+    void shutdown();
 
 }

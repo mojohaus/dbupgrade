@@ -68,4 +68,5 @@ public interface SQLExec
     public void execute( Reader reader )
         throws SQLException;
 
+    public void shutdown();
 }

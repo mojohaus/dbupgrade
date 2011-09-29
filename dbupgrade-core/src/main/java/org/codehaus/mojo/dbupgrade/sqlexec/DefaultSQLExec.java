@@ -933,5 +933,13 @@ public class DefaultSQLExec
     {
         return totalStatements;
     }
+    
+    public void shutdown() {
+        
+        if ( this.conn != null ) {
+            DbUtils.closeQuietly( conn );
+            conn = null;// to allow the object reused
+        }
+    }
 
 }
