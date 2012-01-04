@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>DBUpgrade Maven Plugin</title>
+    <author email="dantran@gmail.com">Dan T. Tran</author>
+  </properties>
+  <body>
+  
+    <release version="1.0-beta-2" date="2012-01-04" description="Bug fixes">
+      <action dev="dtran" type="fix" issue="MOJO-1754">
+        Introduce shutdown method in dbupgrade-core to allow client cleaning connection after upgrade invocation
+      </action>
+    </release>
+    
+    <release version="1.0-beta-1" date="2010-07-28" description="First Beta Release">
+    </release>
+    
+  </body>
+</document>
+
