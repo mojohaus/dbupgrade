@@ -10,7 +10,7 @@
 
   <groupId>org.codehaus.mojo.dbupgrade</groupId>
   <artifactId>dbupgrade</artifactId>
-  <version>1.0-beta-2</version>
+  <version>1.0-beta-3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DBUpgrade Parent</name>
@@ -24,9 +24,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-2</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-2</developerConnection>
-    <url>http://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-2</url>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</developerConnection>
+    <url>http://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</url>
   </scm>
 
   <developers>
