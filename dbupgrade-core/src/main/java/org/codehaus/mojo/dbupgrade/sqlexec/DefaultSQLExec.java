@@ -14,6 +14,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -32,12 +33,12 @@ import org.codehaus.plexus.util.StringUtils;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -87,7 +88,6 @@ public class DefaultSQLExec
 
     /**
      * Add sql command to transactions list.
-     *
      */
     private List<Transaction> addCommandToTransactions( List<Transaction> transactions, String sqlCommand )
     {
@@ -103,7 +103,6 @@ public class DefaultSQLExec
 
     /**
      * Add user sql fileset to transation list
-     *
      */
     private List<Transaction> addFileSetToTransactions( List<Transaction> transactions, FileSet fileset )
     {
@@ -184,18 +183,21 @@ public class DefaultSQLExec
     {
         Driver driverInstance = null;
 
-        try
+        if ( config.getDriver() != null )
         {
-            Class<?> dc = Class.forName( config.getDriver() );
-            driverInstance = (Driver) dc.newInstance();
-        }
-        catch ( ClassNotFoundException e )
-        {
-            throw new RuntimeException( "Driver class not found: " + config.getDriver(), e );
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( "Failure loading driver: " + config.getDriver(), e );
+            try
+            {
+                Class<?> dc = Class.forName( config.getDriver() );
+                driverInstance = (Driver) dc.newInstance();
+            }
+            catch ( ClassNotFoundException e )
+            {
+                throw new RuntimeException( "Driver class not found: " + config.getDriver(), e );
+            }
+            catch ( Exception e )
+            {
+                throw new RuntimeException( "Failure loading driver: " + config.getDriver(), e );
+            }
         }
 
         return driverInstance;
@@ -210,6 +212,12 @@ public class DefaultSQLExec
         {
             try
             {
+                if ( driverInstance == null )
+                {
+                    connection = DriverManager.getConnection( config.getUrl(), driverProperties );
+                    break;
+                }
+
                 connection = driverInstance.connect( config.getUrl(), driverProperties );
                 if ( connection == null )
                 {
@@ -242,36 +250,6 @@ public class DefaultSQLExec
 
         return connection;
 
-    }
-
-    /**
-     * parse driverProperties into Properties set
-     *
-     * @return
-     * @throws SQLException
-     */
-    protected Properties getDriverProperties()
-    {
-        //set as protected scopy for unit test purpose
-        Properties properties = new Properties();
-
-        if ( !StringUtils.isEmpty( this.config.getDriverProperties() ) )
-        {
-            String[] tokens = StringUtils.split( this.config.getDriverProperties(), "," );
-            for ( int i = 0; i < tokens.length; ++i )
-            {
-                String[] keyValueTokens = StringUtils.split( tokens[i].trim(), "=" );
-                if ( keyValueTokens.length != 2 )
-                {
-                    throw new RuntimeException( "Invalid JDBC Driver properties: " + this.config.getDriverProperties() );
-                }
-
-                properties.setProperty( keyValueTokens[0], keyValueTokens[1] );
-
-            }
-        }
-
-        return properties;
     }
 
     /**
@@ -495,9 +473,8 @@ public class DefaultSQLExec
     }
 
     /**
-     * Contains the definition of a new transaction element. Transactions allow several files or
-     * blocks of statements to be executed using the same JDBC connection and commit operation in
-     * between.
+     * Contains the definition of a new transaction element. Transactions allow several files or blocks of statements to
+     * be executed using the same JDBC connection and commit operation in between.
      */
     private class Transaction
         implements Comparable<Object>
@@ -608,8 +585,12 @@ public class DefaultSQLExec
             {
                 if ( config.getOutputFile() != null )
                 {
-                    out = new PrintStream( new BufferedOutputStream( new FileOutputStream( config.getOutputFile()
-                        .getAbsolutePath(), config.isAppend() ) ) );
+                    out =
+                        new PrintStream(
+                                         new BufferedOutputStream(
+                                                                   new FileOutputStream(
+                                                                                         config.getOutputFile().getAbsolutePath(),
+                                                                                         config.isAppend() ) ) );
                 }
 
                 // Process all transactions
@@ -658,19 +639,17 @@ public class DefaultSQLExec
 
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates a new Connection as using the driver, url, userid and password specified.
-     *
-     * The calling method is responsible for closing the connection.
+     * Creates a new Connection as using the driver, url, userid and password specified. The calling method is
+     * responsible for closing the connection.
      *
      * @return Connection the newly created connection.
-     * @throws SQLException if the UserId/Password/Url is not set or there is no suitable driver
-     *             or the driver fails to load.
+     * @throws SQLException if the UserId/Password/Url is not set or there is no suitable driver or the driver fails to
+     *             load.
      * @throws SQLException if there is problem getting connection with valid url
-     *
      */
     public Connection getConnection()
         throws SQLException
@@ -694,7 +673,7 @@ public class DefaultSQLExec
             }
         }
 
-        driverProperties.putAll( this.getDriverProperties() );
+        driverProperties.putAll( this.config.getDriverPropertyMap() );
 
         Driver driverInstance = this.createJDBCDriver();
 
@@ -850,7 +829,7 @@ public class DefaultSQLExec
 
                 if ( statement.execute( sql ) )
                 {
-                    //we expect a false return since the execution has no result set
+                    // we expect a false return since the execution has no result set
                     throw new SQLException( "Unable execute SQL Statement:" + sql );
                 }
 
@@ -884,7 +863,7 @@ public class DefaultSQLExec
         }
         catch ( SQLException e )
         {
-            //unexpected exception, throw runtime to get more attention
+            // unexpected exception, throw runtime to get more attention
             throw new RuntimeException( "Unable to rollback." );
         }
     }
@@ -933,10 +912,12 @@ public class DefaultSQLExec
     {
         return totalStatements;
     }
-    
-    public void shutdown() {
-        
-        if ( this.conn != null ) {
+
+    public void shutdown()
+    {
+
+        if ( this.conn != null )
+        {
             DbUtils.closeQuietly( conn );
             conn = null;// to allow the object reused
         }

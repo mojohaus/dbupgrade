@@ -1,17 +1,20 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.Properties;
 
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec.DelimiterType;
+import org.codehaus.plexus.util.StringUtils;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -76,7 +79,7 @@ public class SQLExecConfig
     private boolean enableAnonymousPassword;
 
     /**
-     * Additional key=value pairs separated by comma to be passed into JDBC driver.
+     * Additional key=value pairs separated by comma(,) or semicolon(;) to be passed into JDBC driver.
      * @since 1.0-beta-1
      */
     private String driverProperties;
@@ -101,7 +104,7 @@ public class SQLExecConfig
     private String url;
 
     /**
-     * Database driver classname.
+     * Database driver classname. If not give, it will be discovered using provided url with jdbc4
      *
      * @since 1.0-beta-1
      */
@@ -225,7 +228,7 @@ public class SQLExecConfig
     /**
      * Number of retries to open connection before giving up.
      * Mainly to handle the case where application and database colocated and
-     * database is much slower to accept connection at system startup 
+     * database is much slower to accept connection at system startup
      * @since 1.0-beta-1
      */
     private int connectionRetries = 1;
@@ -442,6 +445,35 @@ public class SQLExecConfig
     public String getDriverProperties()
     {
         return driverProperties;
+    }
+
+    /**
+     * parse driverProperties into Properties set
+     *
+     * @return Proproties
+     */
+    public Properties getDriverPropertyMap()
+    {
+        // set as protected scopy for unit test purpose
+        Properties properties = new Properties();
+
+        if ( !StringUtils.isEmpty( this.driverProperties ) )
+        {
+            String[] tokens = StringUtils.split( this.driverProperties, ",;" );
+            for ( int i = 0; i < tokens.length; ++i )
+            {
+                String[] keyValueTokens = StringUtils.split( tokens[i].trim(), "=" );
+                if ( keyValueTokens.length != 2 )
+                {
+                    throw new RuntimeException( "Invalid JDBC Driver properties: " + this.driverProperties );
+                }
+
+                properties.setProperty( keyValueTokens[0], keyValueTokens[1] );
+
+            }
+        }
+
+        return properties;
     }
 
     public boolean isSkipOnConnectionError()
