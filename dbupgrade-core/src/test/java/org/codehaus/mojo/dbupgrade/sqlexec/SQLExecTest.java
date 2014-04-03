@@ -52,6 +52,14 @@ public class SQLExecTest
 
     }
 
+    public void tearDown()
+        throws Exception
+    {
+        if ( sqlexec != null ) {
+            sqlexec.close();
+        }
+    }
+
     /**
      * No error when there is no input
      */
@@ -90,7 +98,7 @@ public class SQLExecTest
         ds.scan();
         assert ( ds.getIncludedFiles().length == 1 );
 
-        //sqlexec.setFileSet( ds );
+        // sqlexec.setFileSet( ds );
 
         sqlexec.execute( ds );
 
@@ -104,7 +112,7 @@ public class SQLExecTest
         File[] srcFiles = new File[1];
         srcFiles[0] = new File( "src/test/data/drop-test-tables.sql" );
 
-        //sqlexec.setSrcFiles( srcFiles );
+        // sqlexec.setSrcFiles( srcFiles );
         sqlexec.execute( srcFiles );
 
         assertEquals( 3, sqlexec.getSuccessfulStatements() );
@@ -113,24 +121,23 @@ public class SQLExecTest
 
     /**
      * Ensure srcFiles always execute first
-     *
      */
     public void testAllMojo()
         throws SQLException
     {
 
         String command = "create table PERSON2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
 
         File[] srcFiles = new File[1];
         srcFiles[0] = new File( "src/test/data/create-test-tables.sql" );
-        //sqlexec.setSrcFiles( srcFiles );
+        // sqlexec.setSrcFiles( srcFiles );
 
         FileSet ds = new FileSet();
         ds.setBasedir( "src/test" );
         ds.setIncludes( new String[] { "**/drop*.sql" } );
         ds.scan();
-        //sqlexec.setFileSet( ds );
+        // sqlexec.setFileSet( ds );
         sqlexec.execute( command, srcFiles, ds );
 
         assertEquals( 7, sqlexec.getSuccessfulStatements() );
@@ -143,7 +150,7 @@ public class SQLExecTest
         ds.setBasedir( "src/test" );
         ds.setIncludes( new String[] { "**/drop*.sql", "**/create*.sql" } );
         ds.scan();
-        //sqlexec.setFileSet( ds );
+        // sqlexec.setFileSet( ds );
 
         config.setOrderFile( SQLExecConfig.FILE_SORTING_ASC );
         sqlexec.execute( ds );
@@ -164,7 +171,7 @@ public class SQLExecTest
     public void testOnErrorContinueMojo()
         throws SQLException
     {
-        String command = "create table BOGUS"; //bad syntax
+        String command = "create table BOGUS"; // bad syntax
         config.setOnError( "continue" );
         sqlexec.execute( command );
         assertEquals( 0, sqlexec.getSuccessfulStatements() );
@@ -173,7 +180,7 @@ public class SQLExecTest
     public void testOnErrorAbortMojo()
         throws SQLException
     {
-        String command = "create table BOGUS"; //bad syntax
+        String command = "create table BOGUS"; // bad syntax
 
         try
         {
@@ -192,16 +199,16 @@ public class SQLExecTest
     public void testOnErrorAbortAfterMojo()
         throws SQLException
     {
-        String commands = "create table BOGUS"; //bad syntax
+        String commands = "create table BOGUS"; // bad syntax
 
-        //        sqlexec.addText( commands );
+        // sqlexec.addText( commands );
 
         File[] srcFiles = new File[1];
         srcFiles[0] = new File( "src/test/data/invalid-syntax.sql" );
 
         assertTrue( srcFiles[0].exists() );
 
-        //        sqlexec.setSrcFiles( srcFiles );
+        // sqlexec.setSrcFiles( srcFiles );
         config.setOnError( "abortAfter" );
 
         try
@@ -212,7 +219,7 @@ public class SQLExecTest
         }
         catch ( SQLException e )
         {
-            //expected
+            // expected
         }
 
         assertEquals( 0, sqlexec.getSuccessfulStatements() );
@@ -281,7 +288,7 @@ public class SQLExecTest
         }
         catch ( IllegalArgumentException e )
         {
-            //expected
+            // expected
         }
         try
         {
@@ -290,7 +297,7 @@ public class SQLExecTest
         }
         catch ( IllegalArgumentException e )
         {
-            //expected
+            // expected
         }
     }
 
@@ -324,7 +331,7 @@ public class SQLExecTest
         // Normally a line starting in -- would be ignored, but with keepformat mode
         // on it will not.
         String command = "--create table PERSON ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setKeepFormat( true );
 
         try
@@ -343,10 +350,11 @@ public class SQLExecTest
     public void testBadDelimiter()
         throws Exception
     {
-        String command = "create table SEPARATOR ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar):"
-            + "create table SEPARATOR2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
+        String command =
+            "create table SEPARATOR ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar):"
+                + "create table SEPARATOR2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
 
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setDelimiter( ":" );
 
         try
@@ -362,10 +370,11 @@ public class SQLExecTest
     public void testGoodDelimiter()
         throws Exception
     {
-        String command = "create table SEPARATOR ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)\n:\n"
-            + "create table SEPARATOR2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
+        String command =
+            "create table SEPARATOR ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)\n:\n"
+                + "create table SEPARATOR2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
 
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setDelimiter( ":" );
 
         sqlexec.execute( command );
@@ -376,10 +385,11 @@ public class SQLExecTest
     public void testBadDelimiterType()
         throws Exception
     {
-        String command = "create table BADDELIMTYPE ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)" + "\n:"
-            + "create table BADDELIMTYPE2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
+        String command =
+            "create table BADDELIMTYPE ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)" + "\n:"
+                + "create table BADDELIMTYPE2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
 
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setDelimiter( ":" );
         config.setDelimiterType( DefaultSQLExec.DelimiterType.ROW );
 
@@ -396,10 +406,11 @@ public class SQLExecTest
     public void testGoodDelimiterType()
         throws Exception
     {
-        String command = "create table GOODDELIMTYPE ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)"
-            + "\n:  \n" + "create table GOODDELIMTYPE2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
+        String command =
+            "create table GOODDELIMTYPE ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)" + "\n:  \n"
+                + "create table GOODDELIMTYPE2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
 
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setDelimiter( ":" );
         config.setDelimiterType( DefaultSQLExec.DelimiterType.ROW );
 
@@ -410,10 +421,11 @@ public class SQLExecTest
     public void testOutputFile()
         throws Exception
     {
-        String command = "create table GOODDELIMTYPE3 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)"
-            + "\n:  \n" + "create table GOODDELIMTYPE4 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
+        String command =
+            "create table GOODDELIMTYPE3 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)" + "\n:  \n"
+                + "create table GOODDELIMTYPE4 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
 
-        //sqlexec.addText( command );
+        // sqlexec.addText( command );
         config.setDelimiter( ":" );
         config.setDelimiterType( DefaultSQLExec.DelimiterType.ROW );
 
@@ -421,16 +433,22 @@ public class SQLExecTest
         File outputFile = new File( basedir, "target/sql.out" );
         outputFile.delete();
         config.setOutputFile( outputFile );
+        config.setVerbose( true );
         config.setPrintResutlSet( true );
 
+        // force log creation
+        sqlexec = new DefaultSQLExec( config );
+
         sqlexec.execute( command );
+        sqlexec.close();
+        sqlexec = null;
 
         assertTrue( "Output file: " + outputFile + " not found.", outputFile.exists() );
 
         assertTrue( "Unexpected empty output file. ", outputFile.length() > 0 );
 
-        //makesure we can remote the file, it is not locked
-        //assertTrue( outputFile.delete() );
+        // makesure we can remote the file, it is not locked
+        // assertTrue( outputFile.delete() );
 
     }
 

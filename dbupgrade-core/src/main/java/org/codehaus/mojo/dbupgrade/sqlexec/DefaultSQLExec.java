@@ -58,6 +58,24 @@ public class DefaultSQLExec
     public DefaultSQLExec( SQLExecConfig config )
     {
         this.config = config;
+
+        if ( config.getOutputFile() != null )
+        {
+            try
+            {
+                outLog =
+                    new PrintStream(
+                                     new BufferedOutputStream(
+                                                               new FileOutputStream(
+                                                                                     config.getOutputFile().getAbsolutePath(),
+                                                                                     config.isAppend() ) ) );
+            }
+            catch ( IOException e )
+            {
+                throw new RuntimeException( e );
+            }
+        }
+
     }
 
     // //////////////////////////////// Internal properties//////////////////////
@@ -255,7 +273,7 @@ public class DefaultSQLExec
     /**
      * read in lines and execute them
      */
-    private void runStatements( Reader reader, PrintStream out )
+    private void runStatements( Reader reader )
         throws SQLException, IOException
     {
         String line;
@@ -322,7 +340,7 @@ public class DefaultSQLExec
             if ( ( delimiterType.equals( DelimiterType.NORMAL ) && SqlSplitter.containsSqlEnd( line, delimiter ) > 0 )
                 || ( delimiterType.equals( DelimiterType.ROW ) && line.trim().equals( delimiter ) ) )
             {
-                execSQL( sql.substring( 0, sql.length() - delimiter.length() ), out );
+                execSQL( sql.substring( 0, sql.length() - delimiter.length() ) );
                 sql.setLength( 0 ); // clean buffer
             }
         }
@@ -330,14 +348,14 @@ public class DefaultSQLExec
         // Catch any statements not followed by ;
         if ( !sql.toString().equals( "" ) )
         {
-            execSQL( sql.toString(), out );
+            execSQL( sql.toString() );
         }
     }
 
     /**
      * Exec the sql statement.
      */
-    private void execSQL( String sql, PrintStream out )
+    private void execSQL( String sql )
         throws SQLException
     {
         // Check and ignore empty statements
@@ -348,7 +366,7 @@ public class DefaultSQLExec
 
         if ( config.isVerbose() )
         {
-            out.append( sql ).append( "\n" );
+            outLog.append( sql ).append( "\n" );
         }
 
         ResultSet resultSet = null;
@@ -375,7 +393,7 @@ public class DefaultSQLExec
                 {
                     if ( config.isPrintResultSet() )
                     {
-                        printResultSet( resultSet, out );
+                        printResultSet( resultSet, outLog );
                     }
                 }
                 ret = statement.getMoreResults();
@@ -391,7 +409,7 @@ public class DefaultSQLExec
             {
                 StringBuffer line = new StringBuffer();
                 line.append( updateCountTotal ).append( " rows affected" );
-                out.println( line );
+                outLog.println( line );
             }
 
             SQLWarning warning = conn.getWarnings();
@@ -505,12 +523,12 @@ public class DefaultSQLExec
         /**
          *
          */
-        private void runTransaction( PrintStream out )
+        private void runTransaction()
             throws IOException, SQLException
         {
             if ( tSqlCommand.length() != 0 )
             {
-                runStatements( new StringReader( tSqlCommand ), out );
+                runStatements( new StringReader( tSqlCommand ) );
             }
 
             if ( tSrcFile != null )
@@ -528,7 +546,7 @@ public class DefaultSQLExec
 
                 try
                 {
-                    runStatements( reader, out );
+                    runStatements( reader );
                 }
                 finally
                 {
@@ -580,38 +598,17 @@ public class DefaultSQLExec
             statement = conn.createStatement();
             statement.setEscapeProcessing( config.isEscapeProcessing() );
 
-            PrintStream out = System.out;
-            try
+            // Process all transactions
+            for ( Transaction t : transactions )
             {
-                if ( config.getOutputFile() != null )
-                {
-                    out =
-                        new PrintStream(
-                                         new BufferedOutputStream(
-                                                                   new FileOutputStream(
-                                                                                         config.getOutputFile().getAbsolutePath(),
-                                                                                         config.isAppend() ) ) );
-                }
+                t.runTransaction();
 
-                // Process all transactions
-                for ( Transaction t : transactions )
+                if ( !config.isAutocommit() )
                 {
-                    t.runTransaction( out );
-
-                    if ( !config.isAutocommit() )
-                    {
-                        conn.commit();
-                    }
-                }
-
-            }
-            finally
-            {
-                if ( out != null && out != System.out )
-                {
-                    out.close();
+                    conn.commit();
                 }
             }
+
         }
         catch ( IOException e )
         {
@@ -772,7 +769,7 @@ public class DefaultSQLExec
             statement = this.getConnection().createStatement();
             statement.setEscapeProcessing( config.isEscapeProcessing() );
 
-            this.runStatements( reader, outLog );
+            this.runStatements( reader );
         }
         catch ( IOException e )
         {
@@ -884,6 +881,10 @@ public class DefaultSQLExec
     {
         DbUtils.closeQuietly( this.conn );
         this.conn = null;
+
+        if ( this.outLog != null && this.config.getOutputFile() != null ) {
+            this.outLog.close();
+        }
     }
 
     public void execute( InputStream istream )
@@ -915,12 +916,7 @@ public class DefaultSQLExec
 
     public void shutdown()
     {
-
-        if ( this.conn != null )
-        {
-            DbUtils.closeQuietly( conn );
-            conn = null;// to allow the object reused
-        }
+        this.close();
     }
 
 }
