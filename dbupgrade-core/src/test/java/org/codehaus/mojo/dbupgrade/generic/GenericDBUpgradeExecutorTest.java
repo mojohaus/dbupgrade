@@ -50,7 +50,7 @@ public class GenericDBUpgradeExecutorTest
         assertEquals( 4, upgrader.upgrade() );
 
         //test whether the component can reconnect after a shutdown
-        upgrader.shutdown();
+        upgrader.close();
         assertEquals( 0, upgrader.upgrade() );
         
         //do it one more time

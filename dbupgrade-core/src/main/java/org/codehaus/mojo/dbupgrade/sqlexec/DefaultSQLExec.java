@@ -914,9 +914,4 @@ public class DefaultSQLExec
         return totalStatements;
     }
 
-    public void shutdown()
-    {
-        this.close();
-    }
-
 }

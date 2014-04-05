@@ -29,6 +29,6 @@ public interface DBUpgradeLifecycle
     /**
      * Done with this instance
      */
-    void shutdown();
+    void close();
 
 }

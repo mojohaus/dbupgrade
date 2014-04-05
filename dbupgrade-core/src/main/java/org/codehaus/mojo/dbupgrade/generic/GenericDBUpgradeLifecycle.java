@@ -17,12 +17,12 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -30,10 +30,10 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  */
 
 /**
- * This class hooks up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL 
+ * This class hooks up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL
  * files through java resources. Each incremental upgrade has an associate version number to be stored in a configurable
  * database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java resource, if any.
- *   
+ *
  * Original source is from http://code.google.com/p/dbmigrate
  */
 public class GenericDBUpgradeLifecycle
@@ -53,15 +53,15 @@ public class GenericDBUpgradeLifecycle
         this.sqlexec = new DefaultSQLExec( config );
         this.initDBUpgrade();
     }
-    
+
     /**
      * Done with this instance
      */
-    public void shutdown() 
+    public void close()
     {
-        this.sqlexec.shutdown();
+        this.sqlexec.close();
     }
-    
+
 
     /**
      * Execute DB Upgrade lifecycle phases
@@ -195,7 +195,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * get version for DB and check
-     * 
+     *
      * @param connection
      * @param latestVersion
      * @return
@@ -266,7 +266,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * Upgrade to the next version
-     * 
+     *
      * @param configuration
      * @return false when there are more upgrade to do
      * @throws DBUpgradeException
@@ -425,7 +425,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * search of available upgrader
-     * 
+     *
      * @param version
      * @param toVersion
      * @param config
@@ -487,7 +487,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * return a DBUpgrade instance base on class name
-     * 
+     *
      * @param config
      * @param className
      * @return
