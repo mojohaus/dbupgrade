@@ -1,7 +1,6 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Properties;
 
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec.DelimiterType;
