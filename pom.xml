@@ -40,6 +40,15 @@
         <role>Developer</role>
       </roles>
     </developer>
+    <developer>
+      <id>dipanjan</id>
+      <name>Dipanjan Laha</name>
+      <email>dipanjan21@gmail.com</email>
+      <organization />
+      <roles>
+        <role>Contributer</role>
+      </roles>
+    </developer>
   </developers>
 
 

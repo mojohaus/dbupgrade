@@ -4,15 +4,16 @@ import junit.framework.TestCase;
 
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
+import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -39,6 +40,14 @@ public class GenericDBUpgradeExecutorTest
         config.setInitialVersion( -2 );
     }
 
+    protected void tearDown()
+        throws Exception
+    {
+        DefaultSQLExec sqlExec = new DefaultSQLExec( config );
+        sqlExec.execute( "delete from " + config.getVersionTableName() );
+        sqlExec.commit();
+    }
+
     /**
      * test 2 upgrade versions using both SQL and java
      * @throws Exception
@@ -52,7 +61,7 @@ public class GenericDBUpgradeExecutorTest
         //test whether the component can reconnect after a shutdown
         upgrader.close();
         assertEquals( 0, upgrader.upgrade() );
-        
+
         //do it one more time
         assertEquals( 0, upgrader.upgrade() );
     }

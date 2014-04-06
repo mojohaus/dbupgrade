@@ -8,8 +8,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.io.FileUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
@@ -31,9 +39,12 @@ import org.codehaus.plexus.util.StringUtils;
  */
 
 /**
- * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list of SQL script paths ).
- * After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
- * database version's value ( a SQL script name ) to pickup the next upgrade script, if any.
+ * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list
+ * of SQL script paths ). After a SQL script is executed, its names is stored in your configurable database version
+ * table. DBUpgrade uses database version's value ( a SQL script name ) to pickup the next upgrade script, if any.
+ * <p>
+ * Alternatively this can also scan the script directory recursively in a lexicographical order to create a list of SQL
+ * scripts to execute. This behavior can be triggered by not supplying the upgrade file list in the config.
  */
 public class FileDBUpgradeLifecycle
     implements DBUpgradeLifecycle
@@ -61,15 +72,70 @@ public class FileDBUpgradeLifecycle
         this.sqlexec.close();
     }
 
-
     /**
      * Execute DB Upgrade lifecycle phases
      */
     public int upgrade()
         throws DBUpgradeException
     {
-        int upgraderCount = 0;
+        Collection<String> upgradeFileNames;
 
+        if ( config.getUpgradeFile() != null )
+        {
+            upgradeFileNames = getUpgradeListFromFile();
+        }
+        else
+        {
+            upgradeFileNames = getUpgradeListFromScriptDir();
+        }
+
+        return upgrade( upgradeFileNames );
+    }
+
+    // //////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
+
+    private int upgrade( Collection<String> fileNames )
+        throws DBUpgradeException
+    {
+        int upgraderCount = 0;
+        Iterator<String> it = fileNames.iterator();
+        // find where we left off last upgrade
+        if ( !StringUtils.isBlank( this.initialDBVersion ) )
+        {
+            boolean versionFileFound = false;
+
+            while ( it.hasNext() )
+            {
+                String upgradeFileName = it.next();
+                if ( initialDBVersion.equals( upgradeFileName ) )
+                {
+                    versionFileFound = true;
+                    break; // so that we can continue with upgrade
+                }
+            }
+
+            if ( !versionFileFound )
+            {
+                throw new DBUpgradeException( "Database version value: " + initialDBVersion
+                    + " not found. Are you upgrading the right database?" );
+            }
+        }
+
+        // Continue with the upgrade from where it was left last
+        while ( it.hasNext() )
+        {
+            String upgradeFileName = it.next();
+            upgrade( config.getScriptDirectory(), upgradeFileName );
+            upgraderCount++;
+        }
+        return upgraderCount;
+    }
+
+    private Collection<String> getUpgradeListFromFile()
+        throws DBUpgradeException
+    {
+        List<String> upgradeFileNameList = new LinkedList<String>();
         FileReader fileReader = null;
 
         try
@@ -79,56 +145,25 @@ public class FileDBUpgradeLifecycle
 
             String line = null;
 
-            //find where we left off last upgrade
-            if ( !StringUtils.isBlank( this.initialDBVersion ) )
-            {
-                while ( ( line = this.readLine( reader ) ) != null )
-                {
-                    if ( !StringUtils.isBlank( line ) )
-                    {
-                        File upgradeFile = new File( config.getScriptDirectory(), line );
-                        if ( !upgradeFile.exists() )
-                        {
-                            throw new DBUpgradeException( upgradeFile.getAbsolutePath() + " not found." );
-                        }
-
-                        if ( initialDBVersion.equals( line ) )
-                        {
-                            break; //so that we can continue with upgrade
-                        }
-                    }
-
-                }
-
-                if ( line == null )
-                {
-                    throw new DBUpgradeException( "Database version value: " + initialDBVersion
-                        + " not found in the list. Are you upgrading the right database?" );
-                }
-
-            }
-
-            //continue on with last upgrade
             while ( ( line = this.readLine( reader ) ) != null )
             {
                 if ( !StringUtils.isBlank( line ) )
                 {
-                    upgrade( config.getScriptDirectory(), line.trim() );
-                    upgraderCount++;
+                    upgradeFileNameList.add( line );
                 }
             }
 
         }
         catch ( IOException e )
         {
-            throw new DBUpgradeException( "Unable to perform file upgrade: " + this.config.getUpgradeFile(), e );
+            throw new DBUpgradeException( "Unable to get file list from " + this.config.getUpgradeFile(), e );
         }
         finally
         {
             IOUtil.close( fileReader );
         }
 
-        return upgraderCount;
+        return upgradeFileNameList;
     }
 
     private String readLine( BufferedReader reader )
@@ -146,8 +181,30 @@ public class FileDBUpgradeLifecycle
         return line;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+    private Collection<String> getUpgradeListFromScriptDir()
+        throws DBUpgradeException
+    {
+        SortedSet<String> upgradeFileNameSet = new TreeSet<String>( new Comparator<String>()
+        {
+            public int compare( String a, String b )
+            {
+                return a.compareTo( b );
+            }
+        } );
+
+        Collection<File> fileList = FileUtils.listFiles( config.getScriptDirectory(), new String[] { "sql" }, true );
+
+        for ( File file : fileList )
+        {
+            String diff =
+                StringUtils.difference( config.getScriptDirectory().getAbsolutePath(), file.getAbsolutePath() );
+            diff = StringUtils.substring( diff, 1 ); // remove the starting / after the diff
+            diff = StringUtils.replace( diff, File.separator, "/" );
+            upgradeFileNameSet.add( diff );
+        }
+
+        return upgradeFileNameSet;
+    }
 
     private Connection getConnection()
         throws DBUpgradeException
@@ -235,8 +292,9 @@ public class FileDBUpgradeLifecycle
         {
             statement = connection.createStatement();
 
-            rs = statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
-                + config.getVersionTableName() );
+            rs =
+                statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
+                    + config.getVersionTableName() );
 
             if ( rs.next() )
             {
