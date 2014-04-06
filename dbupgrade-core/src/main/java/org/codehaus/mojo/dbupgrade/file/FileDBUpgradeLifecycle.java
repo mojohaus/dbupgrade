@@ -8,10 +8,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -135,50 +135,25 @@ public class FileDBUpgradeLifecycle
     private Collection<String> getUpgradeListFromFile()
         throws DBUpgradeException
     {
-        List<String> upgradeFileNameList = new LinkedList<String>();
-        FileReader fileReader = null;
-
+        List<String> upgradeFileList = new ArrayList<String>();
         try
         {
-            fileReader = new FileReader( config.getUpgradeFile() );
-            BufferedReader reader = new BufferedReader( fileReader );
-
-            String line = null;
-
-            while ( ( line = this.readLine( reader ) ) != null )
-            {
-                if ( !StringUtils.isBlank( line ) )
+            List<String> lines = FileUtils.readLines( config.getUpgradeFile() );
+            for ( String line : lines ) {
+                line = line.trim();
+                if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
                 {
-                    upgradeFileNameList.add( line );
+                    continue;
                 }
+                upgradeFileList.add( line );
             }
-
         }
         catch ( IOException e )
         {
             throw new DBUpgradeException( "Unable to get file list from " + this.config.getUpgradeFile(), e );
         }
-        finally
-        {
-            IOUtil.close( fileReader );
-        }
 
-        return upgradeFileNameList;
-    }
-
-    private String readLine( BufferedReader reader )
-        throws IOException
-    {
-        String line = reader.readLine();
-        if ( line != null )
-        {
-            line = line.trim();
-            if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
-            {
-                line = "";
-            }
-        }
-        return line;
+        return upgradeFileList;
     }
 
     private Collection<String> getUpgradeListFromScriptDir()
