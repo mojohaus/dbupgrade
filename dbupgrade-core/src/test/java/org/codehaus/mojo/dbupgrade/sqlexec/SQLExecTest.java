@@ -71,52 +71,47 @@ public class SQLExecTest
         assertEquals( 0, sqlexec.getSuccessfulStatements() );
     }
 
-    public void testCreateCommandMojo()
+    public void testCreateDropCommandMojo()
         throws SQLException
     {
-        String command = "create table PERSON ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
-        sqlexec.execute( command );
-
-        assertEquals( 1, sqlexec.getSuccessfulStatements() );
-    }
-
-    public void testDropCommandMojo()
-        throws SQLException
-    {
-        String command = "drop table PERSON";
+        String randomTable = "T" + System.currentTimeMillis();
+        String command = "create table " + randomTable + " ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
         sqlexec.execute( command );
         assertEquals( 1, sqlexec.getSuccessfulStatements() );
+        sqlexec.execute( "drop table " + randomTable );
+        assertEquals( 1, sqlexec.getSuccessfulStatements() );
+
     }
 
     public void testFileSetMojo()
         throws SQLException
     {
-
         FileSet ds = new FileSet();
         ds.setBasedir( "src/test" );
         ds.setIncludes( new String[] { "**/create*.sql" } );
         ds.scan();
         assert ( ds.getIncludedFiles().length == 1 );
 
-        // sqlexec.setFileSet( ds );
-
         sqlexec.execute( ds );
 
         assertEquals( 3, sqlexec.getSuccessfulStatements() );
+
+        sqlexec.execute( new File( "src/test/data/drop-test-tables.sql" ) );
 
     }
 
     public void testFileArrayMojo()
         throws SQLException
     {
-        File[] srcFiles = new File[1];
-        srcFiles[0] = new File( "src/test/data/drop-test-tables.sql" );
+        File[] srcFiles = new File[3];
+        srcFiles[0] = new File( "src/test/data/create-test-tables.sql" );
+        srcFiles[1] = new File( "src/test/data/query-test-tables.sql" );
+        srcFiles[2] = new File( "src/test/data/drop-test-tables.sql" );
 
         // sqlexec.setSrcFiles( srcFiles );
         sqlexec.execute( srcFiles );
 
-        assertEquals( 3, sqlexec.getSuccessfulStatements() );
-
+        assertEquals( 9, sqlexec.getSuccessfulStatements() );
     }
 
     /**
@@ -125,7 +120,6 @@ public class SQLExecTest
     public void testAllMojo()
         throws SQLException
     {
-
         String command = "create table PERSON2 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
         // sqlexec.addText( command );
 
@@ -143,7 +137,7 @@ public class SQLExecTest
         assertEquals( 7, sqlexec.getSuccessfulStatements() );
     }
 
-    public void distestOrderFile()
+    public void testOrderFile()
         throws SQLException
     {
         FileSet ds = new FileSet();
@@ -201,8 +195,6 @@ public class SQLExecTest
     {
         String commands = "create table BOGUS"; // bad syntax
 
-        // sqlexec.addText( commands );
-
         File[] srcFiles = new File[1];
         srcFiles[0] = new File( "src/test/data/invalid-syntax.sql" );
 
@@ -215,7 +207,6 @@ public class SQLExecTest
         {
             sqlexec.execute( commands, srcFiles, null );
             fail( "Execution is not aborted on error." );
-
         }
         catch ( SQLException e )
         {
@@ -233,12 +224,10 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( "" );
-
             fail( "Bad driver is not detected" );
         }
         catch ( RuntimeException e )
         {
-
         }
     }
 
@@ -249,12 +238,10 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( "" );
-
             fail( "Bad URL is not detected" );
         }
         catch ( RuntimeException e )
         {
-
         }
     }
 
@@ -266,12 +253,10 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( srcFiles );
-
             fail( "Bad files is not detected" );
         }
         catch ( SQLException e )
         {
-
         }
     }
 
