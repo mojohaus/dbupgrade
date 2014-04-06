@@ -1,8 +1,6 @@
 package org.codehaus.mojo.dbupgrade.file;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,7 +19,6 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 /*
