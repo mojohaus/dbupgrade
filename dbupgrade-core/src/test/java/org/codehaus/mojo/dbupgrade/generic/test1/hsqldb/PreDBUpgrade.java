@@ -23,7 +23,6 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
-
 public class PreDBUpgrade
     extends AbstractDBUpgrade
 {
@@ -37,7 +36,7 @@ public class PreDBUpgrade
         }
         catch ( Exception e )
         {
-            //should ignore if we can not create table
+            // should ignore if we can not create table
         }
     }
 

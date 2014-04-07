@@ -31,6 +31,7 @@ public abstract class AbstractDBUpgrade
 
     /**
      * SQLExec wrapper to throw DBUpgradeException on error
+     * 
      * @param sqlexec
      * @param istream
      * @throws DBUpgradeException
@@ -50,6 +51,7 @@ public abstract class AbstractDBUpgrade
 
     /**
      * SQLExec wrapper to throw DBUpgradeException on error
+     * 
      * @param sqlexec
      * @param sqlString
      * @throws DBUpgradeException
@@ -69,6 +71,7 @@ public abstract class AbstractDBUpgrade
 
     /**
      * Helper method to run a SQL resource file in the same package of a class with option to commit
+     * 
      * @param sqlexec
      * @param clazz
      * @param name
@@ -99,6 +102,7 @@ public abstract class AbstractDBUpgrade
 
     /**
      * Helper method to run a SQL resource file in the same package of a class with option to commit
+     * 
      * @param sqlexec
      * @param clazz
      * @param name

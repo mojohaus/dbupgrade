@@ -28,8 +28,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
 /**
  * Unit test for simple SQLExec taken from sqlexec-maven-plugin 1.3
  */
@@ -65,7 +63,8 @@ public class SQLExecTest
     public void tearDown()
         throws Exception
     {
-        if ( sqlexec != null ) {
+        if ( sqlexec != null )
+        {
             sqlexec.close();
         }
     }

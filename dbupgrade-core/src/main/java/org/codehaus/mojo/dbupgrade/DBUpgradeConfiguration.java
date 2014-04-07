@@ -21,7 +21,6 @@ package org.codehaus.mojo.dbupgrade;
 
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
 
-
 public abstract class DBUpgradeConfiguration
     extends SQLExecConfig
 {

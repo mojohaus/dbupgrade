@@ -22,7 +22,6 @@ package org.codehaus.mojo.dbupgrade.sqlexec;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 public class SqlExecConfigTest
 {
 
@@ -32,7 +31,7 @@ public class SqlExecConfigTest
         SQLExecConfig config = new SQLExecConfig();
 
         config.setDriverProperties( "key1=value1,key2=value2;key3=value3;key4=value4" );
-        Assert.assertEquals( 4,  config.getDriverPropertyMap().size() );
+        Assert.assertEquals( 4, config.getDriverPropertyMap().size() );
 
     }
 

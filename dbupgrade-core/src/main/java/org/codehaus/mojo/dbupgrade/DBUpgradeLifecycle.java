@@ -25,6 +25,7 @@ public interface DBUpgradeLifecycle
 
     /**
      * Upgrade database
+     * 
      * @return number of upgrader it executes
      * @throws DBUpgradeException
      */

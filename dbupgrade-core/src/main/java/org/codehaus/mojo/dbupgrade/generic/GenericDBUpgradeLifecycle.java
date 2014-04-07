@@ -35,11 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class hooks up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java and SQL
- * files through java resources. Each incremental upgrade has an associate version number to be stored in a configurable
- * database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java resource, if any.
- *
- * Original source is from http://code.google.com/p/dbmigrate
+ * This class hooks up your global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java
+ * and SQL files through java resources. Each incremental upgrade has an associate version number to be stored in a
+ * configurable database version table. DBUpgrade uses database version's value to pickup the next upgrade in your java
+ * resource, if any. Original source is from http://code.google.com/p/dbmigrate
  */
 public class GenericDBUpgradeLifecycle
     implements DBUpgradeLifecycle
@@ -67,7 +66,6 @@ public class GenericDBUpgradeLifecycle
         this.sqlexec.close();
     }
 
-
     /**
      * Execute DB Upgrade lifecycle phases
      */
@@ -91,8 +89,8 @@ public class GenericDBUpgradeLifecycle
         return upgradeCount;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
 
     private Connection getConnection()
         throws DBUpgradeException
@@ -200,7 +198,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * get version for DB and check
-     *
+     * 
      * @param connection
      * @param latestVersion
      * @return
@@ -220,15 +218,16 @@ public class GenericDBUpgradeLifecycle
 
             try
             {
-                rs = statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
-                    + config.getVersionTableName() );
+                rs =
+                    statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
+                        + config.getVersionTableName() );
             }
             catch ( SQLException e )
             {
-                //postgres requires this rollback
+                // postgres requires this rollback
                 sqlexec.rollback();
 
-                //version table is not available ,assume version 0
+                // version table is not available ,assume version 0
                 version = 0;
                 return version;
             }
@@ -271,7 +270,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * Upgrade to the next version
-     *
+     * 
      * @param configuration
      * @return false when there are more upgrade to do
      * @throws DBUpgradeException
@@ -292,7 +291,7 @@ public class GenericDBUpgradeLifecycle
 
             if ( version == latestVersion )
             {
-                //no more upgrade to do
+                // no more upgrade to do
                 return true;
             }
 
@@ -311,8 +310,9 @@ public class GenericDBUpgradeLifecycle
 
             statement = this.getConnection().createStatement();
 
-            rs = statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
-                + config.getVersionTableName() );
+            rs =
+                statement.executeQuery( "SELECT distinct(" + config.getVersionColumnName() + ") FROM "
+                    + config.getVersionTableName() );
 
             if ( !rs.next() )
             {
@@ -331,12 +331,12 @@ public class GenericDBUpgradeLifecycle
                 }
             }
 
-            //all good
+            // all good
             sqlexec.commit();
         }
         catch ( SQLException e )
         {
-            //more likely version table was not created during the first upgrade at version 0
+            // more likely version table was not created during the first upgrade at version 0
             sqlexec.rollbackQuietly();
             throw new DBUpgradeException( "Failed to upgrade due to database exception", e );
         }
@@ -375,8 +375,9 @@ public class GenericDBUpgradeLifecycle
         if ( upgrader == null )
         {
             String dialect = config.getDialect();
-            className = config.getPackageName() + "." + dialect + "." + config.getUpgraderPrefix() + fromVersion + "to"
-                + toVersion;
+            className =
+                config.getPackageName() + "." + dialect + "." + config.getUpgraderPrefix() + fromVersion + "to"
+                    + toVersion;
 
             upgrader = this.getJavaUpgrader( className );
         }
@@ -391,14 +392,16 @@ public class GenericDBUpgradeLifecycle
         String fromVersion = versionToString( fromVer );
         String toVersion = versionToString( toVer );
 
-        String sqlResourceName = config.getPackageNameSlashFormat() + "/" + config.getUpgraderPrefix() + fromVersion
-            + "to" + toVersion + ".sql";
+        String sqlResourceName =
+            config.getPackageNameSlashFormat() + "/" + config.getUpgraderPrefix() + fromVersion + "to" + toVersion
+                + ".sql";
         upgrader = this.getSqlUpgrader( sqlResourceName );
 
         if ( upgrader == null )
         {
-            sqlResourceName = config.getPackageNameSlashFormat() + "/" + config.getDialect() + "/"
-                + config.getUpgraderPrefix() + fromVersion + "to" + toVersion + ".sql";
+            sqlResourceName =
+                config.getPackageNameSlashFormat() + "/" + config.getDialect() + "/" + config.getUpgraderPrefix()
+                    + fromVersion + "to" + toVersion + ".sql";
             upgrader = this.getSqlUpgrader( sqlResourceName );
         }
 
@@ -429,7 +432,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * search of available upgrader
-     *
+     * 
      * @param version
      * @param toVersion
      * @param config
@@ -491,7 +494,7 @@ public class GenericDBUpgradeLifecycle
 
     /**
      * return a DBUpgrade instance base on class name
-     *
+     * 
      * @param config
      * @param className
      * @return
@@ -509,7 +512,7 @@ public class GenericDBUpgradeLifecycle
         }
         catch ( ClassNotFoundException e )
         {
-            //user does not supply the upgrader, return null so that the upgrade lifecycle can safely ignore it
+            // user does not supply the upgrader, return null so that the upgrade lifecycle can safely ignore it
             return null;
         }
 
@@ -519,7 +522,7 @@ public class GenericDBUpgradeLifecycle
         }
         catch ( Exception e )
         {
-            //all bets are off, user supplies the unexpected class type
+            // all bets are off, user supplies the unexpected class type
             throw new RuntimeException( e );
         }
 

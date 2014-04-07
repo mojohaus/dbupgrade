@@ -31,8 +31,8 @@ import org.codehaus.mojo.dbupgrade.sqlexec.SQLUtils;
 
 /**
  * Submit the resource to jdbc in one shot. Use this to execute SQL function/store procedure
+ * 
  * @author dtran
- *
  */
 public class DBUpgradeUsingSQLNoParser
     extends AbstractDBUpgrade
@@ -61,7 +61,7 @@ public class DBUpgradeUsingSQLNoParser
 
             if ( statement.execute( sql ) )
             {
-                //we expect a false return since the execution has no result set
+                // we expect a false return since the execution has no result set
                 throw new DBUpgradeException( "Unable execute SQL Statement:" + sql );
             }
 

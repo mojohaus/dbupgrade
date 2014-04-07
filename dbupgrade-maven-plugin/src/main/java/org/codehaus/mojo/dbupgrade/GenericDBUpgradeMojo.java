@@ -26,7 +26,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeConfiguration;
 import org.codehaus.mojo.dbupgrade.generic.GenericDBUpgradeLifecycle;
 
-
 /**
  * This class hooks up user's global pre-upgrade, incremental upgrades, and finally global post-upgrade using both java
  * and SQL files through java resources. Each incremental upgrade has an associate version number to be stored in a

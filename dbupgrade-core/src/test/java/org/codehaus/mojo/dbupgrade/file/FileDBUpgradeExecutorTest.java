@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class FileDBUpgradeExecutorTest
 {
     private FileListDBUpgradeConfiguration config;
@@ -64,11 +63,10 @@ public class FileDBUpgradeExecutorTest
     }
 
     /**
-     * Sets the DB version to the supplied one. Can be used by tests to set the DB to a particular
-     * version before executing tests. Note that this function assumes that the version table is
-     * created and a row exists for the version. But, as setUp() initializes FileDBUpgradeLifecycle,
-     * the version table and rows are already created.
-     *
+     * Sets the DB version to the supplied one. Can be used by tests to set the DB to a particular version before
+     * executing tests. Note that this function assumes that the version table is created and a row exists for the
+     * version. But, as setUp() initializes FileDBUpgradeLifecycle, the version table and rows are already created.
+     * 
      * @param version the version to set in the DB
      * @throws Exception
      */
@@ -76,39 +74,40 @@ public class FileDBUpgradeExecutorTest
         throws Exception
     {
         DefaultSQLExec sqlExec = new DefaultSQLExec( config );
-        sqlExec.execute( "update " + this.config.getVersionTableName() + " set "
-                + this.config.getVersionColumnName() + " ='" + version + "'" );
+        sqlExec.execute( "update " + this.config.getVersionTableName() + " set " + this.config.getVersionColumnName()
+            + " ='" + version + "'" );
         sqlExec.commit();
     }
 
     /**
      * test 2 upgrade versions using both SQL and java
+     * 
      * @throws Exception
      */
     @Test
     public void testGoodDBUpgradeExecutorTest()
         throws Exception
     {
-        //version 1
+        // version 1
         config.setUpgradeFile( new File( dataDirectory, "version-1.lst" ) );
         Assert.assertEquals( 2, upgrader.upgrade() );
 
-        //version 1.1
+        // version 1.1
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
         Assert.assertEquals( 1, upgrader.upgrade() );
 
-        //version 1.1 again
+        // version 1.1 again
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
         Assert.assertEquals( 0, upgrader.upgrade() );
 
-        //version 2
+        // version 2
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
         Assert.assertEquals( 2, upgrader.upgrade() );
 
-        //version 2
+        // version 2
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
         Assert.assertEquals( 0, upgrader.upgrade() );
@@ -134,7 +133,7 @@ public class FileDBUpgradeExecutorTest
     public void testMissingDBUpgraderScriptFileTest()
         throws Exception
     {
-        //version 3
+        // version 3
         config.setUpgradeFile( new File( dataDirectory, "bad.lst" ) );
         try
         {
@@ -151,7 +150,7 @@ public class FileDBUpgradeExecutorTest
     public void testBadList()
         throws Exception
     {
-        //Set DB Version to a version not present in version-3.lst
+        // Set DB Version to a version not present in version-3.lst
         setDBVersion( "version2/file-2.sql" );
 
         config.setUpgradeFile( new File( dataDirectory, "version-3.lst" ) );
@@ -171,7 +170,7 @@ public class FileDBUpgradeExecutorTest
     public void testDBUpgradeFromScriptDirExecution()
         throws Exception
     {
-        //From Empty initial version
+        // From Empty initial version
         config.setUpgradeFile( null );
         Assert.assertEquals( 6, upgrader.upgrade() );
 
@@ -179,7 +178,7 @@ public class FileDBUpgradeExecutorTest
         config.setUpgradeFile( null );
         Assert.assertEquals( 0, upgrader.upgrade() );
 
-        //From version1/file-2.sql version
+        // From version1/file-2.sql version
         setDBVersion( "version1/file-2.sql" );
 
         upgrader = new FileDBUpgradeLifecycle( config );
@@ -190,11 +189,11 @@ public class FileDBUpgradeExecutorTest
         config.setUpgradeFile( null );
         Assert.assertEquals( 0, upgrader.upgrade() );
 
-        //From version2/file-1.sql version
+        // From version2/file-1.sql version
         setDBVersion( "version2/file-1.sql" );
 
         upgrader = new FileDBUpgradeLifecycle( config );
-        config.setUpgradeFile(null);
+        config.setUpgradeFile( null );
         Assert.assertEquals( 2, upgrader.upgrade() );
 
         upgrader = new FileDBUpgradeLifecycle( config );

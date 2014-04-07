@@ -23,7 +23,6 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.generic.AbstractDBUpgrade;
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 
-
 public class DBUpgrade_1to0
     extends AbstractDBUpgrade
 {

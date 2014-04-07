@@ -19,7 +19,6 @@ package org.codehaus.mojo.dbupgrade.sqlexec;
  * under the License.
  */
 
-
 import org.junit.Assert;
 import org.junit.Test;
 

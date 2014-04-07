@@ -23,7 +23,8 @@ import java.sql.SQLException;
 
 public interface SQLExec
 {
-    enum DelimiterType {
+    enum DelimiterType
+    {
         NORMAL,
 
         ROW

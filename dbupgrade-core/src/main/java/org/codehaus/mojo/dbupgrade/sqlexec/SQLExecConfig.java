@@ -22,21 +22,18 @@ import org.codehaus.plexus.util.StringUtils;
 public class SQLExecConfig
 {
     /**
-     * Call {@link #setOnError(String)} with this value to abort SQL command execution if an error
-     * is found.
+     * Call {@link #setOnError(String)} with this value to abort SQL command execution if an error is found.
      */
     public static final String ON_ERROR_ABORT = "abort";
 
     /**
-     * Call {@link #setOnError(String)} with this value to continue SQL command execution until all
-     * commands have been attempted, then abort the build if an SQL error occurred in any of the
-     * commands.
+     * Call {@link #setOnError(String)} with this value to continue SQL command execution until all commands have been
+     * attempted, then abort the build if an SQL error occurred in any of the commands.
      */
     public static final String ON_ERROR_ABORT_AFTER = "abortAfter";
 
     /**
-     * Call {@link #setOnError(String)} with this value to continue SQL command execution if an
-     * error is found.
+     * Call {@link #setOnError(String)} with this value to continue SQL command execution if an error is found.
      */
     public static final String ON_ERROR_CONTINUE = "continue";
 
@@ -53,40 +50,40 @@ public class SQLExecConfig
     // ////////////////////////// User Info ///////////////////////////////////
 
     /**
-     * Database username. If not given, it will be looked up through <code>settings.xml</code>'s
-     * server with <code>${settingsKey}</code> as key.
-     *
+     * Database username. If not given, it will be looked up through <code>settings.xml</code>'s server with
+     * <code>${settingsKey}</code> as key.
+     * 
      * @since 1.0-beta-1
      */
     private String username;
 
     /**
-     * Database password. If not given, it will be looked up through <code>settings.xml</code>'s
-     * server with <code>${settingsKey}</code> as key.
-     *
+     * Database password. If not given, it will be looked up through <code>settings.xml</code>'s server with
+     * <code>${settingsKey}</code> as key.
+     * 
      * @since 1.0-beta-1
      */
     private String password;
 
     /**
-     * Ignore the password and use anonymous access. This may be useful for databases like MySQL
-     * which do not allow empty password parameters in the connection initialization.
-     *
+     * Ignore the password and use anonymous access. This may be useful for databases like MySQL which do not allow
+     * empty password parameters in the connection initialization.
+     * 
      * @since 1.0-beta-1
      */
     private boolean enableAnonymousPassword;
 
     /**
      * Additional key=value pairs separated by comma(,) or semicolon(;) to be passed into JDBC driver.
+     * 
      * @since 1.0-beta-1
      */
     private String driverProperties;
 
     /**
-     * Skip execution when there is an error obtaining a connection. This is a special case to
-     * support databases, such as embedded Derby, that can shutdown the database via the URL (i.e.
-     * <code>shutdown=true</code>).
-     *
+     * Skip execution when there is an error obtaining a connection. This is a special case to support databases, such
+     * as embedded Derby, that can shutdown the database via the URL (i.e. <code>shutdown=true</code>).
+     * 
      * @since 1.0-beta-1
      */
     private boolean skipOnConnectionError;
@@ -96,14 +93,14 @@ public class SQLExecConfig
     // //////////////////////////////// Database info /////////////////////////
     /**
      * Database URL.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private String url;
 
     /**
      * Database driver classname. If not give, it will be discovered using provided url with jdbc4
-     *
+     * 
      * @since 1.0-beta-1
      */
     private String driver;
@@ -111,15 +108,14 @@ public class SQLExecConfig
     // //////////////////////////// Operation Configuration ////////////////////
     /**
      * Set to <code>true</code> to execute none-transactional SQL.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private boolean autocommit;
 
     /**
-     * Action to perform if an error is found. Possible values are <code>abort</code> and
-     * <code>continue</code>.
-     *
+     * Action to perform if an error is found. Possible values are <code>abort</code> and <code>continue</code>.
+     * 
      * @since 1.0-beta-1
      */
     private String onError = ON_ERROR_ABORT;
@@ -128,37 +124,36 @@ public class SQLExecConfig
 
     /**
      * Set the delimiter that separates SQL statements.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private String delimiter = ";";
 
     /**
      * <p>
-     * The delimiter type takes two values - "normal" and "row". Normal means that any occurrence of
-     * the delimiter terminate the SQL command whereas with row, only a line containing just the
-     * delimiter is recognized as the end of the command.
+     * The delimiter type takes two values - "normal" and "row". Normal means that any occurrence of the delimiter
+     * terminate the SQL command whereas with row, only a line containing just the delimiter is recognized as the end of
+     * the command.
      * </p>
      * <p>
      * For example, set this to "go" and delimiterType to "row" for Sybase ASE or MS SQL Server.
      * </p>
-     *
+     * 
      * @since 1.0-beta-1
      */
     private DelimiterType delimiterType = DelimiterType.NORMAL;
 
     /**
-     * Set the order in which the SQL files will be executed. Possible values are
-     * <code>ascending</code> and <code>descending</code>. Any other value means that no sorting
-     * will be performed.
-     *
+     * Set the order in which the SQL files will be executed. Possible values are <code>ascending</code> and
+     * <code>descending</code>. Any other value means that no sorting will be performed.
+     * 
      * @since 1.0-beta-1
      */
     private String orderFile = null;
 
     /**
      * Keep the format of an SQL block.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private boolean keepFormat = false;
@@ -166,7 +161,7 @@ public class SQLExecConfig
     // /////////////////////////////////////////////////////////////////////////////////////
     /**
      * Print SQL results.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private boolean printResultSet = false;
@@ -178,7 +173,7 @@ public class SQLExecConfig
 
     /**
      * Encoding to use when reading SQL statements from a file.
-     *
+     * 
      * @since 1.0-beta-1
      */
     private String encoding = "";
@@ -189,9 +184,9 @@ public class SQLExecConfig
     private boolean append = false;
 
     /**
-     * Argument to Statement.setEscapeProcessing If you want the driver to use regular SQL syntax
-     * then set this to false.
-     *
+     * Argument to Statement.setEscapeProcessing If you want the driver to use regular SQL syntax then set this to
+     * false.
+     * 
      * @since 1.0-beta-1
      */
     private boolean escapeProcessing = true;
@@ -200,35 +195,39 @@ public class SQLExecConfig
 
     /**
      * Repeats the execution for stress test purpose
+     * 
      * @since 1.0-beta-1
      */
     private int repeats = 1;
 
     /**
      * Pause between repeat for stress test purpose
+     * 
      * @since 1.0-beta-1
      */
     private long sleepTimeBetweenRepeats = 0;
 
     /**
      * Transactions per connection execution for stress test purpose
+     * 
      * @since 1.0-beta-1
      */
     private int transactionsPerConnection = 1;
 
     /**
-     * Number of retries to open connection before giving up.
-     * Mainly to handle the case where application and database colocated and
-     * database is much slower to accept connection at system startup
+     * Number of retries to open connection before giving up. Mainly to handle the case where application and database
+     * colocated and database is much slower to accept connection at system startup
+     * 
      * @since 1.0-beta-1
      */
     private int connectionRetries = 1;
 
     /**
      * Number of delay in msec between each connection retry
+     * 
      * @since 1.0-beta-1
      */
-    private int connectionRetryDelay = 10000; //msec
+    private int connectionRetryDelay = 10000; // msec
 
     // /////////////////////////////////////////////////////////////////////////////////////
     // Accessor
@@ -349,7 +348,7 @@ public class SQLExecConfig
 
     /**
      * Set the file encoding to use on the SQL files read in
-     *
+     * 
      * @param encoding the encoding to use on the files
      */
     public void setEncoding( String encoding )
@@ -399,7 +398,7 @@ public class SQLExecConfig
 
     /**
      * whether or not format should be preserved. Defaults to false.
-     *
+     * 
      * @param keepformat The keepformat to set
      */
     public void setKeepFormat( boolean keepformat )
@@ -432,7 +431,7 @@ public class SQLExecConfig
 
     /**
      * parse driverProperties into Properties set
-     *
+     * 
      * @return Proproties
      */
     public Properties getDriverPropertyMap()

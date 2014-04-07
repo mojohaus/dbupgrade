@@ -28,9 +28,8 @@ public class FileListDBUpgradeConfiguration
 {
 
     /**
-     * Path to a file that contains incremental upgrade scripts
-     * If not given, the content of scriptDirectory will be shorted
-     * user is responsible to arrange this content
+     * Path to a file that contains incremental upgrade scripts If not given, the content of scriptDirectory will be
+     * shorted user is responsible to arrange this content
      */
     private File upgradeFile;
 

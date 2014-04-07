@@ -29,6 +29,7 @@ public abstract class AbstractDBUpgradeMojo
 
     /**
      * Internal Maven's project
+     * 
      * @since 1.0
      */
     @Parameter( defaultValue = "${project}", readonly = true )
@@ -36,6 +37,7 @@ public abstract class AbstractDBUpgradeMojo
 
     /**
      * Retrieve all messages in the stack trace
+     * 
      * @param t
      */
     protected static String getExceptionMessages( Throwable t )

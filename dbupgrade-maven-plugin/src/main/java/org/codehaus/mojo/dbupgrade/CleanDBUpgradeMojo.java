@@ -30,7 +30,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec;
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExecConfig;
 
-
 /**
  * Use this goal to clean your database through a provided SQL Script
  */
@@ -47,7 +46,7 @@ public class CleanDBUpgradeMojo
     /**
      * Path to a SQL script to clean your database
      */
-    @Parameter( property="cleanScript", required = true )
+    @Parameter( property = "cleanScript", required = true )
     private File cleanScript;
 
     public void execute()

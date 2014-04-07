@@ -26,16 +26,13 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.dbupgrade.file.FileDBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration;
 
-
 /**
- * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text
- * file contains a list of SQL script paths ). After a SQL script is executed, its names is stored
- * in your configurable database version table. DBUpgrade uses database version's value ( a SQL
- * script name ) to pickup the next upgrade script, if any.
+ * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list
+ * of SQL script paths ). After a SQL script is executed, its names is stored in your configurable database version
+ * table. DBUpgrade uses database version's value ( a SQL script name ) to pickup the next upgrade script, if any.
  * <p>
- * Alternatively this can also scan the script directory recursively in a lexicographical order to
- * create a list of SQL scripts to execute in case the upgrade file list is not supplied.
- *
+ * Alternatively this can also scan the script directory recursively in a lexicographical order to create a list of SQL
+ * scripts to execute in case the upgrade file list is not supplied.
  */
 @Mojo( name = "filelist-upgrade", requiresProject = false, threadSafe = true )
 public class FileListDBUpgradeMojo
@@ -60,7 +57,8 @@ public class FileListDBUpgradeMojo
             }
             else
             {
-                this.getLog().info( "Database upgrade using parse script directory method: " + config.getScriptDirectory() );
+                this.getLog().info( "Database upgrade using parse script directory method: "
+                                        + config.getScriptDirectory() );
             }
         }
         catch ( DBUpgradeException e )

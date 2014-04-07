@@ -42,7 +42,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class hooks up user's sql upgrade script locations contained in a text file ( ie the text file contains a list
  * of SQL script paths ). After a SQL script is executed, its names is stored in your configurable database version

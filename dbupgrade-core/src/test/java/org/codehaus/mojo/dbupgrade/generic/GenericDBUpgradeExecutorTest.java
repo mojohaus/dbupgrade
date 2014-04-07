@@ -26,7 +26,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-
 public class GenericDBUpgradeExecutorTest
 {
     private GenericDBUpgradeConfiguration config;
@@ -43,7 +42,7 @@ public class GenericDBUpgradeExecutorTest
         config.setPackageName( "org.codehaus.mojo.dbupgrade.generic.test1" );
         config.setVersionTableName( "version" );
         config.setVersionColumnName( "version" );
-        //show that we can start the db version using negative number, normally it starts as 0
+        // show that we can start the db version using negative number, normally it starts as 0
         config.setInitialVersion( -2 );
     }
 
@@ -58,6 +57,7 @@ public class GenericDBUpgradeExecutorTest
 
     /**
      * test 2 upgrade versions using both SQL and java
+     * 
      * @throws Exception
      */
     public void testGoodDBUpgradeExecutorTest()
@@ -66,11 +66,11 @@ public class GenericDBUpgradeExecutorTest
         DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
         Assert.assertEquals( 4, upgrader.upgrade() );
 
-        //test whether the component can reconnect after a shutdown
+        // test whether the component can reconnect after a shutdown
         upgrader.close();
         Assert.assertEquals( 0, upgrader.upgrade() );
 
-        //do it one more time
+        // do it one more time
         Assert.assertEquals( 0, upgrader.upgrade() );
     }
 
