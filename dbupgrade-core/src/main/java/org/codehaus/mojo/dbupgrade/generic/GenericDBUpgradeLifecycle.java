@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,8 +131,8 @@ public class GenericDBUpgradeLifecycle
         }
         finally
         {
-            DbUtils.closeQuietly( rs );
-            DbUtils.closeQuietly( stm );
+            SQLUtils.closeQuietly( rs );
+            SQLUtils.closeQuietly( stm );
         }
 
     }
@@ -257,8 +257,8 @@ public class GenericDBUpgradeLifecycle
         }
         finally
         {
-            DbUtils.closeQuietly( rs );
-            DbUtils.closeQuietly( statement );
+            SQLUtils.closeQuietly( rs );
+            SQLUtils.closeQuietly( statement );
         }
 
         return version;
@@ -337,8 +337,8 @@ public class GenericDBUpgradeLifecycle
         }
         finally
         {
-            DbUtils.closeQuietly( rs );
-            DbUtils.closeQuietly( statement );
+            SQLUtils.closeQuietly( rs );
+            SQLUtils.closeQuietly( statement );
         }
 
         return false;

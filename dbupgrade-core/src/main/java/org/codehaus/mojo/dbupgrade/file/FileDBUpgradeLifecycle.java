@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
+import org.codehaus.mojo.dbupgrade.sqlexec.SQLUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,7 +139,8 @@ public class FileDBUpgradeLifecycle
         try
         {
             List<String> lines = FileUtils.readLines( config.getUpgradeFile() );
-            for ( String line : lines ) {
+            for ( String line : lines )
+            {
                 line = line.trim();
                 if ( StringUtils.isBlank( line ) || line.startsWith( "#" ) )
                 {
@@ -230,8 +231,8 @@ public class FileDBUpgradeLifecycle
         }
         finally
         {
-            DbUtils.closeQuietly( rs );
-            DbUtils.closeQuietly( stm );
+            SQLUtils.closeQuietly( rs );
+            SQLUtils.closeQuietly( stm );
         }
 
         this.initialDBVersion = this.getDBVersion();
@@ -293,8 +294,8 @@ public class FileDBUpgradeLifecycle
 
         finally
         {
-            DbUtils.closeQuietly( rs );
-            DbUtils.closeQuietly( statement );
+            SQLUtils.closeQuietly( rs );
+            SQLUtils.closeQuietly( statement );
         }
 
         return version;
@@ -305,7 +306,7 @@ public class FileDBUpgradeLifecycle
     {
         File upgradeFile = new File( scriptDirectory, upgradeFileName );
 
-        logger.info(  "Executing: " + upgradeFile + " ..." );
+        logger.info( "Executing: " + upgradeFile + " ..." );
 
         try
         {

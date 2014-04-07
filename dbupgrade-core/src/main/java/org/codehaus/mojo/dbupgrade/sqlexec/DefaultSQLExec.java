@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
@@ -607,7 +606,7 @@ public class DefaultSQLExec
         }
         finally
         {
-            DbUtils.closeQuietly( statement );
+            SQLUtils.closeQuietly( statement );
         }
 
         if ( SQLExecConfig.ON_ERROR_ABORT_AFTER.equalsIgnoreCase( config.getOnError() )
@@ -759,7 +758,7 @@ public class DefaultSQLExec
         }
         finally
         {
-            DbUtils.closeQuietly( statement );
+            SQLUtils.closeQuietly( statement );
             statement = null;
         }
 
@@ -815,7 +814,7 @@ public class DefaultSQLExec
             }
             finally
             {
-                DbUtils.closeQuietly( statement );
+                SQLUtils.closeQuietly( statement );
                 IOUtils.closeQuietly( is );
             }
         }
@@ -861,7 +860,7 @@ public class DefaultSQLExec
 
     public void close()
     {
-        DbUtils.closeQuietly( this.conn );
+        SQLUtils.closeQuietly( this.conn );
         this.conn = null;
     }
 

@@ -22,11 +22,8 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-dbutils</groupId>
-      <artifactId>commons-dbutils</artifactId>
+      <!-- SQLExec's user using FileSet needs this -->
+      <optional>true</optional>
     </dependency>
 
     <dependency>
