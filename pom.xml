@@ -51,16 +51,45 @@
     </developer>
   </developers>
 
+  <properties>
+    <mojo.java.target>1.5</mojo.java.target>
+    <maven.api.version>2.2.1</maven.api.version>
+  </properties>
 
   <dependencyManagement>
 
     <dependencies>
 
       <dependency>
+        <groupId>org.codehaus.mojo.dbupgrade</groupId>
+        <artifactId>dbupgrade-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-plugin-api</artifactId>
-        <version>2.0.6</version>
+        <version>${maven.api.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-project</artifactId>
+        <version>${maven.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model</artifactId>
+        <version>${maven.api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact</artifactId>
+        <version>${maven.api.version}</version>
+      </dependency>
+
 
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
@@ -72,6 +101,12 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>3.0.15</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-dbutils</groupId>
+        <artifactId>commons-dbutils</artifactId>
+        <version>1.5</version>
       </dependency>
 
       <dependency>
@@ -93,33 +128,9 @@
       </dependency>
 
       <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-project</artifactId>
-        <version>2.0.6</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-model</artifactId>
-        <version>2.0.6</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-artifact</artifactId>
-        <version>2.0.6</version>
-      </dependency>
-
-      <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>1.8.0.7</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.codehaus.mojo.dbupgrade</groupId>
-        <artifactId>dbupgrade-core</artifactId>
-        <version>${project.version}</version>
       </dependency>
 
     </dependencies>
@@ -134,9 +145,6 @@
     </dependency>
   </dependencies>
 
-  <properties>
-    <mojo.java.target>1.5</mojo.java.target>
-  </properties>
 
   <build>
 
