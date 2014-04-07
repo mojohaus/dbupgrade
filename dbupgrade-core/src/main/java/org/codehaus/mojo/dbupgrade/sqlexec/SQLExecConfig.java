@@ -1,6 +1,5 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
-import java.io.File;
 import java.util.Properties;
 
 import org.codehaus.mojo.dbupgrade.sqlexec.SQLExec.DelimiterType;
@@ -176,13 +175,6 @@ public class SQLExecConfig
      * Print header columns.
      */
     private boolean showheaders = true;
-
-    /**
-     * Dump the SQL exection's output to a file. Default is stdout.
-     *
-     * @since 1.0-beta-1
-     */
-    private File outputFile;
 
     /**
      * Encoding to use when reading SQL statements from a file.
@@ -398,14 +390,6 @@ public class SQLExecConfig
     }
 
     /**
-     * Set the output file;
-     */
-    public void setOutputFile( File output )
-    {
-        this.outputFile = output;
-    }
-
-    /**
      * whether output should be appended to or overwrite an existing file. Defaults to false.
      */
     public void setAppend( boolean append )
@@ -528,11 +512,6 @@ public class SQLExecConfig
     public boolean isShowheaders()
     {
         return showheaders;
-    }
-
-    public File getOutputFile()
-    {
-        return outputFile;
     }
 
     public String getEncoding()

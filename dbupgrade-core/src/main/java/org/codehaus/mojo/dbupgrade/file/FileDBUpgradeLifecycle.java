@@ -20,6 +20,8 @@ import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -46,6 +48,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class FileDBUpgradeLifecycle
     implements DBUpgradeLifecycle
 {
+    private static final Logger logger = LoggerFactory.getLogger( DefaultSQLExec.class );
 
     private DefaultSQLExec sqlexec;
 
@@ -302,10 +305,7 @@ public class FileDBUpgradeLifecycle
     {
         File upgradeFile = new File( scriptDirectory, upgradeFileName );
 
-        if ( this.config.isVerbose() )
-        {
-            System.out.println( "Executing: " + upgradeFile + " ..." );
-        }
+        logger.info(  "Executing: " + upgradeFile + " ..." );
 
         try
         {

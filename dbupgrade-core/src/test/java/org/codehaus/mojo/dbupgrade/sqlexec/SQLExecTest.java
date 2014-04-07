@@ -403,38 +403,4 @@ public class SQLExecTest
         assertEquals( 2, sqlexec.getSuccessfulStatements() );
     }
 
-    public void testOutputFile()
-        throws Exception
-    {
-        String command =
-            "create table GOODDELIMTYPE3 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)" + "\n:  \n"
-                + "create table GOODDELIMTYPE4 ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
-
-        // sqlexec.addText( command );
-        config.setDelimiter( ":" );
-        config.setDelimiterType( DefaultSQLExec.DelimiterType.ROW );
-
-        String basedir = System.getProperty( "basedir", "." );
-        File outputFile = new File( basedir, "target/sql.out" );
-        outputFile.delete();
-        config.setOutputFile( outputFile );
-        config.setVerbose( true );
-        config.setPrintResutlSet( true );
-
-        // force log creation
-        sqlexec = new DefaultSQLExec( config );
-
-        sqlexec.execute( command );
-        sqlexec.close();
-        sqlexec = null;
-
-        assertTrue( "Output file: " + outputFile + " not found.", outputFile.exists() );
-
-        assertTrue( "Unexpected empty output file. ", outputFile.length() > 0 );
-
-        // makesure we can remote the file, it is not locked
-        // assertTrue( outputFile.delete() );
-
-    }
-
 }

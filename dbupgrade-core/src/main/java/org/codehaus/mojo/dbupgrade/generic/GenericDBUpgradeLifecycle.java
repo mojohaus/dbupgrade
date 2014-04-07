@@ -12,6 +12,8 @@ import org.apache.commons.dbutils.DbUtils;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -38,7 +40,7 @@ public class GenericDBUpgradeLifecycle
     implements DBUpgradeLifecycle
 {
 
-    //private final Log log = LogFactory.getLog( GenericDBUpgradeLifecycle.class );
+    private static final Logger logger = LoggerFactory.getLogger( DefaultSQLExec.class );
 
     private DefaultSQLExec sqlexec;
 
@@ -293,12 +295,11 @@ public class GenericDBUpgradeLifecycle
 
             try
             {
-                //log.info( "Database Upgrade: " + config.getDialect() + ":" + upgrade );
+                logger.info( "Database Upgrade: " + config.getDialect() + ":" + upgrade );
                 upgrade.upgradeDB( sqlexec, config.getDialect() );
             }
             catch ( Exception e )
             {
-                //log.error( e );
                 sqlexec.rollbackQuietly();
                 throw new DBUpgradeException( "Failed to upgrade from version: " + version + " to " + toVersion, e );
             }

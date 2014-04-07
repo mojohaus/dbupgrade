@@ -1,15 +1,12 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.sql.Connection;
@@ -30,6 +27,8 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -51,31 +50,14 @@ import org.codehaus.plexus.util.StringUtils;
 public class DefaultSQLExec
     implements SQLExec
 {
-    private SQLExecConfig config;
 
-    private PrintStream outLog = System.out;
+    private static final Logger logger = LoggerFactory.getLogger( DefaultSQLExec.class );
+
+    private SQLExecConfig config;
 
     public DefaultSQLExec( SQLExecConfig config )
     {
         this.config = config;
-
-        if ( config.getOutputFile() != null )
-        {
-            try
-            {
-                outLog =
-                    new PrintStream(
-                                     new BufferedOutputStream(
-                                                               new FileOutputStream(
-                                                                                     config.getOutputFile().getAbsolutePath(),
-                                                                                     config.isAppend() ) ) );
-            }
-            catch ( IOException e )
-            {
-                throw new RuntimeException( e );
-            }
-        }
-
     }
 
     // //////////////////////////////// Internal properties//////////////////////
@@ -99,9 +81,7 @@ public class DefaultSQLExec
      */
     private Transaction createTransaction()
     {
-        Transaction t = new Transaction();
-        // transactions.add( t );
-        return t;
+        return new Transaction();
     }
 
     /**
@@ -116,7 +96,6 @@ public class DefaultSQLExec
         transactions.add( t );
 
         return transactions;
-
     }
 
     /**
@@ -366,7 +345,7 @@ public class DefaultSQLExec
 
         if ( config.isVerbose() )
         {
-            outLog.append( sql ).append( "\n" );
+            logger.info( sql );
         }
 
         ResultSet resultSet = null;
@@ -393,7 +372,7 @@ public class DefaultSQLExec
                 {
                     if ( config.isPrintResultSet() )
                     {
-                        printResultSet( resultSet, outLog );
+                        printResultSet( resultSet );
                     }
                 }
                 ret = statement.getMoreResults();
@@ -409,7 +388,7 @@ public class DefaultSQLExec
             {
                 StringBuffer line = new StringBuffer();
                 line.append( updateCountTotal ).append( " rows affected" );
-                outLog.println( line );
+                logger.info( line.toString() );
             }
 
             SQLWarning warning = conn.getWarnings();
@@ -443,7 +422,7 @@ public class DefaultSQLExec
      * @param out the place to print results
      * @throws SQLException on SQL problems.
      */
-    private void printResultSet( ResultSet rs, PrintStream out )
+    private void printResultSet( ResultSet rs )
         throws SQLException
     {
         if ( rs != null )
@@ -451,6 +430,7 @@ public class DefaultSQLExec
             ResultSetMetaData md = rs.getMetaData();
             int columnCount = md.getColumnCount();
             StringBuffer line = new StringBuffer();
+
             if ( config.isShowheaders() )
             {
                 for ( int col = 1; col < columnCount; col++ )
@@ -459,9 +439,10 @@ public class DefaultSQLExec
                     line.append( "," );
                 }
                 line.append( md.getColumnName( columnCount ) );
-                out.println( line );
+                logger.info( line.toString() );
                 line = new StringBuffer();
             }
+
             while ( rs.next() )
             {
                 boolean first = true;
@@ -483,11 +464,12 @@ public class DefaultSQLExec
                     }
                     line.append( columnValue );
                 }
-                out.println( line );
+
+                logger.info( line.toString() );
+
                 line = new StringBuffer();
             }
         }
-        out.println();
     }
 
     /**
@@ -881,10 +863,6 @@ public class DefaultSQLExec
     {
         DbUtils.closeQuietly( this.conn );
         this.conn = null;
-
-        if ( this.outLog != null && this.config.getOutputFile() != null ) {
-            this.outLog.close();
-        }
     }
 
     public void execute( InputStream istream )
