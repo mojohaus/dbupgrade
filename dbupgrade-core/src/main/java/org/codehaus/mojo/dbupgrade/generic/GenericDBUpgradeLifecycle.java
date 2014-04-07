@@ -9,8 +9,6 @@ import java.sql.Statement;
 import java.util.Properties;
 
 import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
@@ -40,7 +38,7 @@ public class GenericDBUpgradeLifecycle
     implements DBUpgradeLifecycle
 {
 
-    private final Log log = LogFactory.getLog( GenericDBUpgradeLifecycle.class );
+    //private final Log log = LogFactory.getLog( GenericDBUpgradeLifecycle.class );
 
     private DefaultSQLExec sqlexec;
 
@@ -295,12 +293,12 @@ public class GenericDBUpgradeLifecycle
 
             try
             {
-                log.info( "Database Upgrade: " + config.getDialect() + ":" + upgrade );
+                //log.info( "Database Upgrade: " + config.getDialect() + ":" + upgrade );
                 upgrade.upgradeDB( sqlexec, config.getDialect() );
             }
             catch ( Exception e )
             {
-                log.error( e );
+                //log.error( e );
                 sqlexec.rollbackQuietly();
                 throw new DBUpgradeException( "Failed to upgrade from version: " + version + " to " + toVersion, e );
             }

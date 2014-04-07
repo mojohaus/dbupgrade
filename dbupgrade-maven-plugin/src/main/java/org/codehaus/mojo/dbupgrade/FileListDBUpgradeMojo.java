@@ -2,6 +2,8 @@ package org.codehaus.mojo.dbupgrade;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.mojo.dbupgrade.file.FileDBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration;
 
@@ -27,18 +29,16 @@ import org.codehaus.mojo.dbupgrade.file.FileListDBUpgradeConfiguration;
  * <p>
  * Alternatively this can also scan the script directory recursively in a lexicographical order to
  * create a list of SQL scripts to execute in case the upgrade file list is not supplied.
- * 
- * @goal filelist-upgrade
- * @requiresProject false
+ *
  */
+@Mojo( name = "filelist-upgrade", requiresProject = false, threadSafe = true )
 public class FileListDBUpgradeMojo
     extends AbstractDBUpgradeMojo
 {
     /**
      * Necessary configuration to run database upgrade.
-     * @parameter
-     * @required
      */
+    @Parameter( required = true )
     private FileListDBUpgradeConfiguration config;
 
     public void execute()
