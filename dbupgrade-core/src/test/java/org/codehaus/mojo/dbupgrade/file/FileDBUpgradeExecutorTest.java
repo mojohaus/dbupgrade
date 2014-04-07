@@ -2,11 +2,13 @@ package org.codehaus.mojo.dbupgrade.file;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -23,7 +25,6 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  */
 
 public class FileDBUpgradeExecutorTest
-    extends TestCase
 {
     private FileListDBUpgradeConfiguration config;
 
@@ -31,7 +32,8 @@ public class FileDBUpgradeExecutorTest
 
     private File dataDirectory = new File( "src/test/resources/org/codehaus/mojo/dbupgrade/file" );
 
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
         config = new FileListDBUpgradeConfiguration();
@@ -46,7 +48,8 @@ public class FileDBUpgradeExecutorTest
 
     }
 
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         DefaultSQLExec sqlExec = new DefaultSQLExec( config );
@@ -76,35 +79,37 @@ public class FileDBUpgradeExecutorTest
      * test 2 upgrade versions using both SQL and java
      * @throws Exception
      */
+    @Test
     public void testGoodDBUpgradeExecutorTest()
         throws Exception
     {
         //version 1
         config.setUpgradeFile( new File( dataDirectory, "version-1.lst" ) );
-        assertEquals( 2, upgrader.upgrade() );
+        Assert.assertEquals( 2, upgrader.upgrade() );
 
         //version 1.1
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
-        assertEquals( 1, upgrader.upgrade() );
+        Assert.assertEquals( 1, upgrader.upgrade() );
 
         //version 1.1 again
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-1.1.lst" ) );
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
 
         //version 2
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
-        assertEquals( 2, upgrader.upgrade() );
+        Assert.assertEquals( 2, upgrader.upgrade() );
 
         //version 2
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( new File( dataDirectory, "version-2.lst" ) );
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
 
     }
 
+    @Test
     public void testMissingDBUpgraderFileTest()
         throws Exception
     {
@@ -112,13 +117,14 @@ public class FileDBUpgradeExecutorTest
         {
             config.setUpgradeFile( new File( dataDirectory, "version-bogus.lst" ) );
             upgrader.upgrade();
-            fail( "Exception expected." );
+            Assert.fail( "Exception expected." );
         }
         catch ( DBUpgradeException e )
         {
         }
     }
 
+    @Test
     public void testMissingDBUpgraderScriptFileTest()
         throws Exception
     {
@@ -127,7 +133,7 @@ public class FileDBUpgradeExecutorTest
         try
         {
             upgrader.upgrade();
-            fail( "Missing SQL script not detected." );
+            Assert.fail( "Missing SQL script not detected." );
         }
         catch ( DBUpgradeException e )
         {
@@ -135,6 +141,7 @@ public class FileDBUpgradeExecutorTest
         }
     }
 
+    @Test
     public void testBadList()
         throws Exception
     {
@@ -146,7 +153,7 @@ public class FileDBUpgradeExecutorTest
         try
         {
             upgrader.upgrade();
-            fail( "Exception expected." );
+            Assert.fail( "Exception expected." );
         }
         catch ( DBUpgradeException e )
         {
@@ -154,40 +161,42 @@ public class FileDBUpgradeExecutorTest
         }
     }
 
+    @Test
     public void testDBUpgradeFromScriptDirExecution()
         throws Exception
     {
         //From Empty initial version
         config.setUpgradeFile( null );
-        assertEquals( 6, upgrader.upgrade() );
+        Assert.assertEquals( 6, upgrader.upgrade() );
 
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( null );
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
 
         //From version1/file-2.sql version
         setDBVersion( "version1/file-2.sql" );
 
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( null );
-        assertEquals( 4, upgrader.upgrade() );
+        Assert.assertEquals( 4, upgrader.upgrade() );
 
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( null );
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
 
         //From version2/file-1.sql version
         setDBVersion( "version2/file-1.sql" );
 
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile(null);
-        assertEquals( 2, upgrader.upgrade() );
+        Assert.assertEquals( 2, upgrader.upgrade() );
 
         upgrader = new FileDBUpgradeLifecycle( config );
         config.setUpgradeFile( null );
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
     }
 
+    @Test
     public void testDBUpgradeFromScriptDirMissingVersion()
         throws Exception
     {
@@ -198,7 +207,7 @@ public class FileDBUpgradeExecutorTest
         try
         {
             upgrader.upgrade();
-            fail( "Exception Expected" );
+            Assert.fail( "Exception Expected" );
         }
         catch ( DBUpgradeException e )
         {
@@ -210,7 +219,7 @@ public class FileDBUpgradeExecutorTest
         try
         {
             upgrader.upgrade();
-            fail( "Exception Expected" );
+            Assert.fail( "Exception Expected" );
         }
         catch ( DBUpgradeException e )
         {
@@ -222,7 +231,7 @@ public class FileDBUpgradeExecutorTest
         try
         {
             upgrader.upgrade();
-            fail( "Exception Expected" );
+            Assert.fail( "Exception Expected" );
         }
         catch ( DBUpgradeException e )
         {

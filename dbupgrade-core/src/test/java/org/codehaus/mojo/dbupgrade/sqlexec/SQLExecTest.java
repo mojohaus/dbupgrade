@@ -4,7 +4,11 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -24,7 +28,6 @@ import junit.framework.TestCase;
  * Unit test for simple SQLExec taken from sqlexec-maven-plugin 1.3
  */
 public class SQLExecTest
-    extends TestCase
 {
     private DefaultSQLExec sqlexec;
 
@@ -32,10 +35,10 @@ public class SQLExecTest
 
     private Properties p;
 
+    @Before
     public void setUp()
         throws Exception
     {
-        super.setUp();
         p = new Properties();
         p.load( getClass().getResourceAsStream( "/test.properties" ) );
 
@@ -52,6 +55,7 @@ public class SQLExecTest
 
     }
 
+    @After
     public void tearDown()
         throws Exception
     {
@@ -63,26 +67,29 @@ public class SQLExecTest
     /**
      * No error when there is no input
      */
+    @Test
     public void testNoCommandMojo()
         throws SQLException
     {
         sqlexec.execute( "" );
 
-        assertEquals( 0, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 0, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test
     public void testCreateDropCommandMojo()
         throws SQLException
     {
         String randomTable = "T" + System.currentTimeMillis();
         String command = "create table " + randomTable + " ( PERSON_ID integer, FIRSTNAME varchar, LASTNAME varchar)";
         sqlexec.execute( command );
-        assertEquals( 1, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 1, sqlexec.getSuccessfulStatements() );
         sqlexec.execute( "drop table " + randomTable );
-        assertEquals( 1, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 1, sqlexec.getSuccessfulStatements() );
 
     }
 
+    @Test
     public void testFileSetMojo()
         throws SQLException
     {
@@ -94,12 +101,13 @@ public class SQLExecTest
 
         sqlexec.execute( ds );
 
-        assertEquals( 3, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 3, sqlexec.getSuccessfulStatements() );
 
         sqlexec.execute( new File( "src/test/data/drop-test-tables.sql" ) );
 
     }
 
+    @Test
     public void testFileArrayMojo()
         throws SQLException
     {
@@ -111,12 +119,13 @@ public class SQLExecTest
         // sqlexec.setSrcFiles( srcFiles );
         sqlexec.execute( srcFiles );
 
-        assertEquals( 9, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 9, sqlexec.getSuccessfulStatements() );
     }
 
     /**
      * Ensure srcFiles always execute first
      */
+    @Test
     public void testAllMojo()
         throws SQLException
     {
@@ -134,9 +143,10 @@ public class SQLExecTest
         // sqlexec.setFileSet( ds );
         sqlexec.execute( command, srcFiles, ds );
 
-        assertEquals( 7, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 7, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test
     public void testOrderFile()
         throws SQLException
     {
@@ -149,28 +159,30 @@ public class SQLExecTest
         config.setOrderFile( SQLExecConfig.FILE_SORTING_ASC );
         sqlexec.execute( ds );
 
-        assertEquals( 6, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 6, sqlexec.getSuccessfulStatements() );
 
         try
         {
             config.setOrderFile( SQLExecConfig.FILE_SORTING_DSC );
             sqlexec.execute( ds );
-            fail( "Execution is not aborted on error." );
+            Assert.fail( "Execution is not aborted on error." );
         }
         catch ( SQLException e )
         {
         }
     }
 
+    @Test
     public void testOnErrorContinueMojo()
         throws SQLException
     {
         String command = "create table BOGUS"; // bad syntax
         config.setOnError( "continue" );
         sqlexec.execute( command );
-        assertEquals( 0, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 0, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test
     public void testOnErrorAbortMojo()
         throws SQLException
     {
@@ -179,7 +191,7 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( command );
-            fail( "Execution is not aborted on error." );
+            Assert.fail( "Execution is not aborted on error." );
 
         }
         catch ( SQLException e )
@@ -187,9 +199,10 @@ public class SQLExecTest
 
         }
 
-        assertEquals( 0, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 0, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test
     public void testOnErrorAbortAfterMojo()
         throws SQLException
     {
@@ -198,7 +211,7 @@ public class SQLExecTest
         File[] srcFiles = new File[1];
         srcFiles[0] = new File( "src/test/data/invalid-syntax.sql" );
 
-        assertTrue( srcFiles[0].exists() );
+        Assert.assertTrue( srcFiles[0].exists() );
 
         // sqlexec.setSrcFiles( srcFiles );
         config.setOnError( "abortAfter" );
@@ -206,17 +219,18 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( commands, srcFiles, null );
-            fail( "Execution is not aborted on error." );
+            Assert.fail( "Execution is not aborted on error." );
         }
         catch ( SQLException e )
         {
             // expected
         }
 
-        assertEquals( 0, sqlexec.getSuccessfulStatements() );
-        assertEquals( 2, sqlexec.getTotalStatements() );
+        Assert.assertEquals( 0, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 2, sqlexec.getTotalStatements() );
     }
 
+    @Test
     public void testBadDriver()
         throws SQLException
     {
@@ -224,13 +238,14 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( "" );
-            fail( "Bad driver is not detected" );
+            Assert.fail( "Bad driver is not detected" );
         }
         catch ( RuntimeException e )
         {
         }
     }
 
+    @Test
     public void testBadUrl()
         throws SQLException
     {
@@ -238,13 +253,14 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( "" );
-            fail( "Bad URL is not detected" );
+            Assert.fail( "Bad URL is not detected" );
         }
         catch ( RuntimeException e )
         {
         }
     }
 
+    @Test
     public void testBadFile()
     {
         File[] srcFiles = new File[1];
@@ -253,23 +269,24 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( srcFiles );
-            fail( "Bad files is not detected" );
+            Assert.fail( "Bad files is not detected" );
         }
         catch ( SQLException e )
         {
         }
     }
 
+    @Test
     public void testOnError()
     {
         config.setOnError( "AbOrT" );
-        assertEquals( SQLExecConfig.ON_ERROR_ABORT, config.getOnError() );
+        Assert.assertEquals( SQLExecConfig.ON_ERROR_ABORT, config.getOnError() );
         config.setOnError( "cOnTiNuE" );
-        assertEquals( SQLExecConfig.ON_ERROR_CONTINUE, config.getOnError() );
+        Assert.assertEquals( SQLExecConfig.ON_ERROR_CONTINUE, config.getOnError() );
         try
         {
             config.setOnError( "bad" );
-            fail( IllegalArgumentException.class.getName() + " was not thrown." );
+            Assert.fail( IllegalArgumentException.class.getName() + " was not thrown." );
         }
         catch ( IllegalArgumentException e )
         {
@@ -278,7 +295,7 @@ public class SQLExecTest
         try
         {
             config.setOnError( null );
-            fail( IllegalArgumentException.class.getName() + " was not thrown." );
+            Assert.fail( IllegalArgumentException.class.getName() + " was not thrown." );
         }
         catch ( IllegalArgumentException e )
         {
@@ -286,15 +303,17 @@ public class SQLExecTest
         }
     }
 
+    @Test
     public void testDriverProperties()
         throws SQLException
     {
         Properties driverProperties = this.config.getDriverPropertyMap();
-        assertEquals( 2, driverProperties.size() );
-        assertEquals( "value1", driverProperties.get( "key1" ) );
-        assertEquals( "value2", driverProperties.get( "key2" ) );
+        Assert.assertEquals( 2, driverProperties.size() );
+        Assert.assertEquals( "value1", driverProperties.get( "key1" ) );
+        Assert.assertEquals( "value2", driverProperties.get( "key2" ) );
     }
 
+    @Test
     public void testBadDriverProperties()
         throws SQLException
     {
@@ -302,7 +321,7 @@ public class SQLExecTest
         {
             config.setDriverProperties( "key1=value1,key2" );
             config.getDriverPropertyMap();
-            fail( "Unable to detect bad driver properties" );
+            Assert.fail( "Unable to detect bad driver properties" );
         }
         catch ( RuntimeException e )
         {
@@ -310,6 +329,7 @@ public class SQLExecTest
         }
     }
 
+    @Test
     public void testKeepFormat()
         throws SQLException
     {
@@ -322,16 +342,17 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( command );
-            fail( "-- at the start of the SQL command is ignored." );
+            Assert.fail( "-- at the start of the SQL command is ignored." );
         }
         catch ( SQLException e )
         {
         }
 
-        assertEquals( 0, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 0, sqlexec.getSuccessfulStatements() );
 
     }
 
+    @Test
     public void testBadDelimiter()
         throws Exception
     {
@@ -345,13 +366,14 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( command );
-            fail( "Expected parser error." );
+            Assert.fail( "Expected parser error." );
         }
         catch ( SQLException e )
         {
         }
     }
 
+    @Test
     public void testGoodDelimiter()
         throws Exception
     {
@@ -364,9 +386,10 @@ public class SQLExecTest
 
         sqlexec.execute( command );
 
-        assertEquals( 2, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 2, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test
     public void testBadDelimiterType()
         throws Exception
     {
@@ -381,13 +404,14 @@ public class SQLExecTest
         try
         {
             sqlexec.execute( command );
-            fail( "Expected parser error." );
+            Assert.fail( "Expected parser error." );
         }
         catch ( SQLException e )
         {
         }
     }
 
+    @Test
     public void testGoodDelimiterType()
         throws Exception
     {
@@ -400,7 +424,7 @@ public class SQLExecTest
         config.setDelimiterType( DefaultSQLExec.DelimiterType.ROW );
 
         sqlexec.execute( command );
-        assertEquals( 2, sqlexec.getSuccessfulStatements() );
+        Assert.assertEquals( 2, sqlexec.getSuccessfulStatements() );
     }
 
 }

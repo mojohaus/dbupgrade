@@ -1,7 +1,8 @@
 package org.codehaus.mojo.dbupgrade.sqlexec;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
+
 
 /*
  * Copyright 2000-2014 The Apache Software Foundation
@@ -18,9 +19,9 @@ import junit.framework.TestCase;
  */
 
 public class SqlExecConfigTest
-    extends TestCase
 {
 
+    @Test
     public void testDriverProperties()
     {
         SQLExecConfig config = new SQLExecConfig();

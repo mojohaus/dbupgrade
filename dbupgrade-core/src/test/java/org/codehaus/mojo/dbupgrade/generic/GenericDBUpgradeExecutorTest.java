@@ -1,10 +1,11 @@
 package org.codehaus.mojo.dbupgrade.generic;
 
-import junit.framework.TestCase;
-
 import org.codehaus.mojo.dbupgrade.DBUpgradeException;
 import org.codehaus.mojo.dbupgrade.DBUpgradeLifecycle;
 import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
 /*
  * Copyright 2000-2010 The Apache Software Foundation
@@ -21,11 +22,11 @@ import org.codehaus.mojo.dbupgrade.sqlexec.DefaultSQLExec;
  */
 
 public class GenericDBUpgradeExecutorTest
-    extends TestCase
 {
     private GenericDBUpgradeConfiguration config;
 
-    protected void setUp()
+    @Before
+    public void setUp()
     {
         config = new GenericDBUpgradeConfiguration();
         config.setUsername( "sa" );
@@ -40,7 +41,8 @@ public class GenericDBUpgradeExecutorTest
         config.setInitialVersion( -2 );
     }
 
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
         DefaultSQLExec sqlExec = new DefaultSQLExec( config );
@@ -56,14 +58,14 @@ public class GenericDBUpgradeExecutorTest
         throws Exception
     {
         DBUpgradeLifecycle upgrader = new GenericDBUpgradeLifecycle( config );
-        assertEquals( 4, upgrader.upgrade() );
+        Assert.assertEquals( 4, upgrader.upgrade() );
 
         //test whether the component can reconnect after a shutdown
         upgrader.close();
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
 
         //do it one more time
-        assertEquals( 0, upgrader.upgrade() );
+        Assert.assertEquals( 0, upgrader.upgrade() );
     }
 
     public void testMissingDBUpgraderTest()
@@ -77,7 +79,7 @@ public class GenericDBUpgradeExecutorTest
         }
         catch ( RuntimeException e )
         {
-            assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" ) );
+            Assert.assertTrue( e.getMessage().startsWith( "Unable to find a DBUpgrader capable of upgrading" ) );
         }
     }
 

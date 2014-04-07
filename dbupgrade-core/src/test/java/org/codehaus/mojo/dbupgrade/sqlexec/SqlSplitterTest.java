@@ -6,21 +6,23 @@ package org.codehaus.mojo.dbupgrade.sqlexec;
  * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License. You may obtain a
  * copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
 
-import junit.framework.TestCase;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 public class SqlSplitterTest
-    extends TestCase
 {
 
+    @Test
     public void testContainsSqlString()
         throws Exception
     {
@@ -55,6 +57,7 @@ public class SqlSplitterTest
 
     }
 
+    @Test
     public void testMsSQLStrings()
         throws Exception
     {
@@ -80,12 +83,12 @@ public class SqlSplitterTest
     private void contains( String sql, String delimiter, int expectedIndex )
         throws Exception
     {
-        assertEquals( sql, SqlSplitter.containsSqlEnd( sql, delimiter ), expectedIndex );
+        Assert.assertEquals( sql, SqlSplitter.containsSqlEnd( sql, delimiter ), expectedIndex );
     }
 
     private void containsNot( String sql, String delimiter )
         throws Exception
     {
-        assertTrue( sql, SqlSplitter.containsSqlEnd( sql, delimiter ) == SqlSplitter.NO_END );
+        Assert.assertTrue( sql, SqlSplitter.containsSqlEnd( sql, delimiter ) == SqlSplitter.NO_END );
     }
 }
