@@ -18,8 +18,7 @@
   under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 
 
@@ -33,7 +32,7 @@
 
   <groupId>org.codehaus.mojo.dbupgrade</groupId>
   <artifactId>dbupgrade</artifactId>
-  <version>1.0-beta-3-SNAPSHOT</version>
+  <version>1.0-beta-3</version>
   <packaging>pom</packaging>
 
   <name>DBUpgrade Parent</name>
@@ -47,9 +46,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</developerConnection>
-    <url>http://svn.codehaus.org/mojo/trunk/mojo/dbupgrade</url>
+    <connection>scm:svn:http://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-3</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-3</developerConnection>
+    <url>http://svn.codehaus.org/mojo/tags/dbupgrade-1.0-beta-3</url>
   </scm>
 
   <developers>
