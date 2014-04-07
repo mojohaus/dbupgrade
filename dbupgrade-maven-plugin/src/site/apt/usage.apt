@@ -40,7 +40,7 @@ Generic Upgrade
 	* Lookup global java post-upgrader if available and execute it. The java post-upgrader must implement {{{../dbupgrade-core/apidocs}DBUpgrade interface}}.
 	
 
-** Generic Upgrade Setup
+* Generic Upgrade Setup
    
    * Setting up your maven project
    
@@ -78,7 +78,9 @@ Generic Upgrade
   
 ------------------------------------
   <plugin>
-    [...]
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>dbupgrade-maven-plugin</artifactId>
+    <version>[...]</version>
     <executions>
       <execution>
         [...]
@@ -87,8 +89,14 @@ Generic Upgrade
         </goals>
         <configuration>
           <config>
+            <!-- Your SQL configuration, see SQLExec maven plugin for further details -->
+            <driver>com.organization.DriverClass</driver>
+            <url>${dburl}</url>
+            <username>user</username>
+            <password>password</password>
+            
+            <!-- DBUpgrade configurations -->
             <dialect>${dialect}</dialect>
-            [Your SQL configuration, similar to SQLExec maven plugin configuration]
             <packageName>com.your.comp.app.upgrade.package</package>
           
             <!-- the following are optional since they have default values -->
@@ -119,11 +127,19 @@ Generic Upgrade
   </profiles>
 -------------------------------------
   
-* File List Upgrade
+File List Upgrade
 
-    File upgrade lets you hook up your SQL upgrade scripts in increamentally upgrade your application database schema and data. 
-    After a SQL script is executed, its names is stored in your configurable database version table. DBUpgrade uses
-    your database version's value ( a SQL script name ) to pickup the next upgrade script.
+    File list upgrade lets you hook up your SQL upgrade scripts to increamentally upgrade your application's database schema and data. 
+    After a SQL script is executed, its names is stored in your configurable database version table. This version value ( a SQL script name ) 
+    is used to pickup the next upgrade script. 
+    
+    The list of SQL script files to execute can be supplied in two ways
+    
+    * A explicit upgrade file list may be supplied which is a text file listing all the available SQL upgrade scripts' locations. 
+    
+    * The file list would be created recursively in lexicographical order of names from the script directory supplied in 
+    the plugin config. Use this approach if your script file names follow a definite convention and are orderd as per your
+    database's version.
 
 * File List Upgrade Lifecycle
 
@@ -133,7 +149,7 @@ Generic Upgrade
 	
 	* Creates version table and its data row with varchar type version column set to empty if not available.
 	
-	* Loads up the file list via a user provided file which contains an order of sql files to be executed.
+	* Loads up the file list either via a user provided file or recursively reading the script directory in lexicographical order. 
 	
 	* Retrieves database version and uses it to lookup next available incremental upgrade in the file list. (See next)
 	
@@ -141,39 +157,44 @@ Generic Upgrade
 	  in the list to start the incremental upgrade until end of list.  After each upgrade, update the database version to the 
 	  script name.
 
-    []
+* Setup and Configuration
     
-    
-   * Setting up your script directory
-   
+    * Setting up your script directory
+
 ------------------------------------
-   src/upgrade/filelist.txt
-   src/upgrade/major-version-1/file1.sql
-   src/upgrade/major-version-1/file2.sql
-   [...]
-   src/upgrade/major-version-n/file1.sql
-   src/upgrade/major-version-n/file2.sql
-   src/upgrade/major-version-n/file3.sql
+    src/upgrade/filelist.txt
+    src/upgrade/major-version-1/file1.sql
+    src/upgrade/major-version-1/file2.sql
+    [...]
+    src/upgrade/major-version-n/file1.sql
+    src/upgrade/major-version-n/file2.sql
+    src/upgrade/major-version-n/file3.sql
 -------------------------------------
 
-   * Setting up your file list
+    * Setting up your file list
    
-   Base on the above directory structure, your file list contents are:
+    Base on the above directory structure, your file list contents should be:
    
 -------------------------------------
-   major-version-1/file1.sql
-   major-version-1/file2.sql
-   [...]
-   major-version-2/file1.sql
-   major-version-2/file2.sql
-   major-version-2/file3.sql
+    major-version-1/file1.sql
+    major-version-1/file2.sql
+    [...]
+    major-version-2/file1.sql
+    major-version-2/file2.sql
+    major-version-2/file3.sql
 ------------------------------------
 
-  * Setting up your plugin configuration
+    You may choose not to give an explicit file list. In that case, the script directory would be parsed recursively to 
+    create the file list in lexicographical order of their path relative to the script directory. Please note that only the files with "sql" extention 
+    are considered. So this would create the same file list mentioned above.
+
+    * Setting up your plugin configuration
   
 ------------------------------------
   <plugin>
-    [...]
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>dbupgrade-maven-plugin</artifactId>
+    <version>[...]</version>
     <executions>
       <execution>
         [...]
@@ -182,9 +203,18 @@ Generic Upgrade
         </goals>
         <configuration>
           <config>
-            [Your SQL configuration, see SQLExec maven plugin for details]
-            <scriptDirectory>${basedir}/src/upgrade</scriptDirectory>          
-            <upgradeFile>${basedir}/src/upgrade/filelist.txt</upgradeFile>          
+            <!-- Your SQL configuration, see SQLExec maven plugin for further details -->
+            <driver>com.organization.DriverClass</driver>
+            <url>${dburl}</url>
+            <username>user</username>
+            <password>password</password>
+            
+            <!-- DBUpgrade configuration -->
+            <scriptDirectory>${basedir}/src/upgrade</scriptDirectory>
+             
+            <!-- optional, omit this if you want the file list to be generated recursively -->
+            <upgradeFile>${basedir}/src/upgrade/filelist.txt</upgradeFile>
+                      
             <!-- the following are optional since they have default values -->
             <versionTableName>version</versionTableName>
             <versionColumnName>version</versionColumnName>
@@ -194,10 +224,23 @@ Generic Upgrade
     </executions>
   </plugin>
   [...]
-
 ------------------------------------
+
+* Few things to keep in mind
+
+    * This plugin assumes that the SQL upgrade scripts are present in the script directory. Hence it is the responsibility of 
+    everyone working on the application to add any SQL upgrade scripts to this directory.
     
-* Clean database
+    * In case you are specifying an explicit upgrade file, make sure that an entry is added to this file in correct order whenever
+    a new script is added to the script directory
+    
+    * In case an upgrade file is not specified, please note that the list is created parsing the script directory recursively and 
+    ordered lexicographically using the path relative to the script directory. Hence the SQL upgrade files should be named appropriately.
+    
+    * In anycase it is always a good idea to decide on a naming convention for your upgrade files and directories inside the script 
+    directory. Say "major_version/build_number.sql" or "major_version/minor_version/build_number.sql"   
+    
+Clean database
 
   While developing your incremental upgrades, you can use <clean-database> goal to wipe out your database.
 
@@ -207,7 +250,9 @@ Generic Upgrade
       <id>cleandb</id>
       <build>
         <plugin>
-        [...]
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>dbupgrade-maven-plugin</artifactId>
+        <version>[...]</version>
         <executions>
           <execution>
           [...]
@@ -216,7 +261,13 @@ Generic Upgrade
           </goals>
           <configuration>
             <config>
-              [Your SQL configuration, see SQLExec maven plugin for details]
+              <!-- Your SQL configuration, see SQLExec maven plugin for further details -->
+              <driver>com.organization.DriverClass</driver>
+              <url>${dburl}</url>
+              <username>user</username>
+              <password>password</password>
+              
+              <!-- DBUpgrade configuration -->
               <cleanScript>${basedir}/path/to/your/cleanscript.sql</cleanScript>
             </config>
           </configuration>
@@ -224,12 +275,11 @@ Generic Upgrade
       </executions>
     </plugin>
     [...]
-    
     </profile>
   </profiles>
 ------------------------------------
     
-* Integration with Java Application
+Integration with Java Application
 
   To integrate with your java application
   
