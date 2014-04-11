@@ -432,4 +432,15 @@ public class SQLExecTest
         Assert.assertEquals( 2, sqlexec.getSuccessfulStatements() );
     }
 
+    @Test(expected = SQLException.class)
+    public void testIncorrectCredentials()
+        throws SQLException
+    {
+        config.setUsername( "sa" );
+        config.setPassword( "dummy" );
+        config.setDriver( "org.hsqldb.jdbcDriver" );
+        config.setUrl( "jdbc:hsqldb:mem:target/testdb2s" );
+        sqlexec.getConnection();
+    }
+
 }

@@ -125,7 +125,7 @@ public class DefaultSQLExec
 
     /**
      * Add user input of srcFiles to transaction list.
-     * 
+     *
      * @throws SQLException
      */
     private List<Transaction> addFilesToTransactions( List<Transaction> transactions, File[] files )
@@ -204,48 +204,22 @@ public class DefaultSQLExec
     {
         Connection connection = null;
 
-        for ( int i = 0; i < config.getConnectionRetries(); ++i )
+        if ( driverInstance == null )
         {
-            try
-            {
-                if ( driverInstance == null )
-                {
-                    connection = DriverManager.getConnection( config.getUrl(), driverProperties );
-                    break;
-                }
+            connection = DriverManager.getConnection( config.getUrl(), driverProperties );
+        }
+        else
+        {
+            connection = driverInstance.connect( config.getUrl(), driverProperties );
+        }
 
-                connection = driverInstance.connect( config.getUrl(), driverProperties );
-                if ( connection == null )
-                {
-                    // Driver doesn't understand the URL
-                    throw new RuntimeException( "No suitable Driver for " + config.getUrl() );
-                }
-
-                break;
-
-            }
-            catch ( SQLException e )
-            {
-                if ( i < config.getConnectionRetries() )
-                {
-                    try
-                    {
-                        Thread.sleep( config.getConnectionRetryDelay() );
-                    }
-                    catch ( Exception iex )
-                    {
-                        throw new SQLException( "Unable to connect to " + config.getUrl(), iex );
-                    }
-                    continue;
-                }
-
-                throw new SQLException( "Unable to connect to " + config.getUrl(), e );
-            }
-
+        if ( connection == null )
+        {
+            // Driver doesn't understand the URL
+            throw new RuntimeException( "No suitable Driver for " + config.getUrl() );
         }
 
         return connection;
-
     }
 
     /**
@@ -416,7 +390,7 @@ public class DefaultSQLExec
 
     /**
      * print any results in the result set.
-     * 
+     *
      * @param rs the resultset to print information about
      * @param out the place to print results
      * @throws SQLException on SQL problems.
@@ -623,7 +597,7 @@ public class DefaultSQLExec
     /**
      * Creates a new Connection as using the driver, url, userid and password specified. The calling method is
      * responsible for closing the connection.
-     * 
+     *
      * @return Connection the newly created connection.
      * @throws SQLException if the UserId/Password/Url is not set or there is no suitable driver or the driver fails to
      *             load.
@@ -873,7 +847,7 @@ public class DefaultSQLExec
 
     /**
      * Number of SQL statements executed so far that caused errors.
-     * 
+     *
      * @return the number
      */
     public int getSuccessfulStatements()
@@ -883,7 +857,7 @@ public class DefaultSQLExec
 
     /**
      * Number of SQL statements executed so far, including the ones that caused errors.
-     * 
+     *
      * @return the number
      */
     public int getTotalStatements()
