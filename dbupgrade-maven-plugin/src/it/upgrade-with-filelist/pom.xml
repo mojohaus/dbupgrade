@@ -30,16 +30,11 @@
   <name>dbupgrade-maven-plugin Database Integration Test Using filelist method</name>
 
   <build>
-
-    <defaultGoal>compile</defaultGoal>
-
     <plugins>
-
       <plugin>
-
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>dbupgrade-maven-plugin</artifactId>
-        <version>1.0-beta-3-SNAPSHOT</version>
+        <version>1.0-beta-4-SNAPSHOT</version>
 
         <dependencies>
           <dependency>
@@ -53,7 +48,7 @@
 
           <execution>
             <id>create-version-1</id>
-            <phase>generate-resources</phase>
+            <phase>validate</phase>
             <goals>
               <goal>filelist-upgrade</goal>
             </goals>
@@ -70,7 +65,7 @@
 
           <execution>
             <id>create-version-2</id>
-            <phase>generate-resources</phase>
+            <phase>validate</phase>
             <goals>
               <goal>filelist-upgrade</goal>
             </goals>
@@ -87,7 +82,7 @@
 
           <execution>
             <id>create-version-3</id>
-            <phase>generate-resources</phase>
+            <phase>validate</phase>
             <goals>
               <goal>filelist-upgrade</goal>
             </goals>
@@ -101,9 +96,10 @@
               </config>
             </configuration>
           </execution>
+
           <execution>
             <id>create-version-3-again-should-have-no-effect</id>
-            <phase>generate-resources</phase>
+            <phase>validate</phase>
             <goals>
               <goal>filelist-upgrade</goal>
             </goals>
@@ -117,50 +113,26 @@
               </config>
             </configuration>
           </execution>
+
+          <execution>
+            <id>clean-db</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>clean-database</goal>
+            </goals>
+            <configuration>
+              <config>
+                <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+                <url>jdbc:derby:${project.build.directory}/testdb;create=true</url>
+                <username>sa</username>
+              </config>
+              <cleanScript>${basedir}/src/dbupgrade/filelist/cleandb.sql</cleanScript>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
-
     </plugins>
-
   </build>
-
-  <profiles>
-    <profile>
-      <id>cleandb</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>dbupgrade-maven-plugin</artifactId>
-            <version>1.0-beta-3-SNAPSHOT</version>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derby</artifactId>
-                <version>10.2.2.0</version>
-              </dependency>
-            </dependencies>
-            <executions>
-              <execution>
-                <id>cleandb</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>clean-database</goal>
-                </goals>
-                <configuration>
-                  <config>
-                    <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
-                    <url>jdbc:derby:${project.build.directory}/testdb;create=true</url>
-                    <username>sa</username>
-                  </config>
-                  <cleanScript>${basedir}/src/dbupgrade/filelist/cleandb.sql</cleanScript>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
 </project>
