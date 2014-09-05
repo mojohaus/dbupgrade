@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.codehaus.mojo.dbupgrade</groupId>
     <artifactId>dbupgrade</artifactId>
-    <version>1.0-beta-4-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
   </parent>
 
   <packaging>maven-plugin</packaging>
